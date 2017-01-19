@@ -1,0 +1,23 @@
+export KOPS_SHORT_NAME=my-kops
+export KOPS_DOMAIN=moz.works
+export KOPS_NAME="${KOPS_SHORT_NAME}.${KOPS_DOMAIN}"
+export KOPS_REGION=us-east-1
+export KOPS_STATE_STORE=s3://some-bucket
+export KOPS_NODE_COUNT=3
+export KOPS_NODE_SIZE=t2.medium
+export KOPS_MASTER_SIZE=t2.medium
+export KOPS_PUBLIC_KEY=/path/to/public/key
+export KOPS_ZONES="us-east-1b,us-east-1c,us-east-1d"
+export KOPS_MASTER_ZONES="us-east-1b,us-east-1c,us-east-1d"
+export TF_STATE_BUCKET="${KOPS_SHORT_NAME}-tf-state"
+
+export STAGE2_ETC_PATH=/some/path
+
+# Bring your own RDS instance
+#export KOPS_EXISTING_RDS=1
+#export KOPS_PGSQL_ADDRESS=
+#export KOPS_PGSQL_DB_NAME=
+#export KOPS_PGSQL_PORT=
+#export KOPS_PGSQL_USERNAME=
+#export KOPS_PGSQL_PASSWORD=
+
