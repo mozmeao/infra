@@ -69,6 +69,9 @@ run_kops() {
         --node-count=${KOPS_NODE_COUNT} \
         --node-size=${KOPS_NODE_SIZE} \
         --master-size=${KOPS_MASTER_SIZE} \
+        --topology private \
+        --networking calico \
+        --bastion \
         --ssh-public-key=${KOPS_PUBLIC_KEY}
 }
 

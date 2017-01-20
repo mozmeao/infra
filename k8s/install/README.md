@@ -64,6 +64,11 @@ Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, and
 ---
 # Post install
 
+### Accessing the bastion
+
+See [https://github.com/kubernetes/kops/blob/master/docs/bastion.md#using-ssh-agent-to-access-your-bastion](this page) for more info.
+
+
 ### Generating kubeconfig
 
 More info [here](https://github.com/kubernetes/kops/blob/master/docs/tips.md)
