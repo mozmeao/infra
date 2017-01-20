@@ -4,9 +4,9 @@
 
 - kops
 - terraform
-- [helm](https://github.com/kubernetes/helm/blob/master/docs/install.md)
 - awscli
 
+The easiest way to run the k8s install is via a [dev node](https://github.com/mozmar/infra/blob/master/k8s/dev_node/README.md).
 
 ### Building a new kops cluster
 
@@ -52,14 +52,15 @@ kubectl get nodes
 
 ### Installing monitoring services
 
-This step installs Mig, Datadog, New Relic DaemonSets, and the k8s dashboard.
-You must unlock the repo before running this script.
+This step installs Mig, Datadog, New Relic DaemonSets, the k8s dashboard, and Deis Workflow. 
 
-```
-$KOPS_INSTALLER/stage2.sh
-```
+You'll need to:
 
-Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, and `newrelic`.
+0. clone and **unlock** the `ee-infra-private` repo 
+1. modify `config.sh` and set `STAGE2_ETC_PATH` to point to the `ee-infra-private/k8s/install/etc` directory.
+2. run: `$KOPS_INSTALLER/stage2.sh`
+
+Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, `newrelic`, and `deis`.
 
 ---
 # Post install
