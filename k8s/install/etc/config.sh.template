@@ -1,5 +1,5 @@
 export KOPS_SHORT_NAME=my-kops
-export KOPS_DOMAIN=moz.works
+export KOPS_DOMAIN=example.com
 export KOPS_NAME="${KOPS_SHORT_NAME}.${KOPS_DOMAIN}"
 export KOPS_REGION=us-east-1
 export KOPS_STATE_STORE=s3://some-bucket
@@ -12,6 +12,15 @@ export KOPS_MASTER_ZONES="us-east-1b,us-east-1c,us-east-1d"
 export TF_STATE_BUCKET="${KOPS_SHORT_NAME}-tf-state"
 
 export STAGE2_ETC_PATH=/some/path
+
+# select components to install during stage2
+# set to 1 will install, set to 0 to ignore
+export INSTALL_MIG=1
+export INSTALL_DATADOG=1
+export INSTALL_NEWRELIC=1
+export INSTALL_DASHBOARD=1
+export INSTALL_HEAPSTER=1
+export INSTALL_WORKFLOW=1
 
 # Bring your own RDS instance
 #export KOPS_EXISTING_RDS=1
