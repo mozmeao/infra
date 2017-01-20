@@ -6,18 +6,18 @@
 - terraform
 - awscli
 
-The easiest way to run the k8s install is via a [dev node](https://github.com/mozmar/infra/blob/master/k8s/dev_node/README.md).
+The easiest way to run our K8s install is via a [dev node](https://github.com/mozmar/infra/blob/master/k8s/dev_node/README.md).
 
 ### Building a new kops cluster
 
 ```
-# modify stage1.sh to your liking
-cd ee-infra-private/k8s/install
+cd infra/k8s/install
 export KOPS_INSTALLER=$(pwd)
 
 mkdir my_cluster
 cd my_cluster
 cp $KOPS_INSTALLER/etc/config.sh.template config.sh
+# modify config.sh to your liking
 ```
 
 **At this point, you MUST customize config.sh.**
