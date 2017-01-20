@@ -1,5 +1,5 @@
 export KOPS_SHORT_NAME=my-kops
-export KOPS_DOMAIN=moz.works
+export KOPS_DOMAIN=example.com
 export KOPS_NAME="${KOPS_SHORT_NAME}.${KOPS_DOMAIN}"
 export KOPS_REGION=us-east-1
 export KOPS_STATE_STORE=s3://some-bucket
