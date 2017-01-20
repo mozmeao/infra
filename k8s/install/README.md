@@ -2,11 +2,9 @@
 
 ### Prereqs
 
-- kops
+- [kops](https://github.com/kubernetes/kops/releases) 1.5.0-alpha3 or above (for bastion support)
 - terraform
-- [helm](https://github.com/kubernetes/helm/blob/master/docs/install.md)
 - awscli
-
 
 ### Building a new kops cluster
 
