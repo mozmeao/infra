@@ -13,6 +13,8 @@ export TF_STATE_BUCKET="${KOPS_SHORT_NAME}-tf-state"
 
 export STAGE2_ETC_PATH=/some/path
 
+# select components to install during stage2
+# set to 1 will install, set to 0 to ignore
 export INSTALL_MIG=1
 export INSTALL_DATADOG=1
 export INSTALL_NEWRELIC=1
