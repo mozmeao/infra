@@ -2,7 +2,7 @@
 
 ### Prereqs
 
-- kops
+- [kops](https://github.com/kubernetes/kops/releases) 1.5.0-alpha3 or above (for bastion support)
 - terraform
 - awscli
 
@@ -64,6 +64,11 @@ Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, `ne
 
 ---
 # Post install
+
+### Accessing the bastion
+
+See [this page](https://github.com/kubernetes/kops/blob/master/docs/bastion.md#using-ssh-agent-to-access-your-bastion) for more info.
+
 
 ### Generating kubeconfig
 

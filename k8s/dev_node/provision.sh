@@ -1,4 +1,4 @@
-KOPS_URL="https://github.com/kubernetes/kops/releases/download/v1.4.4/kops-linux-amd64"
+KOPS_URL="https://github.com/kubernetes/kops/releases/download/1.5.0-alpha3/kops-linux-amd64"
 
 sudo apt -y update
 sudo apt -y upgrade
