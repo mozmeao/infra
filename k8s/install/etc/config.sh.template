@@ -13,6 +13,13 @@ export TF_STATE_BUCKET="${KOPS_SHORT_NAME}-tf-state"
 
 export STAGE2_ETC_PATH=/some/path
 
+export INSTALL_MIG=1
+export INSTALL_DATADOG=1
+export INSTALL_NEWRELIC=1
+export INSTALL_DASHBOARD=1
+export INSTALL_HEAPSTER=1
+export INSTALL_WORKFLOW=1
+
 # Bring your own RDS instance
 #export KOPS_EXISTING_RDS=1
 #export KOPS_PGSQL_ADDRESS=

@@ -10,6 +10,13 @@ if [ -z "${STAGE2_ETC_PATH}" ]; then
 	exit -1
 fi
 
+# let's make sure we are in the right directory
+terraform output region > /dev/null 2>&1
+if [ $? -ne 0 ]
+then
+	echo "Please run from <mycluster>/out/terraform directory"
+	exit 1
+fi
 
 install_y2j() {
 	which y2j > /dev/null
@@ -216,12 +223,20 @@ config_deis_elb() {
 
 
 install_deps
-install_mig
-install_dd
-install_newrelic
-install_k8s_dashboard
-install_heapster
 install_tiller
-install_workflow
-config_deis_elb
+
+# k8s specific
+if [ "${INSTALL_DASHBOARD}" -eq 1 ]; then install_k8s_dashboard; fi
+if [ "${INSTALL_HEAPSTER}" -eq 1 ]; then install_heapster; fi
+
+# MozMEAO monitoring
+if [ "${INSTALL_MIG}" -eq 1 ]; then install_mig; fi
+if [ "${INSTALL_DATADOG}" -eq 1 ]; then install_dd; fi
+if [ "${INSTALL_NEWRELIC}" -eq 1 ]; then install_newrelic; fi
+
+if [ "${INSTALL_WORKFLOW}" -eq 1 ]; then
+	install_workflow
+	config_deis_elb
+fi
+
 
