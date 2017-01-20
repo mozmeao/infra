@@ -12,7 +12,7 @@
 
 ```
 # modify stage1.sh to your liking
-cd ee-infra-private/k8s/install
+cd infra/k8s/install
 export KOPS_INSTALLER=$(pwd)
 
 mkdir my_cluster
