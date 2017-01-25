@@ -1,9 +1,9 @@
-KOPS_URL="https://github.com/kubernetes/kops/releases/download/v1.4.4/kops-linux-amd64"
+KOPS_URL="https://github.com/kubernetes/kops/releases/download/1.5.0-alpha4/kops-linux-amd64"
 
 sudo apt -y update
 sudo apt -y upgrade
 
-sudo apt -y install git jq python3 python3-pip curl silversearcher-ag
+sudo apt -y install git jq python3 python3-pip curl silversearcher-ag libssl-dev
 sudo usermod -a -G docker admin
 
 
@@ -16,3 +16,7 @@ sudo mv ./kubectl /usr/local/bin/kubectl
 wget ${KOPS_URL}
 chmod +x kops-linux-amd64
 sudo mv kops-linux-amd64 /usr/local/bin/kops
+
+# install git-crypt
+git clone https://github.com/AGWA/git-crypt.git
+(cd git-crypt && make && sudo make install)

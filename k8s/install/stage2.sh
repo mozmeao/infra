@@ -109,6 +109,14 @@ install_heapster() {
 	kubectl create -f https://raw.githubusercontent.com/kubernetes/kops/master/addons/monitoring-standalone/v1.2.0.yaml
 }
 
+install_fluentd() {
+	echo "Installing fluentd"
+
+    cat ${STAGE2_ETC_PATH}/fluentd.yaml | \
+        sed "s/TEMPL_SYSLOG_HOST/${SYSLOG_HOST}/" | \
+        sed "s/TEMPL_SYSLOG_PORT/${SYSLOG_PORT}/" | \
+    	kubectl create -f -
+}
 
 
 install_tiller() {
@@ -233,6 +241,7 @@ if [ "${INSTALL_HEAPSTER}" -eq 1 ]; then install_heapster; fi
 if [ "${INSTALL_MIG}" -eq 1 ]; then install_mig; fi
 if [ "${INSTALL_DATADOG}" -eq 1 ]; then install_dd; fi
 if [ "${INSTALL_NEWRELIC}" -eq 1 ]; then install_newrelic; fi
+if [ "${INSTALL_FLUENTD}" -eq 1 ]; then install_fluentd; fi
 
 if [ "${INSTALL_WORKFLOW}" -eq 1 ]; then
 	install_workflow
