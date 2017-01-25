@@ -12,8 +12,8 @@ export KOPS_MASTER_ZONES="us-east-1b,us-east-1c,us-east-1d"
 export TF_STATE_BUCKET="${KOPS_SHORT_NAME}-tf-state"
 
 # populate these if installing FluentD->PaperTrail DaemonSet
-export PAPERTRAIL_HOST=""
-export PAPERTRAIL_PORT=""
+export SYSLOG_HOST=""
+export SYSLOG_PORT=""
 
 export STAGE2_ETC_PATH=/some/path
 

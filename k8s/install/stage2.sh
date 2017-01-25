@@ -113,8 +113,8 @@ install_fluentd() {
 	echo "Installing fluentd"
 
     cat ${STAGE2_ETC_PATH}/fluentd.yaml | \
-        sed "s/TEMPL_PAPERTRAIL_HOST/${PAPERTRAIL_HOST}/" | \
-        sed "s/TEMPL_PAPERTRAIL_PORT/${PAPERTRAIL_PORT}/" | \
+        sed "s/TEMPL_SYSLOG_HOST/${SYSLOG_HOST}/" | \
+        sed "s/TEMPL_SYSLOG_PORT/${SYSLOG_PORT}/" | \
     	kubectl create -f -
 }
 
