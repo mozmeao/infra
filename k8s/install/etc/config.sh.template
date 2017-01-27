@@ -2,14 +2,17 @@ export KOPS_SHORT_NAME=my-kops
 export KOPS_DOMAIN=example.com
 export KOPS_NAME="${KOPS_SHORT_NAME}.${KOPS_DOMAIN}"
 export KOPS_REGION=us-east-1
-export KOPS_STATE_STORE=s3://some-bucket
 export KOPS_NODE_COUNT=3
 export KOPS_NODE_SIZE=t2.medium
 export KOPS_MASTER_SIZE=t2.medium
 export KOPS_PUBLIC_KEY=/path/to/public/key
 export KOPS_ZONES="us-east-1b,us-east-1c,us-east-1d"
 export KOPS_MASTER_ZONES="us-east-1b,us-east-1c,us-east-1d"
+export KOPS_K8S_VERSION="1.5.2"
+
+# s3 buckets
 export TF_STATE_BUCKET="${KOPS_SHORT_NAME}-tf-state"
+export KOPS_STATE_BUCKET="${KOPS_SHORT_NAME}-kops-state"
 
 # populate these if installing FluentD->PaperTrail DaemonSet
 export SYSLOG_HOST=""

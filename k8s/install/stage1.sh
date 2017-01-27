@@ -31,9 +31,9 @@ check_var() {
 }
 
 verify_env() {
-    required_vars=( KOPS_SHORT_NAME KOPS_DOMAIN KOPS_NAME KOPS_REGION KOPS_STATE_STORE
+    required_vars=( KOPS_SHORT_NAME KOPS_DOMAIN KOPS_NAME KOPS_REGION TF_STATE_BUCKET
                     KOPS_NODE_COUNT KOPS_NODE_SIZE KOPS_MASTER_SIZE KOPS_PUBLIC_KEY
-                    KOPS_ZONES KOPS_MASTER_ZONES )
+                    KOPS_ZONES KOPS_MASTER_ZONES KOPS_STATE_BUCKET )
     echo ""
     echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     echo "Environment"
@@ -62,6 +62,7 @@ verify_env() {
 }
 
 run_kops() {
+    aws s3 mb s3://${KOPS_STATE_BUCKET} --region ${KOPS_REGION}
     kops create cluster ${KOPS_NAME} \
         --zones=${KOPS_ZONES} \
         --master-zones=${KOPS_MASTER_ZONES} \
@@ -69,7 +70,8 @@ run_kops() {
         --node-count=${KOPS_NODE_COUNT} \
         --node-size=${KOPS_NODE_SIZE} \
         --master-size=${KOPS_MASTER_SIZE} \
-        --ssh-public-key=${KOPS_PUBLIC_KEY}
+        --ssh-public-key=${KOPS_PUBLIC_KEY} \
+        --kubernetes-version=${KOPS_K8S_VERSION}
 }
 
 render_tf_templates() {
