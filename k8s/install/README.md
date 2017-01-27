@@ -30,7 +30,7 @@ $KOPS_INSTALLER/stage1.sh
 
 Two different sets of results of `stage1.sh` are stored in:
  - a) `./out/terraform` (terraform only)
- - b) general kops config stored in an S3 bucket: `$KOPS_STATE_STORE`.
+ - b) general kops config stored in an S3 bucket: `$KOPS_STATE_BUCKET`.
 
 When you're ready to continue, apply the Terraform config:
 
