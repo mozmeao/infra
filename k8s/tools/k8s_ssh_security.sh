@@ -39,11 +39,17 @@ show_help() {
     echo "Disable ssh access from this public ip into K8s:"
     echo "k8s_ssh_security.sh --disable --myip"
     echo ""
+    echo "Disable ssh access from a specific CIRD into K8s:"
+    echo "k8s_ssh_security.sh --disable --cidr=1.2.3.4/16"
+    echo ""
     echo "Enable 0.0.0.0/0 ssh access into K8s:"
     echo "k8s_ssh_security.sh --enable"
     echo ""
     echo "Enable ssh access from this public ip into K8s:"
     echo "k8s_ssh_security.sh --enable --myip"
+    echo ""
+    echo "Enable ssh access from a specific CIRD into K8s:"
+    echo "k8s_ssh_security.sh --enable --cidr=1.2.3.4/16"
 }
 
 get_security_groups() {
@@ -90,6 +96,9 @@ enable_ssh() {
         echo "Limiting SSH to ${thisip}"
         aws ec2 authorize-security-group-ingress --group-id ${MASTERS_GROUP_ID} --port 22 --protocol tcp --cidr ${this_cidr} --region ${KOPS_REGION}
         aws ec2 authorize-security-group-ingress --group-id ${NODES_GROUP_ID} --port 22 --protocol tcp --cidr ${this_cidr} --region ${KOPS_REGION}
+    elif [ ! -z "${CIDR}" ]; then
+        aws ec2 authorize-security-group-ingress --group-id ${MASTERS_GROUP_ID} --port 22 --protocol tcp --cidr ${CIDR} --region ${KOPS_REGION}
+        aws ec2 authorize-security-group-ingress --group-id ${NODES_GROUP_ID} --port 22 --protocol tcp --cidr ${CIDR} --region ${KOPS_REGION}
     else
         echo "SSH open to 0.0.0.0/0"
         aws ec2 authorize-security-group-ingress --group-id ${MASTERS_GROUP_ID} --port 22 --protocol tcp --cidr 0.0.0.0/0 --region ${KOPS_REGION}
@@ -106,6 +115,9 @@ disable_ssh() {
         this_cidr="${MY_PUBLIC_IP}/32"
         aws ec2 revoke-security-group-ingress --group-id ${MASTERS_GROUP_ID} --port 22 --protocol tcp --cidr ${this_cidr} --region ${KOPS_REGION}
         aws ec2 revoke-security-group-ingress --group-id ${NODES_GROUP_ID} --port 22 --protocol tcp --cidr ${this_cidr} --region ${KOPS_REGION}
+    elif [ ! -z "${CIDR}" ]; then
+        aws ec2 revoke-security-group-ingress --group-id ${MASTERS_GROUP_ID} --port 22 --protocol tcp --cidr ${CIDR} --region ${KOPS_REGION}
+        aws ec2 revoke-security-group-ingress --group-id ${NODES_GROUP_ID} --port 22 --protocol tcp --cidr ${CIDR} --region ${KOPS_REGION}
     else
         aws ec2 revoke-security-group-ingress --group-id ${MASTERS_GROUP_ID} --port 22 --protocol tcp --cidr 0.0.0.0/0 --region ${KOPS_REGION}
         aws ec2 revoke-security-group-ingress --group-id ${NODES_GROUP_ID} --port 22 --protocol tcp --cidr 0.0.0.0/0 --region ${KOPS_REGION}
@@ -122,6 +134,10 @@ do
         ;;
         --myip)
         MYIP=1
+        shift
+        ;;
+        --cidr=*)
+        CIDR="${arg#*=}"
         shift
         ;;
         --disable)
