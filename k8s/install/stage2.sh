@@ -111,11 +111,7 @@ install_heapster() {
 
 install_fluentd() {
 	echo "Installing fluentd"
-
-    cat ${STAGE2_ETC_PATH}/fluentd.yaml | \
-        sed "s/TEMPL_SYSLOG_HOST/${SYSLOG_HOST}/" | \
-        sed "s/TEMPL_SYSLOG_PORT/${SYSLOG_PORT}/" | \
-    	kubectl create -f -
+    helm install ${STAGE2_ETC_PATH}/../charts/mozmeao --set fluentd.syslog_host=${SYSLOG_HOST},fluentd.syslog_port=${SYSLOG_PORT}
 }
 
 
