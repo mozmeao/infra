@@ -111,7 +111,7 @@ install_heapster() {
 
 install_fluentd() {
 	echo "Installing fluentd"
-    helm install ${STAGE2_ETC_PATH}/../charts/mozmeao --set fluentd.syslog_host=${SYSLOG_HOST},fluentd.syslog_port=${SYSLOG_PORT}
+    helm install ${KOPS_INSTALLER}/charts/mozmeao --set fluentd.syslog_host=${SYSLOG_HOST},fluentd.syslog_port=${SYSLOG_PORT}
 }
 
 
