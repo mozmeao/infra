@@ -226,6 +226,30 @@ config_deis_elb() {
             --load-balancer-name ${BASE_ELB_NAME} \
             --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":1200}}" \
             --region ${KOPS_REGION}
+
+    echo "Done"
+}
+
+config_deis_dns() {
+    echo "Waiting for Deis router LB"
+    # the -e flag to jq will cause it to return a 1 if the path isn't found in the json
+    until kubectl --namespace=deis get svc deis-router -o json | jq -e -r .status.loadBalancer.ingress[0].hostname
+    do
+        sleep 1
+    done
+    echo "Deis router LB available"
+
+    NEW_VALUE="*.${KOPS_SHORT_NAME}.${KOPS_DOMAIN}"
+    echo "Configuring Deis DNS for *.${KOPS_SHORT_NAME}.${KOPS_DOMAIN}"
+
+    LONG_ZONE_ID=$(aws route53 list-hosted-zones | jq -r ".HostedZones[]  | select(.Name == \"${KOPS_DOMAIN}.\") | .Id")
+    HOSTED_ZONE_ID=$(echo "${LONG_ZONE_ID}" | tr '/' ' ' | awk '{ print $2 }')
+    INPUT_JSON=$(cat ${KOPS_INSTALLER}/etc/deis_router_dns.yaml | \
+        sed "s/DNS_NAME/${NEW_VALUE}/" | \
+        sed "s/DNS_VALUE/${ELB}/" | \
+        sed "s/HOSTED_ZONE_ID/${HOSTED_ZONE_ID}/" | y2j)
+
+    aws route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID} --cli-input-json "${INPUT_JSON}"
     echo "Done"
 }
 
@@ -244,8 +268,9 @@ if [ "${INSTALL_NEWRELIC}" -eq 1 ]; then install_newrelic; fi
 if [ "${INSTALL_FLUENTD}" -eq 1 ]; then install_fluentd; fi
 
 if [ "${INSTALL_WORKFLOW}" -eq 1 ]; then
-	install_workflow
-	config_deis_elb
+    install_workflow
+    config_deis_elb
+    config_deis_dns
 fi
 
 
