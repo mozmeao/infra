@@ -223,6 +223,20 @@ config_deis_elb() {
             --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":1200}}" \
             --region ${KOPS_REGION}
 
+    # https://deis.com/docs/workflow/managing-workflow/configuring-load-balancers/
+    # Configure proxy protocol
+    kubectl --namespace=deis annotate deployment/deis-router router.deis.io/nginx.useProxyProtocol=true
+    kubectl --namespace=deis annotate service/deis-router service.beta.kubernetes.io/aws-load-balancer-proxy-protocol='*'
+    AWS_ACCOUNT_ID=$(aws ec2 describe-security-groups --group-names 'Default' --region us-east-1 | jq -r .SecurityGroups[0].OwnerId)
+
+    # https config for k8s
+    # https://github.com/kubernetes/kubernetes/issues/24978
+    CERT_ARN=$(aws acm list-certificates --region us-east-1 | jq -r ".CertificateSummaryList[] | select(.DomainName == \"${KOPS_NAME}\") | .CertificateArn")
+    ANNOTATION1="service.beta.kubernetes.io/aws-load-balancer-ssl-cert=${CERT_ARN}"
+    kubectl --namespace=deis annotate service/deis-router ${ANNOTATION1}
+
+    ANNOTATION2="service.beta.kubernetes.io/aws-load-balancer-ssl-ports=https"
+    kubectl --namespace=deis annotate service/deis-router ${ANNOTATION2}
     echo "Done"
 }
 
@@ -245,7 +259,7 @@ config_deis_dns() {
         sed "s/DNS_VALUE/${ELB}/" | \
         sed "s/HOSTED_ZONE_ID/${HOSTED_ZONE_ID}/" | y2j)
 
-    aws route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID} --cli-input-json "${INPUT_JSON}"
+    aws route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID} --cli-input-json "${INPUT_JSON}" --region ${KOPS_REGION}
     echo "Done"
 }
 
