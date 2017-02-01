@@ -18,7 +18,7 @@ if [ -z "${KOPS_INSTALLER}" ]; then
     exit -1
 fi
 
-source stage1_functions.sh
+source ${KOPS_INSTALLER}/stage1_functions.sh
 
 verify_env
 run_kops
