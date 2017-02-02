@@ -18,7 +18,7 @@ then
 	exit 1
 fi
 
-source stage2_functions.sh
+source ${KOPS_INSTALLER}/stage2_functions.sh
 
 install_deps
 install_tiller
