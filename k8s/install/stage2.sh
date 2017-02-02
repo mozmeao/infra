@@ -37,6 +37,7 @@ if [ "${INSTALL_WORKFLOW}" -eq 1 ]; then
     install_workflow
     config_deis_elb
     config_deis_dns
+    config_elb_ssl
 fi
 
 
