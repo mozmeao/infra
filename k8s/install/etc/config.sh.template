@@ -31,6 +31,12 @@ export INSTALL_DASHBOARD=1
 export INSTALL_HEAPSTER=1
 export INSTALL_WORKFLOW=1
 
+# off-cluster registry
+export REGISTRY_HOSTNAME=""
+export REGISTRY_ORG=""
+export REGISTRY_USERNAME=""
+export REGISTRY_PASSWORD=""
+
 # Bring your own RDS instance
 #export KOPS_EXISTING_RDS=1
 #export KOPS_PGSQL_ADDRESS=
@@ -38,4 +44,5 @@ export INSTALL_WORKFLOW=1
 #export KOPS_PGSQL_PORT=
 #export KOPS_PGSQL_USERNAME=
 #export KOPS_PGSQL_PASSWORD=
+
 

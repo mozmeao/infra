@@ -159,6 +159,11 @@ install_workflow() {
 		| jq ".database.postgres.port = \"${pgsql_port}\"" \
 		| jq ".database.postgres.username = \"${pgsql_username}\"" \
 		| jq ".controller.registration_mode = \"disabled\"" \
+		| jq ".registry_location = \"off-cluster\"" \
+		| jq ".\"registry-token-refresher\".off_cluster_registry.hostname = \"${REGISTRY_HOSTNAME}\"" \
+		| jq ".\"registry-token-refresher\".off_cluster_registry.organization = \"${REGISTRY_ORG}\"" \
+		| jq ".\"registry-token-refresher\".off_cluster_registry.username = \"${REGISTRY_USERNAME}\"" \
+		| jq ".\"registry-token-refresher\".off_cluster_registry.password = \"${REGISTRY_PASSWORD}\"" \
 		| j2y > workflow_config_moz.yaml
 
     # if you are reinstalling Deis after a `helm delete ...`, you'll need to delete
@@ -176,6 +181,11 @@ install_workflow() {
         echo "Removing ${comp}"
         rm -rf ./workflow/charts/${comp}
     done
+
+    # SSL is handled at the ELB, but the ELB still wants to point to the Deis router SSL
+    # port internally. We change the ssl port to be unencrypted (http) internally.
+    # TODO: use a template with condition and submit upstream
+    sed -i "s/6443/8080/" workflow/charts/router/templates/router-service.yaml
 
     # if installing an unmodified deis/workflow:
 	# helm install deis/workflow --namespace deis -f workflow_config_moz.yaml
@@ -225,6 +235,25 @@ config_deis_dns() {
         sed "s/DNS_VALUE/${ELB}/" | \
         sed "s/HOSTED_ZONE_ID/${HOSTED_ZONE_ID}/" | y2j)
 
-    aws route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID} --cli-input-json "${INPUT_JSON}"
+    aws route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID} --cli-input-json "${INPUT_JSON}"  --region ${KOPS_REGION}
     echo "Done"
 }
+
+config_elb_ssl() {
+    # https://deis.com/docs/workflow/managing-workflow/configuring-load-balancers/
+    # Configure proxy protocol
+    kubectl --namespace=deis annotate deployment/deis-router router.deis.io/nginx.useProxyProtocol=true
+    kubectl --namespace=deis annotate service/deis-router service.beta.kubernetes.io/aws-load-balancer-proxy-protocol='*'
+    AWS_ACCOUNT_ID=$(aws ec2 describe-security-groups --group-names 'Default' --region ${KOPS_REGION} | jq -r .SecurityGroups[0].OwnerId)
+
+    # https config for k8s
+    # https://github.com/kubernetes/kubernetes/issues/24978
+    CERT_ARN=$(aws acm list-certificates --region ${KOPS_REGION} | jq -r ".CertificateSummaryList[] | select(.DomainName == \"${KOPS_NAME}\") | .CertificateArn")
+    CERT_ID=$(echo $CERT_ARN | tr '/' ' ' | awk '{ print $2 }')
+    ANNOTATION1="service.beta.kubernetes.io/aws-load-balancer-ssl-cert=${CERT_ARN}"
+    kubectl --namespace=deis annotate service/deis-router ${ANNOTATION1}
+
+    ANNOTATION2="service.beta.kubernetes.io/aws-load-balancer-ssl-ports=https"
+    kubectl --namespace=deis annotate service/deis-router ${ANNOTATION2}
+}
+
