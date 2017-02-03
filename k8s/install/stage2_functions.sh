@@ -193,28 +193,6 @@ install_workflow() {
     helm install ./workflow --namespace deis -f workflow_config_moz.yaml
 }
 
-config_deis_elb() {
-    echo "Waiting for Deis router LB"
-    # the -e flag to jq will cause it to return a 1 if the path isn't found in the json
-    until kubectl --namespace=deis get svc deis-router -o json | jq -e -r .status.loadBalancer.ingress[0].hostname
-    do
-      sleep 1
-    done
-    echo "Deis router LB available"
-
-    ELB=$(kubectl --namespace=deis get svc deis-router -o json | jq -r .status.loadBalancer.ingress[0].hostname)
-    echo "ELB = ${ELB}"
-    BASE_ELB_NAME=$(echo $ELB | tr "-" " " | awk '{ print $1 }')
-    echo "BASE ELB = ${BASE_ELB_NAME}"
-
-    echo "Setting ELB IdleTimeout to 1200 seconds"
-    aws elb modify-load-balancer-attributes \
-            --load-balancer-name ${BASE_ELB_NAME} \
-            --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":1200}}" \
-            --region ${KOPS_REGION}
-
-    echo "Done"
-}
 
 config_deis_dns() {
     echo "Waiting for Deis router LB"
@@ -257,3 +235,25 @@ config_elb_ssl() {
     kubectl --namespace=deis annotate service/deis-router ${ANNOTATION2}
 }
 
+config_deis_elb_timeout() {
+    echo "Waiting for Deis router LB"
+    # the -e flag to jq will cause it to return a 1 if the path isn't found in the json
+    until kubectl --namespace=deis get svc deis-router -o json | jq -e -r .status.loadBalancer.ingress[0].hostname
+    do
+      sleep 1
+    done
+    echo "Deis router LB available"
+
+    ELB=$(kubectl --namespace=deis get svc deis-router -o json | jq -r .status.loadBalancer.ingress[0].hostname)
+    echo "ELB = ${ELB}"
+    BASE_ELB_NAME=$(echo $ELB | tr "-" " " | awk '{ print $1 }')
+    echo "BASE ELB = ${BASE_ELB_NAME}"
+
+    echo "Setting ELB IdleTimeout to 1200 seconds"
+    aws elb modify-load-balancer-attributes \
+            --load-balancer-name ${BASE_ELB_NAME} \
+            --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":1200}}" \
+            --region ${KOPS_REGION}
+
+    echo "Done"
+}
