@@ -10,12 +10,9 @@ if [ -z "${STAGE2_ETC_PATH}" ]; then
 	exit -1
 fi
 
-# let's make sure we are in the right directory
-terraform output region > /dev/null 2>&1
-if [ $? -ne 0 ]
-then
-	echo "Please run from <mycluster>/out/terraform directory"
-	exit 1
+if [ ! -f config.sh ]; then
+    echo "Can't find config.sh in cwd"
+    exit -1
 fi
 
 source ${KOPS_INSTALLER}/stage2_functions.sh
@@ -34,10 +31,7 @@ if [ "${INSTALL_NEWRELIC}" -eq 1 ]; then install_newrelic; fi
 if [ "${INSTALL_FLUENTD}" -eq 1 ]; then install_fluentd; fi
 
 if [ "${INSTALL_WORKFLOW}" -eq 1 ]; then
-    install_workflow
-    config_deis_elb
-    config_deis_dns
-    config_elb_ssl
+    install_deis
 fi
 
 

@@ -1,3 +1,11 @@
+# are we running from a directory with config.sh?
+check_cwd() {
+	if [ ! -f config.sh ]; then
+    	echo "Can't find config.sh in cwd"
+    	exit 1
+	fi
+}
+
 install_y2j() {
 	which y2j > /dev/null
 	if [ $? -ne 0 ]; then
@@ -108,28 +116,35 @@ install_tiller() {
 }
 
 
+# use this if you need to reinstall Deis and secrets already exist
+delete_deis_secrets() {
+	kubectl -n deis get secrets | tail -n +2 | awk '{ print $1 }' | xargs kubectl -n deis delete secret
+}
 
-install_workflow() {
+install_workflow_chart() {
+	# make sure we're running from a directory with config.sh
+	check_cwd
 	echo "Installing Deis Workflow"
 	helm repo add deis https://charts.deis.com/workflow
 	helm inspect values deis/workflow | sed -n '1!p' > workflow_config.yaml
+	TF_OUTPUT_CMD="terraform output --state ./out/terraform/.terraform/terraform.tfstate"
 
 	# s3 settings
-	region=$(terraform output -json | jq -r .region.value)
-	registry_bucket=$(terraform output -json | jq -r '."registry-bucket"'.value)
-	builder_bucket=$(terraform output -json | jq -r '."builder-bucket"'.value)
-	s3_accesskey=$(terraform output -json | jq -r '."deis_s3_accesskey"'.value)
-	s3_secretkey=$(terraform output -json | jq -r '."deis_s3_secretkey"'.value)
+	region=$(${TF_OUTPUT_CMD} region)
+	registry_bucket=$(${TF_OUTPUT_CMD} registry-bucket)
+	builder_bucket=$(${TF_OUTPUT_CMD} builder-bucket)
+	s3_accesskey=$(${TF_OUTPUT_CMD} deis_s3_accesskey)
+	s3_secretkey=$(${TF_OUTPUT_CMD} deis_s3_secretkey)
 
 	# rds settings
 	if [ -z "${KOPS_EXISTING_RDS}" ]
 	then
 		echo "Using new RDS instance"
-		pgsql_address=$(terraform output -json | jq -r '."pgsql_address"'.value)
-		pgsql_db_name=$(terraform output -json | jq -r '."pgsql_db_name"'.value)
-		pgsql_password=$(terraform output -json | jq -r '."pgsql_password"'.value)
-		pgsql_port=$(terraform output -json | jq -r '."pgsql_port"'.value)
-		pgsql_username=$(terraform output -json | jq -r '."pgsql_username"'.value)
+		pgsql_address=$(${TF_OUTPUT_CMD} pgsql_address)
+		pgsql_db_name=$(${TF_OUTPUT_CMD} pgsql_db_name)
+		pgsql_password=$(${TF_OUTPUT_CMD} pgsql_password)
+		pgsql_port=$(${TF_OUTPUT_CMD} pgsql_port)
+		pgsql_username=$(${TF_OUTPUT_CMD} pgsql_username)
 	else
 		echo "Using existing RDS settings"
 		pgsql_address=${KOPS_PGSQL_ADDRESS}
@@ -193,28 +208,6 @@ install_workflow() {
     helm install ./workflow --namespace deis -f workflow_config_moz.yaml
 }
 
-config_deis_elb() {
-    echo "Waiting for Deis router LB"
-    # the -e flag to jq will cause it to return a 1 if the path isn't found in the json
-    until kubectl --namespace=deis get svc deis-router -o json | jq -e -r .status.loadBalancer.ingress[0].hostname
-    do
-      sleep 1
-    done
-    echo "Deis router LB available"
-
-    ELB=$(kubectl --namespace=deis get svc deis-router -o json | jq -r .status.loadBalancer.ingress[0].hostname)
-    echo "ELB = ${ELB}"
-    BASE_ELB_NAME=$(echo $ELB | tr "-" " " | awk '{ print $1 }')
-    echo "BASE ELB = ${BASE_ELB_NAME}"
-
-    echo "Setting ELB IdleTimeout to 1200 seconds"
-    aws elb modify-load-balancer-attributes \
-            --load-balancer-name ${BASE_ELB_NAME} \
-            --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":1200}}" \
-            --region ${KOPS_REGION}
-
-    echo "Done"
-}
 
 config_deis_dns() {
     echo "Waiting for Deis router LB"
@@ -255,5 +248,38 @@ config_elb_ssl() {
 
     ANNOTATION2="service.beta.kubernetes.io/aws-load-balancer-ssl-ports=https"
     kubectl --namespace=deis annotate service/deis-router ${ANNOTATION2}
+}
+
+config_deis_elb_timeout() {
+    echo "Waiting for Deis router LB"
+    # the -e flag to jq will cause it to return a 1 if the path isn't found in the json
+    until kubectl --namespace=deis get svc deis-router -o json | jq -e -r .status.loadBalancer.ingress[0].hostname
+    do
+      sleep 1
+    done
+    echo "Deis router LB available"
+
+    ELB=$(kubectl --namespace=deis get svc deis-router -o json | jq -r .status.loadBalancer.ingress[0].hostname)
+    echo "ELB = ${ELB}"
+    BASE_ELB_NAME=$(echo $ELB | tr "-" " " | awk '{ print $1 }')
+    echo "BASE ELB = ${BASE_ELB_NAME}"
+
+    echo "Setting ELB IdleTimeout to 1200 seconds"
+    aws elb modify-load-balancer-attributes \
+            --load-balancer-name ${BASE_ELB_NAME} \
+            --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":1200}}" \
+            --region ${KOPS_REGION}
+
+    echo "ELB timeout:"
+	aws elb describe-load-balancer-attributes --load-balancer-name=${BASE_ELB_NAME} --region ${KOPS_REGION} | jq .LoadBalancerAttributes.ConnectionSettings.IdleTimeout
+    echo "Done"
+}
+
+install_deis() {
+	check_cwd
+	install_workflow_chart
+    config_deis_dns
+    config_elb_ssl
+    config_deis_elb_timeout
 }
 
