@@ -243,9 +243,12 @@ config_annotations() {
     kubectl --namespace=deis annotate service/deis-router \
         service.beta.kubernetes.io/aws-load-balancer-proxy-protocol='*'
 
-    # this creates a DNS entry for deis.foo.moz.works and points it at the ELB for us
+    # this creates a DNS entry for *.foo.moz.works and points it at the ELB for us
+    # NOTE: if the *.foo.moz.works record already exists, changes will not be applied.
+    # Watch the logs for changes via:
+    # kubectl -n kube-system logs dns-controller-foo -f
     kubectl --namespace=deis annotate service/deis-router \
-        dns.alpha.kubernetes.io/external="deis.${KOPS_NAME}"
+        dns.alpha.kubernetes.io/external="*.${KOPS_NAME}"
 
     AWS_ACCOUNT_ID=$(aws ec2 describe-security-groups --group-names 'Default' --region ${KOPS_REGION} | jq -r .SecurityGroups[0].OwnerId)
 
