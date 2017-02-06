@@ -1,0 +1,16 @@
+replicaCount: 3
+image:
+  repository: nginx
+  url: quay.io/mozmar/viewsourceconf
+  tag: fe27ede
+  pullPolicy: Always
+service:
+  port: 80
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+

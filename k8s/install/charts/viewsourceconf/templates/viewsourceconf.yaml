@@ -1,0 +1,46 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: viewsourceconf
+  labels:
+    name: viewsourceconf
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: viewsourceconf
+  namespace: viewsourceconf
+  labels:
+    app: viewsourceconf
+spec:
+  type: LoadBalancer
+  ports:
+  - port: {{ .Values.service.port }}
+  selector:
+    app: viewsourceconf
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: viewsourceconf
+  namespace: viewsourceconf
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      namespace: viewsourceconf
+      labels:
+        app: viewsourceconf
+    spec:
+      containers:
+      - name: viewsourceconf
+        image: {{ Values.image.url }}:{{ Values.image.tag }}
+        resources:
+          requests:
+            cpu: {{ Values.resources.requests.cpu }}
+            memory: {{ Values.resources.requests.memory }}
+          limits:
+            cpu: {{ Values.resources.limits.cpu }}
+            memory: {{ Values.resources.limits.memory }}
+        ports:
+        - containerPort: {{ Values.service.port }}
