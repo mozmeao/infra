@@ -207,30 +207,8 @@ install_workflow_chart() {
     helm install ./workflow --namespace deis -f workflow_config_moz.yaml
 }
 
-
-config_deis_dns() {
-    echo "Waiting for Deis router LB"
-    # the -e flag to jq will cause it to return a 1 if the path isn't found in the json
-    until kubectl --namespace=deis get svc deis-router -o json | jq -e -r .status.loadBalancer.ingress[0].hostname
-    do
-        sleep 1
-    done
-    echo "Deis router LB available"
-
-    NEW_VALUE="*.${KOPS_SHORT_NAME}.${KOPS_DOMAIN}"
-    echo "Configuring Deis DNS for *.${KOPS_SHORT_NAME}.${KOPS_DOMAIN}"
-
-    LONG_ZONE_ID=$(aws route53 list-hosted-zones | jq -r ".HostedZones[]  | select(.Name == \"${KOPS_DOMAIN}.\") | .Id")
-    HOSTED_ZONE_ID=$(echo "${LONG_ZONE_ID}" | tr '/' ' ' | awk '{ print $2 }')
-    INPUT_JSON=$(cat ${KOPS_INSTALLER}/etc/deis_router_dns.yaml | \
-        sed "s/DNS_NAME/${NEW_VALUE}/" | \
-        sed "s/DNS_VALUE/${ELB}/" | \
-        sed "s/HOSTED_ZONE_ID/${HOSTED_ZONE_ID}/" | y2j)
-
-    aws route53 change-resource-record-sets --hosted-zone-id ${HOSTED_ZONE_ID} --cli-input-json "${INPUT_JSON}"  --region ${KOPS_REGION}
-    echo "Done"
-}
-
+# configure Deis Workflow annotations for ELB timeout, DNS, proxy protocol,
+# and SSL certs
 config_annotations() {
     # https://deis.com/docs/workflow/managing-workflow/configuring-load-balancers/
     # Configure proxy protocol
@@ -263,9 +241,33 @@ config_annotations() {
     kubectl --namespace=deis annotate service/deis-router ${ANNOTATION2}
 }
 
+config_deis_router_hpa() {
+    # export the current Deis router config and add resource requests to it
+    # so the HPA can calculate "CURRENT". Reimport it via kubectl apply, then
+    #create the HPA
+    TARGET_CPU=70
+    LIMITS_CPU=1
+    LIMITS_MEMORY="2048Mi"
+    REQUESTS_CPU=1
+    REQUESTS_MEMORY="1024Mi"
+
+    REQUESTS_PATH=".spec.template.spec.containers[0].resources.requests"
+    LIMITS_PATH=".spec.template.spec.containers[0].resources.limits"
+    kubectl -n deis get --export deployment deis-router -o json | \
+         jq "${LIMITS_PATH}.cpu = \"${LIMITS_CPU}\"" | \
+         jq "${LIMITS_PATH}.memory = \"${LIMITS_MEMORY}\"" | \
+         jq "${REQUESTS_PATH}.cpu = \"${REQUESTS_CPU}\"" | \
+         jq "${REQUESTS_PATH}.memory = \"${REQUESTS_MEMORY}\"" | \
+         kubectl -n deis apply -f -
+
+    kubectl -n deis autoscale deployment deis-router \
+        --min=1 --max=${KOPS_NODE_COUNT} --cpu-percent=${TARGET_CPU}
+}
+
+# install Deis Workflow components and perform post-intall configuration
 install_deis() {
     check_cwd
     install_workflow_chart
     config_annotations
-    config_deis_dns
+    config_deis_router_hpa
 }
