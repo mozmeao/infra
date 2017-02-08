@@ -2,12 +2,6 @@
 
 This repo is maintained by the [Mozilla Marketing Engineering and Operations](https://mozilla.github.io/meao/) (MozMEAO) site reliability engineers.
 
-## Kubernetes
-
-This repo contains MozMEAO's Kubernetes installation scripts.
-
-See [this](https://github.com/mozmar/infra/tree/master/k8s) page for more info.
-
 ## Tools we use
 
 ### Automation and infrastructure tools:
@@ -31,6 +25,7 @@ See [this](https://github.com/mozmar/infra/tree/master/k8s) page for more info.
 
 - [Kubernetes](https://kubernetes.io/)
 	- container orchestration in the cloud
+	- See [this](https://github.com/mozmar/infra/tree/master/k8s) page for more info.
 - [Kops](https://github.com/kubernetes/kops)
 	- Kubernetes installation in AWS
 - [Deis 1 and Deis Workflow](https://deis.com/)
@@ -52,7 +47,15 @@ See [this](https://github.com/mozmar/infra/tree/master/k8s) page for more info.
 - [FluentD](http://www.fluentd.org/)
 	- collecting logs from Kubernetes pods
 
-	
+
+## How we manage our work
+
+Our team manages it's work via a simple [Github project](https://github.com/mozmar/infra/projects/2). All data in the project is "standalone": we try to keep all links and references as public as possible, but there are obviously tasks that include sensitive data. These sensitive tasks are managed internally, and also tracked in private [Bugzilla](https://bugzilla.mozilla.org/) issues.
+
+## Contributing
+
+If you'd like to make a contribution, or you've found an issue with our work, please submit an issue and/or pull request. We're happy to take a look, however, a timeframe for review cannot be guaranteed.
+
 ## Contacting us
 
 We're in the `#ee-infra` channel on IRC. More info [here](https://wiki.mozilla.org/IRC).
