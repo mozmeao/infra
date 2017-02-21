@@ -8,7 +8,7 @@ if [ -z "${AWS_USER}" ]; then
 fi
 
 AWS_SSH_KEYNAME="${AWS_USER}.ssh"
-AWS_REGION="us-east-2"
+: "${AWS_REGION:=us-east-2}"
 : "${EC2_INSTANCE_SIZE:=t2.medium}"
 : "${SSH_PUBLIC_KEY_FILE:=~/.ssh/id_rsa.pub}"
 : "${SSH_PRIVATE_KEY_FILE:=~/.ssh/id_rsa}"
@@ -95,16 +95,18 @@ check_deps() {
 # try to describe instances in a region
 # if it fails, ~/.aws/credentials is probably setup incorrectly
 aws_smoke_test() {
+    set +e
     echo -n "Verifying AWS credentials work... "
     aws ec2 describe-instances --region "${AWS_REGION}" > /dev/null 2>&1
     if [ $? -eq 0 ]; then
         echo_green '\o/'
     else
-        echo ":-("
+        echo_red ":-("
         echo "You don't seem to have the AWS cli setup correctly"
         echo "Please visit https://aws.amazon.com/cli/ for more info"
         exit 1
     fi
+    set -e
 }
 
 # upload a public ssh key for the current $AWS_USER
@@ -215,6 +217,4 @@ aws_smoke_test
 upload_public_ssh_key
 run_instance
 footer
-
-
 

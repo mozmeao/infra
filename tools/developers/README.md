@@ -118,6 +118,9 @@ Welcome to Ubuntu 16.04.1 LTS (GNU/Linux 4.4.0-57-generic x86_64)
 	- defaults to `~/.ssh/id_rsa.pub`
 - `SSH_PRIVATE_KEY_FILE`
 	- defaults to `~/.ssh/id_rsa`
+- `AWS_REGION`
+	- defaults to `us-east-2`
+	- the current developer security policy restricts access to this region only.
 	
 	
 **Example**
