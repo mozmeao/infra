@@ -2,6 +2,8 @@ provider "aws" {
   region = "${var.region}"
 }
 
+
+
 resource "aws_elasticache_cluster" "mdn-redis" {
     cluster_id = "mdn-redis"
     engine = "redis"
@@ -38,9 +40,7 @@ resource "aws_elasticsearch_domain" "mdn-elasticsearch" {
             "Action": "es:*",
             "Principal": "*",
             "Effect": "Allow",
-            "Condition": {
-                "IpAddress": {"aws:SourceIp": "$${var.es-source-ip}"}
-            }
+             "Resource": ["arn:aws:ec2:${var.region}:*:mdn-elasticsearch-access/*"]
         }
     ]
 }
@@ -50,5 +50,25 @@ CONFIG
   }
   tags {
     Domain = "mdn-elasticsearch"
+  }
+}
+
+
+resource "aws_security_group" "mdn-elasticsearch-access" {
+  name = "mdn-elasticsearch-access"
+  description = "SG for ElasticSearch"
+
+  ingress {
+      from_port = 0
+      to_port = 9200
+      protocol = "tcp"
+      security_groups = "${var.es_security_groups}"
+  }
+
+  ingress {
+      from_port = 0
+      to_port = 9300
+      protocol = "tcp"
+      security_groups = "${var.es_security_groups}"
   }
 }

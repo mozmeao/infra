@@ -24,8 +24,11 @@ variable "es-version" {
   default = "5.1"
 }
 
-variable "es-source-ip" {
-  default = ["192.168.1.2/32"]
+# The ElasticSearch security group grants port access to any
+# security group listed in this variable
+variable "es_security_groups" {
+  type = "list"
+  default = []
 }
 
 # 24-hour format, not sure which tz it's based on
