@@ -42,7 +42,7 @@ verify_env() {
 }
 
 run_kops() {
-    aws s3 mb s3://${KOPS_STATE_BUCKET} --region ${KOPS_REGION}
+    aws s3 mb s3://${KOPS_STATE_BUCKET} --region ${KOPS_REGION} || true
     kops create cluster ${KOPS_NAME} \
         --zones=${KOPS_ZONES} \
         --master-zones=${KOPS_MASTER_ZONES} \
@@ -91,7 +91,7 @@ setup_tf_s3_state_store() {
     cd out/terraform
     echo "Creating Terraform state bucket at s3://${TF_STATE_BUCKET} (region ${KOPS_REGION})"
     # The following environment variables are defined in config.sh
-    aws s3 mb s3://${TF_STATE_BUCKET} --region ${KOPS_REGION}
+    aws s3 mb s3://${TF_STATE_BUCKET} --region ${KOPS_REGION} || true
 
     echo "Configuring Terraform to use an encrypted remote S3 bucket for state storage"
     # store TF state in S3
