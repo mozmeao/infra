@@ -38,12 +38,6 @@ resource "aws_s3_bucket" "mdn-downloads" {
 
     website_domain="s3-website-${var.region}.amazonaws.com"
     website_endpoint="mdn-downloads.s3-website-${var.region}.amazonaws.com"
-
-}
-
-resource "aws_iam_policy" "mdn-downloads-policy" {
-    name = "mdn-downloads-developer"
-    description = "IAM policy for MDN S3 downloads"
     policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -89,7 +83,7 @@ resource "aws_iam_policy" "mdn-downloads-policy" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::mdn-downloads/sample_db.sql.gz"
+      "Resource": "arn:aws:s3:::mdn-downloads/mdn_sample_db.sql.gz"
     },
     {
       "Sid": "MDNDownloadAllowAssetsSlashStar",
@@ -101,11 +95,6 @@ resource "aws_iam_policy" "mdn-downloads-policy" {
   ]
 }
 EOF
-}
-
-resource "aws_s3_bucket_policy" "mdn-downloads" {
-  bucket = "${aws_s3_bucket.mdn-downloads.id}"
-  policy = "${aws_iam_policy.mdn-downloads-policy.policy}"
 }
 
 
