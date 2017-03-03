@@ -23,7 +23,7 @@ You can start a temporary container to connect to the new MySQL instance:
 ```
 kubectl run -i --tty ubuntu --image=ubuntu:16.04 --restart=Never -- bash -il
 
-apt-get update && apt-get install mysql-client -y
+apt-get update && apt-get install mysql-client wget -y
 
 # you'll need the password from $PATH_TO_MYSQL_SETTINGS
 mysql -h mdn-mm-mysql-mysql.mdn-mm.svc.cluster.local -p
