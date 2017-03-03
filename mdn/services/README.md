@@ -28,9 +28,10 @@ apt-get update && apt-get install mysql-client -y
 # you'll need the password from $PATH_TO_MYSQL_SETTINGS
 mysql -h mdn-mm-mysql-mysql.mdn-mm.svc.cluster.local -p
 
-# after logging into the mysql client:
-show databases;
-exit;
+# to import the mm db:
+wget -N https://mdn-downloads.s3-us-west-2.amazonaws.com/mdn_sample_db.sql.gz
+zcat mdn_sample_db.sql.gz | mysql -h mdn-mm-mysql-mysql.mdn-mm.svc.cluster.local -p mdn-mm 
+
 
 # we can't start another pod named "ubuntu" unless this one is deleted.
 # you can see completed pods w/ kubectl get pods --show-all
