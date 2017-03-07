@@ -31,10 +31,7 @@ if [ "${INSTALL_NEWRELIC}" -eq 1 ]; then install_newrelic; fi
 if [ "${INSTALL_FLUENTD}" -eq 1 ]; then install_fluentd; fi
 
 if [ "${INSTALL_WORKFLOW}" -eq 1 ]; then
-    install_workflow
-    config_deis_dns
-    config_elb_ssl
-    config_deis_elb_timeout
+    install_deis
 fi
 
 
