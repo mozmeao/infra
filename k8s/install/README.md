@@ -106,6 +106,33 @@ kubectl config current-context
 kubectl get nodes
 ```
 
+
+### Enabling K8s cron
+
+- See https://github.com/kubernetes/kops/issues/618
+
+```
+kops edit cluster ${KOPS_NAME}
+```
+
+Add the following under the `spec` section:
+
+```
+  kubeAPIServer:
+    runtimeConfig:
+      "batch/v2alpha1": "true"
+```
+
+> Note: the value `true` MUST appear in double quotes.
+
+Now apply the changes to the cluster:
+
+```
+kops rolling-update cluster ${KOPS_NAME} --force --yes
+```
+
+It's easiest to run this before the cluster has any pods/services installed and running.
+
 ### Installing monitoring services (stage2)
 
 This step installs Mig, Datadog, New Relic DaemonSets, the k8s dashboard, and Deis Workflow.
