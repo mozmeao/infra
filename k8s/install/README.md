@@ -133,6 +133,14 @@ kops rolling-update cluster ${KOPS_NAME} --force --yes
 
 It's easiest to run this before the cluster has any pods/services installed and running.
 
+### Disable public SSH
+
+```
+cd k8s/tools
+./k8s_ssh_security.sh --disable
+```
+
+
 ### Installing monitoring services (stage2)
 
 This step installs Mig, Datadog, New Relic DaemonSets, the k8s dashboard, and Deis Workflow.
@@ -148,6 +156,7 @@ Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, `ne
 
 ---
 # Post install
+
 
 ### Generating kubeconfig
 
