@@ -32,6 +32,9 @@ mysql -h mdn-mm-mysql-mysql.mdn-mm.svc.cluster.local -p
 wget -N https://mdn-downloads.s3-us-west-2.amazonaws.com/mdn_sample_db.sql.gz
 zcat mdn_sample_db.sql.gz | mysql -h mdn-mm-mysql-mysql.mdn-mm.svc.cluster.local -p mdn-mm 
 
+# to create a user for development:
+CREATE USER 'kuma_ro'@'%' IDENTIFIED BY 'kuma';
+GRANT SELECT ON `mdn-mm`.* TO kuma_ro@`%`;
 
 # we can't start another pod named "ubuntu" unless this one is deleted.
 # you can see completed pods w/ kubectl get pods --show-all
