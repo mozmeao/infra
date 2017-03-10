@@ -49,7 +49,7 @@ kops edit ig nodes
 A yaml file will appear in your $EDITOR, you'll need to add the following block to the `spec` section:
 
 ```
-  rootVolumeSize: 500
+  rootVolumeSize: 250
   rootVolumeType: gp2
 ```
 
