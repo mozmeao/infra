@@ -1,9 +1,7 @@
 # NOTE: The following values are replaced via sed as part of stage1.sh
 # TF_RESOURCE_NAME
 # KOPS_NAME
-# KOPS_AZ0
-# KOPS_AZ1
-# KOPS_AZ2
+# KOPS_AZS
 
 /*
 Create an RDS instance, subnets and security groups
@@ -28,9 +26,7 @@ resource "aws_db_instance" "default" {
 resource "aws_db_subnet_group" "default" {
   name        = "main_subnet_group"
   description = "Database subnets"
-  subnet_ids  = ["${aws_subnet.KOPS_AZ0-TF_RESOURCE_NAME.id}",
-                  "${aws_subnet.KOPS_AZ1-TF_RESOURCE_NAME.id}",
-                  "${aws_subnet.KOPS_AZ2-TF_RESOURCE_NAME.id}"]
+  subnet_ids  = [KOPS_AZS]
 }
 
 /********************

@@ -27,15 +27,9 @@ verify_env() {
     IFS=',' read -ra AZ_LIST <<< ${KOPS_ZONES}
     ZONE_COUNT="${#AZ_LIST[@]}"
 
-    export KOPS_AZ0="${AZ_LIST[0]}"
-    export KOPS_AZ1="${AZ_LIST[1]}"
-    export KOPS_AZ2="${AZ_LIST[2]}"
-
     echo "TF_RESOURCE_NAME=${TF_RESOURCE_NAME}"
     echo "ZONE_COUNT=${ZONE_COUNT}"
-    echo "KOPS_AZ0=${KOPS_AZ0}"
-    echo "KOPS_AZ1=${KOPS_AZ1}"
-    echo "KOPS_AZ2=${KOPS_AZ2}"
+
     echo "All vars set"
     echo "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
     echo ""
@@ -43,15 +37,38 @@ verify_env() {
 
 run_kops() {
     aws s3 mb s3://${KOPS_STATE_BUCKET} --region ${KOPS_REGION} || true
+    # for regions with < 3 AZ's, install master in a single region
+    if [ $ZONE_COUNT -lt 3 ]; then
+        local zones="${AZ_LIST[0]}"
+        local master_zones="${AZ_LIST[0]}"
+    else
+        local zones=$KOPS_ZONES
+        local master_zones=$KOPS_ZONES
+    fi
+
     kops create cluster ${KOPS_NAME} \
-        --zones=${KOPS_ZONES} \
-        --master-zones=${KOPS_MASTER_ZONES} \
+        --cloud aws \
+        --zones=${zones} \
+        --master-zones=${master_zones} \
         --target=terraform \
         --node-count=${KOPS_NODE_COUNT} \
         --node-size=${KOPS_NODE_SIZE} \
         --master-size=${KOPS_MASTER_SIZE} \
         --ssh-public-key=${KOPS_PUBLIC_KEY} \
         --kubernetes-version=${KOPS_K8S_VERSION}
+}
+
+build_subnet_ids() {
+    local count=0
+    for az in "${AZ_LIST[@]}"
+    do
+        az=$(tr -d ' ' <<< "${az}")
+        if [ $count -ne 0 ]; then
+            echo -n ","
+        fi
+        echo -n "\"\${aws_subnet.${az}-${TF_RESOURCE_NAME}.id\"}"
+        let "count+=1"
+    done
 }
 
 render_tf_templates() {
@@ -69,13 +86,14 @@ render_tf_templates() {
     then
         echo "Creating new RDS instance"
         # generate a terraform file to create an RDS instance
+        KOPS_AZS=$(build_subnet_ids)
 
+        # DP TODO
+        # aws_subnet.KOPS_AZ0-TF_RESOURCE_NAME.id
         cat ${KOPS_INSTALLER}/etc/deis_rds.tf.template \
             | sed s/TF_RESOURCE_NAME/${TF_RESOURCE_NAME}/g \
             | sed s/KOPS_NAME/${KOPS_NAME}/g \
-            | sed s/KOPS_AZ0/${KOPS_AZ0}/g \
-            | sed s/KOPS_AZ1/${KOPS_AZ1}/g \
-            | sed s/KOPS_AZ2/${KOPS_AZ2}/g \
+            | sed s/KOPS_AZS/${KOPS_AZS}/g \
             > ./out/terraform/deis_rds.tf
 
         # generate a terraform file with RDS instance variables
