@@ -58,4 +58,4 @@ If you'd like to make a contribution, or you've found an issue with our work, pl
 
 ## Contacting us
 
-We're in the `#ee-infra` channel on IRC. More info [here](https://wiki.mozilla.org/IRC).
+We're in the `#meao-infra` channel on IRC. More info [here](https://wiki.mozilla.org/IRC).
