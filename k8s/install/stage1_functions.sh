@@ -66,7 +66,7 @@ build_subnet_ids() {
         if [ $count -ne 0 ]; then
             echo -n ","
         fi
-        echo -n "\"\${aws_subnet.${az}-${TF_RESOURCE_NAME}.id\"}"
+        echo -n "\"\${aws_subnet.${az}-${TF_RESOURCE_NAME}.id}\""
         let "count+=1"
     done
 }
