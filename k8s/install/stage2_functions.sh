@@ -260,8 +260,9 @@ config_deis_router_hpa() {
          jq "${REQUESTS_PATH}.memory = \"${REQUESTS_MEMORY}\"" | \
          kubectl -n deis apply -f -
 
+    DEFAULT_MAX=$(echo "$((4 * ${KOPS_NODE_COUNT}))")
     kubectl -n deis autoscale deployment deis-router \
-        --min=1 --max=${KOPS_NODE_COUNT} --cpu-percent=${TARGET_CPU}
+        --min=${KOPS_NODE_COUNT} --max=${DEFAULT_MAX} --cpu-percent=${TARGET_CPU}
 }
 
 # install Deis Workflow components and perform post-install configuration
@@ -275,7 +276,7 @@ install_deis() {
 # this requires IAM policies installed in stage 1
 install_cluster_autoscaler() {
     NODE_ASG="nodes.${KOPS_NAME}"
-    DEFAULT_MAX=$(echo "$((2 * ${KOPS_NODE_COUNT}))")
+    DEFAULT_MAX=$(echo "$((4 * ${KOPS_NODE_COUNT}))")
     OUTPUT_FILE="${KOPS_NAME}.autoscaler.yaml"
     AUTOSCALER_NAMESPACE="aws-cluster-autoscaler"
 
