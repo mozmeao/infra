@@ -76,6 +76,7 @@ install_dd() {
     echo "Installing Datadog"
     kubectl create namespace datadog | true
     kubectl create -f ${STAGE2_ETC_PATH}/dd-agent.yaml
+    kubectl create -f etc/datadog_statsd_svc.yaml
 }
 
 install_newrelic() {
