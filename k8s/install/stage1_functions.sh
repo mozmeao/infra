@@ -27,7 +27,6 @@ verify_env() {
         check_var $v
     done
 
-    #export TF_RESOURCE_NAME=$(echo ${KOPS_NAME} | tr "." "-")
     set_tf_resource_name
     IFS=',' read -ra AZ_LIST <<< ${KOPS_ZONES}
     ZONE_COUNT="${#AZ_LIST[@]}"
