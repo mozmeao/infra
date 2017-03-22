@@ -264,7 +264,7 @@ config_deis_router_hpa() {
         --min=1 --max=${KOPS_NODE_COUNT} --cpu-percent=${TARGET_CPU}
 }
 
-# install Deis Workflow components and perform post-intall configuration
+# install Deis Workflow components and perform post-install configuration
 install_deis() {
     check_cwd
     install_workflow_chart
@@ -272,22 +272,23 @@ install_deis() {
     config_deis_router_hpa
 }
 
-
+# this requires IAM policies installed in stage 1
 install_cluster_autoscaler() {
-    node_asg="nodes.${KOPS_NAME}"
-    default_max=$(echo "$((2 * ${KOPS_NODE_COUNT}))")
-    output_file="${kops_name}.autoscaler.yaml"
+    NODE_ASG="nodes.${KOPS_NAME}"
+    DEFAULT_MAX=$(echo "$((2 * ${KOPS_NODE_COUNT}))")
+    OUTPUT_FILE="${KOPS_NAME}.autoscaler.yaml"
+    AUTOSCALER_NAMESPACE="aws-cluster-autoscaler"
 
     y2j < ${KOPS_INSTALLER}/etc/autoscaler.yaml | \
-        jq ".autoscalingGroups[0].name=\"${node_asg}\"" | \
+        jq ".autoscalingGroups[0].name=\"${NODE_ASG}\"" | \
         jq ".autoscalingGroups[0].minSize=${KOPS_NODE_COUNT}" | \
-        jq ".autoscalingGroups[0].maxSize=${default_max}" | \
-        jq ".awsRegion=\"${KOPS_REGION}\"" | j2y > "${output_file}"
+        jq ".autoscalingGroups[0].maxSize=${DEFAULT_MAX}" | \
+        jq ".awsRegion=\"${KOPS_REGION}\"" | j2y > "${OUTPUT_FILE}"
 
+    kubectl create namespace "${AUTOSCALER_NAMESPACE}"
     helm install stable/aws-cluster-autoscaler \
         --name aws-cluster-autoscaler \
-        --namespace aws-cluster-autoscaler \
-        -f "${output_file}" \
-        --dry-run
+        --namespace "${AUTOSCALER_NAMESPACE}" \
+        -f "${OUTPUT_FILE}"
 }
 
