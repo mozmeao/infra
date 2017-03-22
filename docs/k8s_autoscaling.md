@@ -5,26 +5,25 @@
  There are 3 main components that scale Kubernetes:
  
  1. AWS autoscaling groups for a) master and b) worker EC2 instances
-   2.  there may be additional ASG's if using multiple AZ's to run k8s masters.
+   -  there may be additional ASG's if using multiple AZ's to run k8s masters.
  2. Application-specific horizonal pod autoscalers (HPA's)
  3. K8s AWS cluster autoscaler
 
-The diagram above shows the domain of each scaling component.
+The diagram above shows the domain of each scaling component. 
 
-### AWS autoscaling groups (ASG's)
+### AWS autoscaling groups (ASGs)
 
-During Kubernetes installation, the [kops](https://github.com/kubernetes/kops) installer creates at least 2 ASG's: masters and nodes. If masters are spread across > 1 AWS availability zone, then there will be an ASG for each master per AZ. These ASG's specify a min, max, and desired amount of instances. Out of the box, Kubernetes won't automatically change these values, we'd have to use Terraform, awscli or the AWS console to make changes. 
+During Kubernetes installation, the [kops](https://github.com/kubernetes/kops) installer creates at least 2 [ASGs](http://docs.aws.amazon.com/autoscaling/latest/userguide/AutoScalingGroup.html): masters and nodes. If masters are spread across > 1 AWS availability zone, then there will be an ASG for each master per AZ. These ASGs specify a min, max, and desired amount of instances. Out of the box, Kubernetes won't automatically change these values, we'd have to use Terraform, awscli or the AWS console to make changes. 
 
-### HPA's
+### HPAs
 
-[Horizontal pod autoscalers](https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/) periodically check a [replication controller | deployment | replica set]'s CPU utilization and increase/decrease pods across all available nodes in the cluster to a specified min/max. An HPA will **not** add or remove EC2 instances. In order for an HPA to work, a [replication controller | deployment | replica set] MUST specify resource requests (and preferrably limits).
+[Horizontal pod autoscalers](https://kubernetes.io/docs/user-guide/horizontal-pod-autoscaling/) periodically check CPU utilization and update a [replication controller | deployment | replica set] to increase/decrease pods across all available nodes in the cluster to a specified min/max. An HPA will **not** add or remove EC2 instances. In order for an HPA to work, a [replication controller | deployment | replica set] MUST specify resource requests (and preferrably limits).
 
 See the following specs for setting resource requests/limits:
 
 - https://kubernetes.io/docs/api-reference/v1/definitions/#_v1_podspec
 - https://kubernetes.io/docs/api-reference/v1/definitions/#_v1_container
 - https://kubernetes.io/docs/api-reference/v1/definitions/#_v1_resourcerequirements
-
 
 ### K8s AWS Cluster Autoscaler
 
