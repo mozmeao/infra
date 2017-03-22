@@ -10,6 +10,10 @@ check_var() {
     fi
 }
 
+set_tf_resource_name() {
+    export TF_RESOURCE_NAME=$(echo ${KOPS_NAME} | tr "." "-")
+}
+
 verify_env() {
     required_vars=( KOPS_SHORT_NAME KOPS_DOMAIN KOPS_NAME KOPS_REGION TF_STATE_BUCKET
                     KOPS_NODE_COUNT KOPS_NODE_SIZE KOPS_MASTER_SIZE KOPS_PUBLIC_KEY
@@ -23,7 +27,8 @@ verify_env() {
         check_var $v
     done
 
-    export TF_RESOURCE_NAME=$(echo ${KOPS_NAME} | tr "." "-")
+    #export TF_RESOURCE_NAME=$(echo ${KOPS_NAME} | tr "." "-")
+    set_tf_resource_name
     IFS=',' read -ra AZ_LIST <<< ${KOPS_ZONES}
     ZONE_COUNT="${#AZ_LIST[@]}"
 
@@ -121,4 +126,17 @@ setup_tf_s3_state_store() {
         -backend-config="region=${KOPS_REGION}"
     echo "Encryption for TF state:"
     aws s3api head-object --bucket=$TF_STATE_BUCKET --key=${KOPS_SHORT_NAME}/terraform.tfstate | jq -r .ServerSideEncryption
+    cd ../../
+}
+
+generate_cluster_autoscaler_tf() {
+    if [ ! -f config.sh ]; then
+        echo "Please change to the directory containing config.sh"
+        exit 1
+    fi
+    set_tf_resource_name
+    cat ${KOPS_INSTALLER}/etc/cluster_autoscaler_policy.tf.template \
+            | sed s/TF_RESOURCE_NAME/${TF_RESOURCE_NAME}/g \
+            | sed s/TF_SHORT_NAME/${KOPS_SHORT_NAME}/g \
+            > ./out/terraform/cluster_autoscaler_policy.tf
 }

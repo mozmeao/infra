@@ -271,3 +271,23 @@ install_deis() {
     config_annotations
     config_deis_router_hpa
 }
+
+
+install_cluster_autoscaler() {
+    node_asg="nodes.${KOPS_NAME}"
+    default_max=$(echo "$((2 * ${KOPS_NODE_COUNT}))")
+    output_file="${kops_name}.autoscaler.yaml"
+
+    y2j < ${KOPS_INSTALLER}/etc/autoscaler.yaml | \
+        jq ".autoscalingGroups[0].name=\"${node_asg}\"" | \
+        jq ".autoscalingGroups[0].minSize=${KOPS_NODE_COUNT}" | \
+        jq ".autoscalingGroups[0].maxSize=${default_max}" | \
+        jq ".awsRegion=\"${KOPS_REGION}\"" | j2y > "${output_file}"
+
+    helm install stable/aws-cluster-autoscaler \
+        --name aws-cluster-autoscaler \
+        --namespace aws-cluster-autoscaler \
+        -f "${output_file}" \
+        --dry-run
+}
+
