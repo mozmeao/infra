@@ -3,6 +3,7 @@ provider "aws" {
 }
 
 # access is controlled via private IAM policy
+# do NOT enable public access to this bucket
 resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
     bucket = "mdn-db-storage-anonymized"
     region = "${var.region}"
@@ -10,6 +11,7 @@ resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
 }
 
 # access is controlled via private IAM policy
+# do NOT enable public access to this bucket
 resource "aws_s3_bucket" "mdn-db-storage-production" {
     bucket = "mdn-db-storage-production"
     region = "${var.region}"
