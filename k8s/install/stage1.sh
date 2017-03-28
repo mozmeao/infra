@@ -24,6 +24,7 @@ verify_env
 run_kops
 render_tf_templates
 setup_tf_s3_state_store
+generate_cluster_autoscaler_tf
 
 echo ""
 echo "To finish the installation of K8s:"
