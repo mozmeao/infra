@@ -291,5 +291,8 @@ install_cluster_autoscaler() {
         --name aws-cluster-autoscaler \
         --namespace "${AUTOSCALER_NAMESPACE}" \
         -f "${OUTPUT_FILE}"
+
+    # set ASG max size so to allow the cluster autoscaler to scale up
+    sed -i "s/max_size = $KOPS_NODE_COUNT/max_size = $DEFAULT_MAX/" ./out/terraform/kubernetes.tf
 }
 
