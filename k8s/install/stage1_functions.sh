@@ -138,6 +138,9 @@ generate_cluster_autoscaler_tf() {
             | sed s/TF_RESOURCE_NAME/${TF_RESOURCE_NAME}/g \
             | sed s/TF_SHORT_NAME/${KOPS_SHORT_NAME}/g \
             > ./out/terraform/cluster_autoscaler_policy.tf
+
+    DEFAULT_MAX=$(echo "$((4 * ${KOPS_NODE_COUNT}))")
     # set ASG max size so to allow the cluster autoscaler to scale up
-    sed -i "s/max_size = $KOPS_NODE_COUNT/max_size = $DEFAULT_MAX/" ./out/terraform/kubernetes.tf
+    # retains whitespace for easier reading :-)
+    sed -ri "s/max_size(\s*)=(\s*)$KOPS_NODE_COUNT/max_size\\1=\2$DEFAULT_MAX/" ./out/terraform/kubernetes.tf
 }
