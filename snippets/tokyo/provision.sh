@@ -14,5 +14,5 @@ export TF_VAR_cache_port=6379
 export TF_VAR_cache_num_nodes=1
 export TF_VAR_cache_param_group="default.redis3.2"
 
-cd .. && ./common.sh
+cd ../tf && ./common.sh
 

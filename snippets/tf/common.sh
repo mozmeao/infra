@@ -38,10 +38,10 @@ else
     setup_tf_s3_state_store
 fi
 
-terraform get ./tf
+terraform get
 
-terraform plan ./tf
+terraform plan
 # if terraform plan fails, the next command won't run due to
 # set -e at the top of the script.
-terraform apply ./tf
+terraform apply
 
