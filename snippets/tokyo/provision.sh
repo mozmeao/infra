@@ -11,7 +11,7 @@ export TF_VAR_alarm_name_stage="Snippets Stage Tokyo"
 ##### Redis config
 export TF_VAR_cache_node_size="cache.m4.xlarge"
 export TF_VAR_cache_port=6379
-export TF_VAR_cache_num_nodes=2
+export TF_VAR_cache_num_nodes=1
 export TF_VAR_cache_param_group="default.redis3.2"
 
 cd ../tf && ./common.sh
