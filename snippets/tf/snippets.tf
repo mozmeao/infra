@@ -26,12 +26,12 @@ module "prod-alerts" {
 }
 
 # do we want stage alerts?
-#module "stage-alerts" {
-#    source = "../tf/alerting"
-#    region = "${var.region}"
-#    fqdn = "${var.fqdn_stage}"
-#    name = "${var.alarm_name_stage}"
-#}
+module "stage-alerts" {
+  source = "../tf/alerting"
+  region = "${var.region}"
+  fqdn   = "${var.fqdn_stage}"
+  name   = "${var.alarm_name_stage}"
+}
 
 module "redis" {
   source            = "../tf/cache"
