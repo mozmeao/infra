@@ -43,4 +43,5 @@ module "redis" {
   cache_param_group    = "${var.cache_param_group}"
   cache_engine_version = "${var.cache_engine_version}"
   cache_subnet_ids     = "${var.cache_subnet_ids}"
+  cache_security_group = "${var.cache_security_group}"
 }

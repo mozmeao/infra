@@ -51,10 +51,20 @@ get_subnets() {
     echo "${SUBNET_LIST}"
 }
 
+get_k8s_nodes_security_group() {
+    QUERY=".SecurityGroups[] | select(.GroupName == \"nodes.${KOPS_NAME}\") | .GroupId"
+    SECURITY_GROUP=$(aws ec2 describe-security-groups --region $TF_VAR_region | jq -r "$QUERY")
+    echo "${SECURITY_GROUP}"
+}
+
 check_state_store
 
 export TF_VAR_kops_name="${KOPS_NAME}"
 export TF_VAR_cache_subnet_ids=$(get_subnets)
+export TF_VAR_cache_security_group=$(get_k8s_nodes_security_group)
+
+echo "Using the following subnets: ${TF_VAR_cache_subnet_ids}"
+echo "Using the following security group: ${TF_VAR_cache_security_group}"
 
 terraform get
 

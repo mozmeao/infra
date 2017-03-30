@@ -14,6 +14,8 @@ variable "cache_engine_version" {}
 
 variable "cache_subnet_ids" {}
 
+variable "cache_security_group" {}
+
 resource "aws_elasticache_subnet_group" "shared-redis-subnet-group" {
   name       = "shared-redis-subnet-group"
   subnet_ids = ["${split(",",var.cache_subnet_ids)}"]
@@ -28,4 +30,5 @@ resource "aws_elasticache_replication_group" "shared-redis-rg" {
   parameter_group_name          = "${var.cache_param_group}"
   engine_version                = "${var.cache_engine_version}"
   subnet_group_name             = "${aws_elasticache_subnet_group.shared-redis-subnet-group.name}"
+  security_group_ids            = ["${var.cache_security_group}"]
 }
