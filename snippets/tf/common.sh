@@ -12,7 +12,6 @@ if [ -z "${KOPS_NAME}" ]; then
   exit 1
 fi
 
-export TF_VAR_kops_name="${KOPS_NAME}"
 
 SNIPPETS_TF_STATE_BUCKET="snippets-shared-tf-state"
 STATE_BUCKET_REGION="us-west-2"
@@ -45,7 +44,6 @@ check_state_store() {
     fi
 }
 
-
 get_subnets() {
     QUERY=".Subnets[] | select(.Tags[]?.Value==\"$KOPS_NAME\") | .SubnetId"
     SUBNETS=$(aws ec2 describe-subnets --region $TF_VAR_region | jq -r "$QUERY" 2> /dev/null | sort)
@@ -55,8 +53,8 @@ get_subnets() {
 
 check_state_store
 
+export TF_VAR_kops_name="${KOPS_NAME}"
 export TF_VAR_cache_subnet_ids=$(get_subnets)
-echo "[[[$TF_VAR_cache_subnet_ids]]]"
 
 terraform get
 
