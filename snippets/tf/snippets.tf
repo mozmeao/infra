@@ -34,11 +34,12 @@ module "stage-alerts" {
 }
 
 module "redis" {
-  source            = "../tf/cache"
-  region            = "${var.region}"
-  region_short      = "${var.region_short}"
-  cache_node_size   = "${var.cache_node_size}"
-  cache_port        = "${var.cache_port}"
-  cache_num_nodes   = "${var.cache_num_nodes}"
-  cache_param_group = "${var.cache_param_group}"
+  source               = "../tf/cache"
+  region               = "${var.region}"
+  region_short         = "${var.region_short}"
+  cache_node_size      = "${var.cache_node_size}"
+  cache_port           = "${var.cache_port}"
+  cache_num_nodes      = "${var.cache_num_nodes}"
+  cache_param_group    = "${var.cache_param_group}"
+  cache_engine_version = "${var.cache_engine_version}"
 }
