@@ -20,3 +20,5 @@ variable "cache_num_nodes" {}
 variable "cache_param_group" {}
 
 variable "cache_engine_version" {}
+
+variable "cache_subnet_ids" {}

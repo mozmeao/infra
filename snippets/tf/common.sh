@@ -7,8 +7,13 @@ if [ -z "${SNIPPETS_REGION}" ]; then
   exit -1
 fi
 
-# NOTE: This variable MUST match the `region` variable in variables.tf
-#SNIPPETS_REGION="ap-northeast-1"
+if [ -z "${KOPS_NAME}" ]; then
+  echo "KOPS_NAME is unset, please set it or source config.sh"
+  exit 1
+fi
+
+export TF_VAR_kops_name="${KOPS_NAME}"
+
 SNIPPETS_TF_STATE_BUCKET="snippets-shared-tf-state"
 STATE_BUCKET_REGION="us-west-2"
 
@@ -30,13 +35,28 @@ setup_tf_s3_state_store() {
     aws s3api head-object --bucket=$SNIPPETS_TF_STATE_BUCKET --key="snippets-${SNIPPETS_REGION}/terraform.tfstate" | jq -r .ServerSideEncryption
 }
 
-echo "Checking state store"
-if aws s3 ls s3://${SNIPPETS_TF_STATE_BUCKET} > /dev/null 2>&1; then
-    echo "State store already exists"
-else
-    echo "Setting up state store"
-    setup_tf_s3_state_store
-fi
+check_state_store() {
+    echo "Checking state store"
+    if aws s3 ls s3://${SNIPPETS_TF_STATE_BUCKET} > /dev/null 2>&1; then
+        echo "State store already exists"
+    else
+        echo "Setting up state store"
+        setup_tf_s3_state_store
+    fi
+}
+
+
+get_subnets() {
+    QUERY=".Subnets[] | select(.Tags[]?.Value==\"$KOPS_NAME\") | .SubnetId"
+    SUBNETS=$(aws ec2 describe-subnets --region $TF_VAR_region | jq -r "$QUERY" 2> /dev/null | sort)
+    SUBNET_LIST=$(paste -d, -s - <<< "${SUBNETS}")
+    echo "${SUBNET_LIST}"
+}
+
+check_state_store
+
+export TF_VAR_cache_subnet_ids=$(get_subnets)
+echo "[[[$TF_VAR_cache_subnet_ids]]]"
 
 terraform get
 
@@ -46,3 +66,4 @@ terraform plan --out $PLAN
 # set -e at the top of the script.
 terraform apply $PLAN
 rm $PLAN
+
