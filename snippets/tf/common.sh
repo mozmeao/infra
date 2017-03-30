@@ -40,8 +40,9 @@ fi
 
 terraform get
 
-terraform plan
+PLAN=$(mktemp)
+terraform plan --out $PLAN
 # if terraform plan fails, the next command won't run due to
 # set -e at the top of the script.
-terraform apply
-
+terraform apply $PLAN
+rm $PLAN
