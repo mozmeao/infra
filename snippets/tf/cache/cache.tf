@@ -18,7 +18,8 @@ variable "cache_security_group" {}
 
 resource "aws_elasticache_subnet_group" "shared-redis-subnet-group" {
   name       = "shared-redis-subnet-group"
-  subnet_ids = ["${split(",",var.cache_subnet_ids)}"]
+  # https://github.com/hashicorp/terraform/issues/57#issuecomment-100372002
+  subnet_ids = ["${split(",", var.cache_subnet_ids)}"]
 }
 
 resource "aws_elasticache_replication_group" "shared-redis-rg" {
