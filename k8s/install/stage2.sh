@@ -1,5 +1,5 @@
 #!/bin/bash -e
-HELM_VERSION=v2.1.3
+HELM_VERSION=v2.2.3
 if [ -z "${KOPS_INSTALLER}" ]; then
     echo "KOPS_INSTALLER must be set to the infra/k8s/install directory"
     exit -1

@@ -34,7 +34,7 @@ install_helm() {
     if [ $? -ne 0 ]; then
         echo "Installing helm client"
         (cd /tmp && \
-            wget https://kubernetes-helm.storage.googleapis.com/helm-${HELM_VERSION}-linux-amd64.tar.gz && \
+            wget https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz && \
             tar xzf /tmp/helm-${HELM_VERSION}-linux-amd64.tar.gz && \
             sudo mv /tmp/linux-amd64/helm /usr/local/bin/helm)
           echo "Done installing helm client"
