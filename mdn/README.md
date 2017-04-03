@@ -63,7 +63,8 @@ persistence:
 - install from the local directory
 
 ```sh
-helm install .
+cd mdn/charts/mysql
+helm install . --namespace mdn-dev
 ```
 
 - sample output
@@ -71,7 +72,7 @@ helm install .
 ```
 NAME:   yellow-wolverine
 LAST DEPLOYED: Fri Mar 31 20:18:23 2017
-NAMESPACE: default
+NAMESPACE: mdn-dev
 STATUS: DEPLOYED
 
 RESOURCES:
@@ -94,11 +95,11 @@ yellow-wolverine-mysql  1        1        1           0          1s
 
 NOTES:
 MySQL can be accessed via port 3306 on the following DNS name from within your cluster:
-yellow-wolverine-mysql.default.svc.cluster.local
+yellow-wolverine-mysql.mdn-dev.svc.cluster.local
 
 To get your root password run:
 
-kubectl get secret --namespace default yellow-wolverine-mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode; echo
+kubectl get secret --namespace mdn-dev yellow-wolverine-mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode; echo
 
 To connect to your database:
 
@@ -116,7 +117,6 @@ $ mysql -h yellow-wolverine-mysql -p
 ```
 
 - instead of opening a separate container as in the example output above, we're going to exec a bash shell in the mysql container directly
- - TODO: use a namespace other than default
 
 ```sh
 kubectl exec -i -t $(kubectl get pods | grep mysql | awk '{print $1}') bash
