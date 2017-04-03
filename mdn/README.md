@@ -6,8 +6,9 @@
 - Access to the IAM role `admin` role via the AWS metadata API
 - awscli
 
-
 ## Usage
+
+- This command and all following assume the same directory as this file unless otherwise specified
 
 ```
 ./provision.sh
