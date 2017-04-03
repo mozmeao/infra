@@ -120,7 +120,7 @@ $ mysql -h yellow-wolverine-mysql -p
 - instead of opening a separate container as in the example output above, we're going to exec a bash shell in the mysql container directly
 
 ```sh
-kubectl exec -i -t $(kubectl get pods | grep mysql | awk '{print $1}') bash
+kubectl exec -i -t $(kubectl get pods -n mdn-dev | grep mysql | awk '{print $1}') -n mdn-bash bash
 ```
 
 - install awscli
