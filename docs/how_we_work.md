@@ -38,17 +38,15 @@ Non-SRE's shouldn't assign issues to specific engineers, and should wait for the
 
 ## Prioritizing issues 
 
-<a name="prioritizing></a>
-
 We have a weekly issue triage meeting on Tuesdays at 12:30pm US eastern/9:30am US pacific. Here we open the [Github project](https://github.com/mozmar/infra/projects/2) and work right to left to clean up the board.
 
 Process:
 
 - start with the top of the `Review` column, ensure that each issue is receiving appropriate review. If the issue has already been resolved/merged/closed, move to the **top** of the `Complete` column.
 - Next, review each card in the `In Progress` column to ensure the issue isn't blocked. Blocked issues should be updated with an appropriate note. When an SRE has submitted a PR, the card should be moved to the **top** of the `Review` column. Pull requests are _usually_ reviewed within 1 business day, and don't need to wait until the weekly triage meeting to be moved to the `Review` column.
-	- The `In Progress` column should generally not have more than 2-3 open cards per engineer.
+    - The `In Progress` column should generally not have more than 2-3 open cards per engineer.
 - Next, review the `Queued` column starting from the top. The top represents the highest priority queued tasks that SRE's should work on next.
-	- are there any cards in this column that have been deferred? If so, move them to the `Backlog` column. 
+    - are there any cards in this column that have been deferred? If so, move them to the `Backlog` column. 
 - Next, review the `Backlog` for cards that can be moved to the `Queued` column. Keep in mind that cards at the top of the `Queued` column are highest priority.
 - Review project-specific milestone progress.
 - Review quarterly milestone progress, reprioritize issues that may fall off the end of a milestone.
@@ -56,7 +54,6 @@ Process:
 
 ### High priority issues
 
-<a name="urgent></a>
 
 If an urgent issue occurs, please contact the SRE team directly on IRC, Slack, phone etc. 
 
@@ -70,15 +67,15 @@ Critical security updates should be labeled as `high priority`.
 
 ### Non-project support issues
 
-The SRE team frequently has to react to production and non-production events in order to see to ensure reliable service delivery. While the main `In Progress` queue is refined [once a week](#prioritizing), it's ok for non-urgent support tasks to be interleaved into our weekly milestone work. This is at the discretion of the SRE team and management. 
+The SRE team frequently has to react to production and non-production events in order to see to ensure reliable service delivery. While the main `In Progress` queue is refined once a week (see the `Prioritizing Issues` section), it's ok for non-urgent support tasks to be interleaved into our weekly milestone work. This is at the discretion of the SRE team and management. 
 
 ##### Examples:
 
 - non-critical security updates to any of our managed servers
-	- critical security updates should be labeled as `high priority`.
+    - critical security updates should be labeled as `high priority`.
 - troubleshooting / updating Jenkins
 - submitting tickets to webops in response to developer needs
-
+- and more!
 
 ## Submitting pull requests
 
