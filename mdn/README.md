@@ -47,7 +47,7 @@ helm init
 - clone mdn/helm-charts
 
 ```sh
-git clone https://github.com/helm-charts charts # TODO: consolidate charts into this repo
+git clone https://github.com/mdn/helm-charts charts # TODO: consolidate charts into this repo
 ```
 
 - edit charts/mysql/values.yaml
