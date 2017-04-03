@@ -64,7 +64,7 @@ persistence:
 - install from the local directory
 
 ```sh
-cd mdn/charts/mysql
+cd charts/mysql
 helm install . --namespace mdn-dev
 ```
 
@@ -120,7 +120,7 @@ $ mysql -h yellow-wolverine-mysql -p
 - instead of opening a separate container as in the example output above, we're going to exec a bash shell in the mysql container directly
 
 ```sh
-kubectl exec -i -t $(kubectl get pods -n mdn-dev | grep mysql | awk '{print $1}') -n mdn-bash bash
+kubectl exec -i -t $(kubectl get pods -n mdn-dev | grep mysql | awk '{print $1}') -n mdn-dev bash
 ```
 
 - install awscli
