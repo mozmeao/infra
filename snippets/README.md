@@ -2,14 +2,14 @@
 
 ### How to apply config to a single cluster
 
-```
+```shell
 cd ./tokyo
 ./provision.sh
 ```
 
 ### Adding a new cluster
 
-```
+```shell
 # from this directory
 mkdir my_snippets_region
 cp ./tokyo/provision.sh ./my_snippets_region/provision.sh

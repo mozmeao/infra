@@ -36,12 +36,14 @@ setup_tf_s3_state_store() {
 
 check_state_store() {
     echo "Checking state store"
+    set +e
     if aws s3 ls s3://${SNIPPETS_TF_STATE_BUCKET} > /dev/null 2>&1; then
         echo "State store already exists"
     else
         echo "Setting up state store"
         setup_tf_s3_state_store
     fi
+    set -e
 }
 
 get_subnets() {
