@@ -24,6 +24,18 @@ Infrastructure issues can be submmitted via [this page](https://github.com/mozma
 
 See the `Prioritizing Issues` section for info on high priority issues.
 
+### Card content
+
+***Please do NOT add ANY secure or sensitive text to an issue or pull request in this repo.***
+
+Some of our cards have simple descriptions, such as "Upgrade Virginia cluster to Kubernetes v1.6.0". While a description like this is generally OK, you are encouraged to add as much prose and links as you see fit. 
+
+Remember, the author of an issue may not be the engineer who works on the card, so any relevant information that can be helpful should be included.
+
+### Cards vs issues
+
+If creating cards via the Github Project interface, please convert the card to an issue as soon as possible. This allows us to use the Github Issues interface to filter by author, labels, project, milestone and assignee. We occasionally create reminder cards with the intent of converting it to a full issue in the near future. 
+
 ### Issue Labels 
 
 Issues should be labeled by an SRE upon triage. While we have a weekly triage meeting (see the `Prioritizing Issues` section below), it is not required that we wait until this meeting to label incoming work.
@@ -35,6 +47,12 @@ As a general rule, try not to create new labels. However, if none of the existin
 If you're an SRE, you can assign an issue to another engineer on the team. This is **not** required when submitting an issue. As a courtesy, ping the engineer that will be assigned to the issue and let them know it's incoming.
 
 Non-SRE's shouldn't assign issues to specific engineers, and should wait for the SRE team to prioritize and assign incoming work.
+
+### Tracking Bugzilla issues
+
+When tickets are created in Bugzilla, they can be tracked in our [SRE project](https://github.com/mozmar/infra/projects/2) with a simple issue. This is not required, but can be helpful for tracking on our end, including the need to perform followup tasks when a bug is closed. 
+
+The issue should contain a link to the Bugzilla issue and any relevant labels and assignees. It can also serve as a place for team discussion related to the Bugzilla ticket without cluttering the original request. These cards can be moved directly to the `In Progress` column of the [MozMEAO SRE project](https://github.com/mozmar/infra/projects/2). 
 
 ## Prioritizing issues 
 
