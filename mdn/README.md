@@ -65,13 +65,13 @@ persistence:
 
 ```sh
 cd charts/mysql
-helm install . --namespace mdn-dev
+helm install . -n mdn-dev --namespace mdn-dev
 ```
 
 - sample output
 
 ```
-NAME:   yellow-wolverine
+NAME:   mdn-dev
 LAST DEPLOYED: Fri Mar 31 20:18:23 2017
 NAMESPACE: mdn-dev
 STATUS: DEPLOYED
@@ -79,28 +79,28 @@ STATUS: DEPLOYED
 RESOURCES:
 ==> v1/Secret
 NAME                    TYPE    DATA  AGE
-yellow-wolverine-mysql  Opaque  2     1s
+mdn-dev-mysql  Opaque  2     1s
 
 ==> v1/PersistentVolumeClaim
 NAME                    STATUS   VOLUME  CAPACITY  ACCESSMODES  AGE
-yellow-wolverine-mysql  Pending  1s
+mdn-dev-mysql  Pending  1s
 
 ==> v1/Service
 NAME                    CLUSTER-IP     EXTERNAL-IP  PORT(S)   AGE
-yellow-wolverine-mysql  100.69.195.67  <none>       3306/TCP  1s
+mdn-dev-mysql  100.69.195.67  <none>       3306/TCP  1s
 
 ==> extensions/v1beta1/Deployment
 NAME                    DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
-yellow-wolverine-mysql  1        1        1           0          1s
+mdn-dev-mysql  1        1        1           0          1s
 
 
 NOTES:
 MySQL can be accessed via port 3306 on the following DNS name from within your cluster:
-yellow-wolverine-mysql.mdn-dev.svc.cluster.local
+mdn-dev-mysql.mdn-dev.svc.cluster.local
 
 To get your root password run:
 
-kubectl get secret --namespace mdn-dev yellow-wolverine-mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode; echo
+kubectl get secret --namespace mdn-dev mdn-dev-mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode; echo
 
 To connect to your database:
 
@@ -114,7 +114,7 @@ $ apt-get update && apt-get install mysql-client -y
 
 3. Connect using the mysql cli, then provide your password:
 
-$ mysql -h yellow-wolverine-mysql -p
+$ mysql -h mdn-dev-mysql -p
 ```
 
 - instead of opening a separate container as in the example output above, we're going to exec a bash shell in the mysql container directly
@@ -148,4 +148,49 @@ aws s3 cp s3://$BUCKET/$BACKUP /var/lib/mysql/backups/
 export DATABASE=developer_mozilla_org
 mysql -e "create database $DATABASE;" -p
 zcat /var/lib/mysql/backups/$BACKUP | mysql -p $DATABASE
+```
+
+## Install memcached
+
+```sh
+helm install stable/memcached -n mdn-dev --namespace=mdn-dev
+```
+
+- example output
+
+```
+
+NAME:   mdn-dev
+LAST DEPLOYED: Tue Apr  4 21:36:53 2017
+NAMESPACE: mdn-dev
+STATUS: DEPLOYED
+
+RESOURCES:
+==> v1/Service
+NAME                      CLUSTER-IP      EXTERNAL-IP  PORT(S)    AGE
+mdn-dev-memcache  100.70.125.186  <none>       11211/TCP  0s
+
+==> extensions/v1beta1/Deployment
+NAME                      DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+mdn-dev-memcache  1        1        1           0          0s
+
+
+NOTES:
+Memcached can be accessed via port 11211 on the following DNS name from within your cluster:
+mdn-dev-memcache.mdn-dev.svc.cluster.local
+
+If you'd like to test your instance, forward the port locally:
+
+  export POD_NAME=$(kubectl get pods --namespace mdn-dev -l "app=mdn-dev-memcache" -o jsonpath="{.items[0].metadata.name}")
+  kubectl port-forward $POD_NAME 11211
+
+In another tab, attempt to set a key:
+
+  $ echo -e 'set mykey 0 60 5\r\nhello\r' | nc localhost 11211
+
+You should see:
+
+  STORED
+        
+        
 ```
