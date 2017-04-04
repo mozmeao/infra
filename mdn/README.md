@@ -168,20 +168,20 @@ STATUS: DEPLOYED
 RESOURCES:
 ==> v1/Service
 NAME                      CLUSTER-IP      EXTERNAL-IP  PORT(S)    AGE
-mdn-dev-memcache  100.70.125.186  <none>       11211/TCP  0s
+mdn-dev-memcached  100.70.125.186  <none>       11211/TCP  0s
 
 ==> extensions/v1beta1/Deployment
 NAME                      DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
-mdn-dev-memcache  1        1        1           0          0s
+mdn-dev-memcached  1        1        1           0          0s
 
 
 NOTES:
 Memcached can be accessed via port 11211 on the following DNS name from within your cluster:
-mdn-dev-memcache.mdn-dev.svc.cluster.local
+mdn-dev-memcached.mdn-dev.svc.cluster.local
 
 If you'd like to test your instance, forward the port locally:
 
-  export POD_NAME=$(kubectl get pods --namespace mdn-dev -l "app=mdn-dev-memcache" -o jsonpath="{.items[0].metadata.name}")
+  export POD_NAME=$(kubectl get pods --namespace mdn-dev -l "app=mdn-dev-memcached" -o jsonpath="{.items[0].metadata.name}")
   kubectl port-forward $POD_NAME 11211
 
 In another tab, attempt to set a key:
@@ -191,6 +191,6 @@ In another tab, attempt to set a key:
 You should see:
 
   STORED
-        
-        
+
+
 ```
