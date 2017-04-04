@@ -28,10 +28,7 @@ See the `Prioritizing Issues` section for info on high priority issues.
 
 ***Please do NOT add ANY secure or sensitive text to an issue or pull request in this repo.***
 
-Some of our cards have simple descriptions, such as "Upgrade Virginia cluster to Kubernetes v1.6.0". While a description like this is generally OK, you are encouraged to add as much prose and links as you see fit. For more complex issues or external requests, it can be helpful to write a user story similar to:
-
-    As a mozilla.org user, I should be able to download Firefox using Windows XP Service Pack 2 and IE 3.
-    As a mozilla.org SRE, provide a CDN solution that allows us to serve SHA-1 as well as SHA-256.
+Some of our cards have simple descriptions, such as "Upgrade Virginia cluster to Kubernetes v1.6.0". While a description like this is generally OK, you are encouraged to add as much prose and links as you see fit. 
 
 Remember, the author of an issue may not be the engineer who works on the card, so any relevant information that can be helpful should be included.
 
