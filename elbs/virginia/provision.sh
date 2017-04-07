@@ -10,18 +10,19 @@ export KOPS_NAME="virginia.moz.works"
 SNIPPETS_VARFILE=$(pwd)/snippets-virginia.tfvars
 CAREERS_VARFILE=$(pwd)/careers-virginia.tfvars
 
+VIRGINIA_SUBNETS="subnet-43125f6e,subnet-a699aaef,subnet-b6ceb6ed"
 # param order: elb name, namespace, nodeport service name, subnets
 gen_tf_elb_cfg "snippets" \
                "snippets-prod" \
                "snippets-nodeport" \
-               "subnet-43125f6e,subnet-a699aaef,subnet-b6ceb6ed" \
+               "${VIRGINIA_SUBNETS}" \
                "arn:aws:iam::236517346949:server-certificate/snippets.mozilla.com" > $SNIPPETS_VARFILE
 
 
 gen_tf_elb_cfg "careers" \
                "careers-prod" \
                "careers-nodeport" \
-               "subnet-43125f6e,subnet-a699aaef,subnet-b6ceb6ed" \
+               "${VIRGINIA_SUBNETS}" \
                "arn:aws:iam::236517346949:server-certificate/careers-mozilla-org" > $CAREERS_VARFILE
 
 # gen configs from other load balancers here
