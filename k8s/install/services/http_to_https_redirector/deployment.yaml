@@ -11,7 +11,7 @@ spec:
     namespace: http_redirector
     spec:
       containers:
-      - name: htto_redirector
+      - name: http_redirector
         image: quay.io/metadave/redirector
         resources:
           requests:
