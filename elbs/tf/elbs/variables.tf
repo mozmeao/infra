@@ -1,7 +1,5 @@
 variable "elb_name" {}
 
-variable "instances" {}
-
 variable "http_listener_instance_port" {}
 
 variable "http_listener_elb_protocol" {

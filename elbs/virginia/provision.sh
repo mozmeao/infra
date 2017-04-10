@@ -7,6 +7,9 @@ export KOPS_NAME="virginia.moz.works"
 # source this file to generate a snippets tfvars file via gen_tf_elb_cfg
 . ../tf/elb_utils.sh
 
+# this is used to attach each ELB to the k8s nodes ASG
+ALL_ELBS=( careers snippets )
+
 SNIPPETS_VARFILE=$(pwd)/snippets-virginia.tfvars
 CAREERS_VARFILE=$(pwd)/careers-virginia.tfvars
 
@@ -30,3 +33,15 @@ gen_tf_elb_cfg "careers" \
 cd ../tf && ./common.sh \
     -var-file $SNIPPETS_VARFILE \
     -var-file $CAREERS_VARFILE
+
+# attach each ELB to the k8s nodes ASG
+ASG_NAME="nodes.${KOPS_NAME}"
+
+for elb in "${elbs[@]}"
+do
+    echo "Assigning ELB ${elb} instances from ASG ${ASG_NAME}"
+    aws autoscaling attach-load-balancers \
+        --auto-scaling-group-name "${ASG_NAME}" \
+        --load-balancer-names careers \
+        --region ${TF_VAR_region}
+done

@@ -1,6 +1,5 @@
 resource "aws_elb" "new-elb" {
   name      = "${var.elb_name}"
-  instances = ["${split(",", var.instances)}"]
   subnets   = ["${split(",", var.subnets)}"]
 
   listener {
@@ -26,7 +25,6 @@ resource "aws_elb" "new-elb" {
     interval            = 10
   }
 
-  instances                   = ["${split(",", var.instances)}"]
   cross_zone_load_balancing   = true
   idle_timeout                = "${var.idle_timeout}"
   connection_draining         = "${var.connection_draining_enabled}"
