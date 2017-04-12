@@ -1,6 +1,7 @@
 resource "aws_elb" "new-elb" {
-  name      = "${var.elb_name}"
-  subnets   = ["${split(",", var.subnets)}"]
+  name            = "${var.elb_name}"
+  subnets         = ["${split(",", var.subnets)}"]
+  security_groups = ["${var.security_group_id}"]
 
   listener {
     lb_port           = 80
@@ -21,7 +22,7 @@ resource "aws_elb" "new-elb" {
     healthy_threshold   = 2
     unhealthy_threshold = 6
     timeout             = 5
-    target              = "HTTP:${var.http_listener_instance_port}/"
+    target              = "TCP:${var.http_listener_instance_port}"
     interval            = 10
   }
 
