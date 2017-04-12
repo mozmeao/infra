@@ -1,21 +1,32 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: http_redirector
+  name: redirector
+  namespace: redirector
 spec:
   replicas: 3
   template:
     metadata:
       labels:
-        app: http_redirector
-    namespace: http_redirector
+        app: redirector
     spec:
       containers:
-      - name: http_redirector
-        image: quay.io/mozmar/redirector
+      - name: redirector
+        image: nginx:latest
         resources:
           requests:
             cpu: 100m
             memory: 100Mi
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: redirector-config
+          mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: redirector-config
+          configMap:
+            name: redirector-config
+            items:
+               - key: redirector-config
+                 path: redirector.conf
+
