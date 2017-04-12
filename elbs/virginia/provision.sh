@@ -36,6 +36,17 @@ cd ../tf && ./common.sh \
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"
 
+# Run these if reattaching ELBs to ASG
+#aws autoscaling detach-load-balancers \
+#        --auto-scaling-group-name nodes.virginia.moz.works \
+#        --load-balancer-name careers \
+#        --region us-east-1
+#
+#aws autoscaling detach-load-balancers \
+#        --auto-scaling-group-name nodes.virginia.moz.works \
+#        --load-balancer-name snippets \
+#        --region us-east-1
+
 echo "Assigning ELB careers instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
@@ -49,3 +60,5 @@ aws autoscaling attach-load-balancers \
     --region "${TF_VAR_region}"
 
 attach_nodeport_sg_to_nodes_sg
+
+
