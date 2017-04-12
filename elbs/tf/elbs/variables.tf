@@ -37,3 +37,30 @@ variable "connection_draining_timeout" {
 }
 
 variable "subnets" {}
+
+variable "health_check_healthy_threshold" {
+  default = 2
+}
+
+variable "health_check_unhealthy_threshold" {
+  default = 6
+}
+
+variable "health_check_timeout" {
+  default = 5
+}
+
+variable "health_check_interval" {
+  default = 10
+}
+
+variable "health_check_target_proto" {
+  default = "HTTP"
+}
+
+variable "health_check_http_path" {
+  # leave empty for tcp healthchecks
+  default = "/"
+}
+
+
