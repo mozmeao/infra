@@ -1,5 +1,3 @@
 image:
-	docker build -t quay.io/metadave/redirector .
-
-push:
-	docker push quay.io/metadave/redirector
+	docker build -t quay.io/mozmar/redirector .
+	docker push quay.io/mozmar/redirector

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
       - name: http_redirector
-        image: quay.io/metadave/redirector
+        image: quay.io/mozmar/redirector
         resources:
           requests:
             cpu: 100m
