@@ -1,6 +1,7 @@
 resource "aws_elb" "new-elb" {
-  name      = "${var.elb_name}"
-  subnets   = ["${split(",", var.subnets)}"]
+  name            = "${var.elb_name}"
+  subnets         = ["${split(",", var.subnets)}"]
+  security_groups = ["${var.security_group_id}"]
 
   listener {
     lb_port           = 80
@@ -18,11 +19,11 @@ resource "aws_elb" "new-elb" {
   }
 
   health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    timeout             = 5
-    target              = "HTTP:${var.http_listener_instance_port}/"
-    interval            = 10
+    healthy_threshold   = "${var.health_check_healthy_threshold}"
+    unhealthy_threshold = "${var.health_check_unhealthy_threshold}"
+    timeout             = "${var.health_check_timeout}"
+    target              = "${var.health_check_target_proto}:${var.http_listener_instance_port}${var.health_check_http_path}"
+    interval            = "${var.health_check_interval}"
   }
 
   cross_zone_load_balancing   = true

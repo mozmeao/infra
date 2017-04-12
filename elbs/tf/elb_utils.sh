@@ -52,4 +52,19 @@ ${ELB_NAME}_ssl_cert_id = "${SSL_CERT_ID}"
 EOF
 }
 
+attach_nodeport_sg_to_nodes_sg() {
+    echo "Attaching nodeport security group to nodes sg"
+    NODES_SECURITY_GROUP_NAME="nodes.${KOPS_NAME}"
+    NODEPORT_SECURITY_GROUP_ID=$(cd ../tf && terraform output elb_security_group_id)
+    NODES_SECURITY_GROUP_ID=$(aws ec2 describe-security-groups --region ${TF_VAR_region} \
+        | jq -r ".SecurityGroups[] | select(.GroupName==\"${NODES_SECURITY_GROUP_NAME}\") | .GroupId")
 
+    echo "Security group id = ${NODEPORT_SECURITY_GROUP_ID}"
+    echo "Nodes security group id = ${NODES_SECURITY_GROUP_ID}"
+    aws ec2 authorize-security-group-ingress \
+        --source-group "${NODEPORT_SECURITY_GROUP_ID}" \
+        --group-id "${NODES_SECURITY_GROUP_ID}" \
+        --protocol "all" \
+        --port -1 \
+        --region "${TF_VAR_region}"
+}
