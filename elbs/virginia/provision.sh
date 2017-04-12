@@ -28,6 +28,7 @@ gen_tf_elb_cfg "careers" \
 
 # gen configs from other load balancers here
 
+# Apply Terraform
 cd ../tf && ./common.sh \
     -var-file $SNIPPETS_VARFILE \
     -var-file $CAREERS_VARFILE
@@ -39,10 +40,13 @@ echo "Assigning ELB careers instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
     --load-balancer-names careers \
-    --region ${TF_VAR_region}
+    --region "${TF_VAR_region}"
 
 echo "Assigning ELB snippets instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
     --load-balancer-names snippets \
-    --region ${TF_VAR_region}
+    --region "${TF_VAR_region}"
+
+
+attach_nodeport_sg_to_nodes_sg
