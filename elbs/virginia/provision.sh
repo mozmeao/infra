@@ -48,5 +48,4 @@ aws autoscaling attach-load-balancers \
     --load-balancer-names snippets \
     --region "${TF_VAR_region}"
 
-
 attach_nodeport_sg_to_nodes_sg
