@@ -22,7 +22,8 @@ resource "aws_elb" "new-elb" {
     healthy_threshold   = "${var.health_check_healthy_threshold}"
     unhealthy_threshold = "${var.health_check_unhealthy_threshold}"
     timeout             = "${var.health_check_timeout}"
-    target              = "${var.health_check_target_proto}:${var.http_listener_instance_port}${var.health_check_http_path}"
+    # note: using https_listener_instance_port here
+    target              = "${var.health_check_target_proto}:${var.https_listener_instance_port}${var.health_check_http_path}"
     interval            = "${var.health_check_interval}"
   }
 

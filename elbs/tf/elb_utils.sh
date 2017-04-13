@@ -13,6 +13,11 @@ if [ -z "${TF_VAR_region}" ]; then
   exit -1
 fi
 
+get_redirector_port() {
+    kubectl -n redirector get service redirector -o json \
+        | jq ".spec.ports[] | select(.name == \"http\") | .nodePort"
+}
+
 get_http_nodeport() {
     NAMESPACE=$1
     NODEPORT_SERVICE=$2
@@ -40,7 +45,7 @@ gen_tf_elb_cfg() {
     VPC_SUBNETS=$4
     SSL_CERT_ID=$5
 
-    HTTP_PORT=$(get_http_nodeport ${NAMESPACE} ${NODEPORT_SERVICE})
+    HTTP_PORT=$(get_redirector_port)
     HTTPS_PORT=$(get_https_nodeport ${NAMESPACE} ${NODEPORT_SERVICE})
 
     cat <<EOF
