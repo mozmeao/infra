@@ -13,9 +13,10 @@
 4. Enter the domain names specified in the issue from step 1.
 5. Click the `Review and request` button.
 6. Click the `Confirm and request` button.
-7. An email is now sent from AWS to the domain administrator (@jgmize). The domain admin needs to click the link in the email approving the new certificate(s).
-8. An SRE will send you a GPG encrypted email containing the new cert and key.
-9. An SRE can update and close the original Github issue requesting the certificate.
+7. An email is now sent from AWS to the hostmaster (@jgmize in MozMEAO, and some additional admins from #webops). The domain admin needs to click the link in the email approving the new certificate(s).
+8. The SRE that approved the cert should reply to the hostmaster email group that received the notification, stating that it has been approved.
+9. An SRE will send you a GPG encrypted email containing the new cert and key.
+10. An SRE can update and close the original Github issue requesting the certificate.
 
 ---
 
