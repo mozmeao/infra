@@ -2,62 +2,62 @@ provider "aws" {
   region = "${var.region}"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "elb-provisioning-tf-state"
+    # we store all the ELB state in us-west-2
+    key = "tf-state"
+    region = "us-west-2"
+  }
+}
+
+
 # NodePort Security Group
 # shared between all ELB's
 resource "aws_security_group" "elb_to_nodeport" {
   name        = "elb_to_nodeport"
   description = "Allow all inbound traffic to reach K8s nodeports"
   vpc_id      = "${var.vpc_id}"
-}
 
-resource "aws_security_group_rule" "nodeport_ingress" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 30000
-  to_port           = 32767
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.elb_to_nodeport.id}"
-}
+  ingress {
+    protocol    = "tcp"
+    from_port   = 30000
+    to_port     = 32767
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-resource "aws_security_group_rule" "http_ingress" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 80
-  to_port           = 80
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.elb_to_nodeport.id}"
-}
+  ingress {
+    protocol    = "tcp"
+    from_port   = 80
+    to_port     = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-resource "aws_security_group_rule" "https_ingress" {
-  type              = "ingress"
-  protocol          = "tcp"
-  from_port         = 443
-  to_port           = 443
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.elb_to_nodeport.id}"
-}
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-resource "aws_security_group_rule" "custom_icmp" {
-  type     = "ingress"
-  protocol = "icmp"
+  ingress {
+    protocol = "icmp"
 
-  # https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml#icmp-parameters-codes-3
-  # ICMP Destination Unreachable
-  from_port = 3
+    # https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml#icmp-parameters-codes-3
+    # ICMP Destination Unreachable
+    from_port = 3
 
-  # Fragmentation Needed and Don't Fragment was Set
-  to_port           = 4
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.elb_to_nodeport.id}"
-}
+    # Fragmentation Needed and Don't Fragment was Set
+    to_port     = 4
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-resource "aws_security_group_rule" "allow_all_egress" {
-  type              = "egress"
-  protocol          = "all"
-  from_port         = 0
-  to_port           = 65535
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = "${aws_security_group.elb_to_nodeport.id}"
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 ### ELBS

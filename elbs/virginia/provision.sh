@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+export TERRAFORM_ENV="virginia"
 export ELB_PROVISIONING_REGION="us-east-1"
 export TF_VAR_region="us-east-1"
 export TF_VAR_vpc_id="vpc-1b35a07d"
