@@ -18,12 +18,6 @@ get_redirector_port() {
         | jq ".spec.ports[] | select(.name == \"http\") | .nodePort"
 }
 
-get_http_nodeport() {
-    NAMESPACE=$1
-    NODEPORT_SERVICE=$2
-    get_nodeport "http" $NAMESPACE $NODEPORT_SERVICE
-}
-
 get_https_nodeport() {
     NAMESPACE=$1
     NODEPORT_SERVICE=$2
