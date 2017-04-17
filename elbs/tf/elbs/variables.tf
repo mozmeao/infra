@@ -62,5 +62,3 @@ variable "health_check_http_path" {
   # leave empty for tcp healthchecks
   default = "/"
 }
-
-

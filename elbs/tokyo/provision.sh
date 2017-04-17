@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+export TERRAFORM_ENV="tokyo"
 export ELB_PROVISIONING_REGION="ap-northeast-1"
 export TF_VAR_region="ap-northeast-1"
 export TF_VAR_vpc_id="vpc-cd1f99a9"
