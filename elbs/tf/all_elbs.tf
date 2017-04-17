@@ -72,6 +72,16 @@ module "snippets" {
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
 }
 
+module "snippets-stats" {
+  source                       = "./elbs"
+  elb_name                     = "${var.snippets-stats_elb_name}"
+  subnets                      = "${var.snippets-stats_subnets}"
+  http_listener_instance_port  = "${var.snippets-stats_http_listener_instance_port}"
+  https_listener_instance_port = "${var.snippets-stats_https_listener_instance_port}"
+  ssl_cert_id                  = "${var.snippets-stats_ssl_cert_id}"
+  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+}
+
 module "careers" {
   source                       = "./elbs"
   elb_name                     = "${var.careers_elb_name}"
@@ -81,3 +91,4 @@ module "careers" {
   ssl_cert_id                  = "${var.careers_ssl_cert_id}"
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
 }
+

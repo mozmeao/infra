@@ -14,6 +14,18 @@ variable "snippets_https_listener_instance_port" {}
 
 variable "snippets_ssl_cert_id" {}
 
+
+# snippets-stats ELB
+variable "snippets-stats_elb_name" {}
+
+variable "snippets-stats_subnets" {}
+
+variable "snippets-stats_http_listener_instance_port" {}
+
+variable "snippets-stats_https_listener_instance_port" {}
+
+variable "snippets-stats_ssl_cert_id" {}
+
 # careers ELB
 variable "careers_elb_name" {}
 

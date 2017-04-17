@@ -10,16 +10,24 @@ export KOPS_NAME="virginia.moz.works"
 . ../tf/elb_utils.sh
 
 SNIPPETS_VARFILE=$(pwd)/snippets-virginia.tfvars
+SNIPPETS_STATS_VARFILE=$(pwd)/snippets-stats-virginia.tfvars
+
 CAREERS_VARFILE=$(pwd)/careers-virginia.tfvars
 
 VIRGINIA_SUBNETS="subnet-43125f6e,subnet-a699aaef,subnet-b6ceb6ed"
-# param order: elb name, namespace, nodeport service name, subnets
+
+# param order: elb name, namespace, nodeport service name, subnets, cert arn
 gen_tf_elb_cfg "snippets" \
                "snippets-prod" \
                "snippets-nodeport" \
                "${VIRGINIA_SUBNETS}" \
                "arn:aws:iam::236517346949:server-certificate/snippets.mozilla.com" > $SNIPPETS_VARFILE
 
+gen_tf_elb_cfg "snippets-stats" \
+               "snippets-stats" \
+               "snippets-stats-nodeport" \
+               "${VIRGINIA_SUBNETS}" \
+               "arn:aws:acm:us-east-1:236517346949:certificate/caf5907d-9804-4a16-9f3f-29193fb25565" > $SNIPPETS_STATS_VARFILE
 
 gen_tf_elb_cfg "careers" \
                "careers-prod" \
@@ -32,6 +40,7 @@ gen_tf_elb_cfg "careers" \
 # Apply Terraform
 cd ../tf && ./common.sh \
     -var-file $SNIPPETS_VARFILE \
+    -var-file $SNIPPETS_STATS_VARFILE \
     -var-file $CAREERS_VARFILE
 
 # attach each ELB to the k8s nodes ASG
@@ -47,6 +56,11 @@ ASG_NAME="nodes.${KOPS_NAME}"
 #        --auto-scaling-group-name nodes.virginia.moz.works \
 #        --load-balancer-name snippets \
 #        --region us-east-1
+#
+#aws autoscaling detach-load-balancers \
+#        --auto-scaling-group-name nodes.virginia.moz.works \
+#        --load-balancer-name snippets-stats \
+#        --region us-east-1
 
 echo "Assigning ELB careers instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
@@ -58,6 +72,12 @@ echo "Assigning ELB snippets instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
     --load-balancer-names snippets \
+    --region "${TF_VAR_region}"
+
+echo "Assigning ELB snippets-stats instances from ASG ${ASG_NAME}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names snippets-stats \
     --region "${TF_VAR_region}"
 
 attach_nodeport_sg_to_nodes_sg
