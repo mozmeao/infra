@@ -54,6 +54,11 @@ ASG_NAME="nodes.${KOPS_NAME}"
 #        --auto-scaling-group-name nodes.tokyo.moz.works \
 #        --load-balancer-name snippets \
 #        --region us-east-1
+#
+#aws autoscaling detach-load-balancers \
+#        --auto-scaling-group-name nodes.tokyo.moz.works \
+#        --load-balancer-name snippets-stats \
+#        --region us-east-1
 
 echo "Assigning ELB careers instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \

@@ -92,4 +92,3 @@ module "careers" {
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
 }
 
-
