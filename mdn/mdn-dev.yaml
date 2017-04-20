@@ -1,6 +1,16 @@
-#generated with `helm install --dry-run --debug kuma`
-#from a local checkout of https://github.com/mdn/helm-charts
-#then modified for mdn-dev
+# generated with `helm install --dry-run --debug kuma`
+# from a local checkout of https://github.com/mdn/helm-charts
+# then modified for mdn-dev
+#------------------------------------------------------------------------------
+# Provision:
+#   * pip install j2cli
+#
+# Deploy "api" and "web" services:
+#   NOTE: assumes Jenkins (i.e., setGitEnvironmentVariables() has run)
+#   NOTE: j2 uses env variables to populate template
+#
+#   * j2 mdn-dev.yaml | kubectl create -n mdn-dev -f -
+#------------------------------------------------------------------------------
 
 ---
 apiVersion: v1
@@ -29,7 +39,7 @@ spec:
     spec:
       containers:
         - name: web
-          image: "quay.io/mozmar/kuma:8426688"
+          image: "quay.io/mozmar/kuma:{{ GIT_COMMIT_SHORT }}"
           imagePullPolicy: IfNotPresent
           command:
             - "gunicorn"
@@ -134,7 +144,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: "quay.io/mozmar/kuma:8426688"
+          image: "quay.io/mozmar/kuma:{{ GIT_COMMIT_SHORT }}"
           imagePullPolicy: IfNotPresent
           command:
             - "gunicorn"
