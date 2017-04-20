@@ -2,95 +2,33 @@
 #from a local checkout of https://github.com/mdn/helm-charts
 #then modified for mdn-dev
 
-#Created tunnel using local port: '36145'
-#SERVER: "localhost:36145"
-#CHART PATH: /home/jgmize/src/mozilla/mdn/helm-charts/kuma
-#NAME:   ringed-lizzard
-#REVISION: 1
-#RELEASED: Wed Apr 19 21:40:54 2017
-#CHART: kuma-0.1.0
-#USER-SUPPLIED VALUES:
-#{}
-
-#COMPUTED VALUES:
-#allowed_hosts: '*'
-#args:
-#- -w=4
-#- --bind=0.0.0.0
-#- --access-logfile=-
-#- --timeout=120
-#- kuma.wsgi:application
-#command: gunicorn
-#debug: "False"
-#debug_toolbar: "False"
-#image:
-#  pullPolicy: IfNotPresent
-#  repository: quay.io/mozmar/kuma
-#  tag: latest
-#livenessProbe:
-#  httpGet:
-#    path: /contribute.json
-#    port: 8000
-#  initialDelaySeconds: 20
-#  periodSeconds: 3
-#maintenance_mode: "False"
-#readinessProbe:
-#  httpGet:
-#    path: /en-US
-#    port: 8000
-#  initialDelaySeconds: 20
-#  periodSeconds: 3
-#replicaCount: 1
-#resources:
-#  requests:
-#    cpu: 100m
-#    memory: 256Mi
-#service:
-#  enable: true
-#  externalPort: 80
-#  internalPort: 8000
-#  type: ClusterIP
-#
-#HOOKS:
-#MANIFEST:
-
 ---
-# Source: kuma/templates/service.yaml
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: kuma
-  labels:
-    chart: "kuma-0.1.0"
+  name: web
 spec:
-  type: ClusterIP
+  type: LoadBalancer
   selector:
-    app: kuma
+    app: web
   ports:
     - port: 80
       targetPort: 8000
       protocol: TCP
-
-
 ---
-# Source: kuma/templates/deployment.yaml
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  labels:
-    app: mdn-dev
-  name: mdn-dev
-  namespace: mdn-dev
+  name: web
 spec:
   replicas: 1
   template:
     metadata:
       labels:
-        app: kuma
+        app: web
     spec:
       containers:
-        - name: kuma
+        - name: web
           image: "quay.io/mozmar/kuma:8426688"
           imagePullPolicy: IfNotPresent
           command:
@@ -115,20 +53,25 @@ spec:
               value: "False"
             - name: CSRF_COOKIE_SECURE
               value: "False"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: manageable-puffin-mysql
+                  key: mysql-root-password
             - name: DATABASE_URL
-              value: mysql://root:kuma@mysql:3306/developer_mozilla_org
+              value: mysql://root:$(MYSQL_ROOT_PASSWORD)@manageable-puffin-mysql:3306/developer_mozilla_org
             - name: DEBUG
               value: "False"
             - name: DEBUG_TOOLBAR
               value: "False"
             - name: DOMAIN
-              value: kuma
+              value: web
             - name: ES_URLS
               value: elasticsearch:9200
             - name: KUMASCRIPT_URL_TEMPLATE
               value: http://kumascript:9080/docs/{path}
             - name: MEMCACHE_SERVERS
-              value: memcached:11211
+              value: mdn-dev-memcached:11211
             - name: PROD_DETAILS_DIR
               value: /app/product_details_json
             - name: PROTOCOL
@@ -136,7 +79,7 @@ spec:
             - name: SESSION_COOKIE_SECURE
               value: "False"
             - name: SITE_URL
-              value: http://kuma
+              value: http://web
             # Other environment overrides
             - name: PYTHONDONTWRITEBYTECODE
               value: "1"
@@ -152,16 +95,118 @@ spec:
               port: 8000
             initialDelaySeconds: 20
             periodSeconds: 3
-            
           readinessProbe:
             httpGet:
               path: /en-US
               port: 8000
             initialDelaySeconds: 20
             periodSeconds: 3
-            
           resources:
             requests:
               cpu: 100m
               memory: 256Mi
-            
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  type: ClusterIP
+  selector:
+    app: api
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: "quay.io/mozmar/kuma:8426688"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "gunicorn"
+          args:
+            - "-w=4"
+            - "--bind=0.0.0.0"
+            - "--access-logfile=-"
+            - "--timeout=120"
+            - "kuma.wsgi:application"
+          ports:
+            - containerPort: 8000
+          env:
+            # Django settings overrides:
+            - name: ACCOUNT_DEFAULT_HTTP_PROTOCOL
+              value: http
+            - name: ALLOWED_HOSTS
+              value: "*"
+            - name: BROKER_URL
+              value: redis://redis:6379/0
+            - name: CELERY_ALWAYS_EAGER
+              value: "False"
+            - name: CSRF_COOKIE_SECURE
+              value: "False"
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: manageable-puffin-mysql
+                  key: mysql-root-password
+            - name: DATABASE_URL
+              value: mysql://root:$(MYSQL_ROOT_PASSWORD)@manageable-puffin-mysql:3306/developer_mozilla_org
+            - name: DEBUG
+              value: "False"
+            - name: DEBUG_TOOLBAR
+              value: "False"
+            - name: DOMAIN
+              value: api
+            - name: ES_URLS
+              value: elasticsearch:9200
+            - name: KUMASCRIPT_URL_TEMPLATE
+              value: http://kumascript:9080/docs/{path}
+            - name: MEMCACHE_SERVERS
+              value: mdn-dev-memcached:11211
+            - name: PROD_DETAILS_DIR
+              value: /app/product_details_json
+            - name: PROTOCOL
+              value: "http://"
+            - name: SESSION_COOKIE_SECURE
+              value: "False"
+            - name: SITE_URL
+              value: http://api
+            # Other environment overrides
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "True"
+            - name: WEB_CONCURRENCY
+              value: "4"
+            - name: MAINTENANCE_MODE
+              value: "False"
+          livenessProbe:
+            httpGet:
+              path: /contribute.json
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /en-US
+              port: 8000
+            initialDelaySeconds: 20
+            periodSeconds: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
