@@ -45,76 +45,59 @@ kubectl get nodes # or another command to verify successful auth
 helm init
 ```
 
-- clone mdn/helm-charts
-
+- install mdn-mysql (i.e., mysql with MDN's custom collations) (requires mysql chart version >= 0.2.6)
 ```sh
-git clone https://github.com/mdn/helm-charts charts # TODO: consolidate charts into this repo
-```
-
-- edit charts/mysql/values.yaml
-
-```yaml
-persistence:
-  enabled: true
-  accessMode: ReadWriteOnce
-  size: 40Gi
-
-```
-
-- install from the local directory
-
-```sh
-cd charts/mysql
-helm install . -n mdn-dev --namespace mdn-dev
+export MYSQL_RELEASE=x
+helm install --name $MYSQL_RELEASE --namespace mdn-dev --version 0.2.6 stable/mysql \
+    --set image=quay.io/mozmar/mdn-mysql,imageTag=latest,persistence.size=40Gi
 ```
 
 - sample output
 
 ```
-NAME:   mdn-dev
-LAST DEPLOYED: Fri Mar 31 20:18:23 2017
+NAME:   x
+LAST DEPLOYED: Thu Apr 20 15:46:17 2017
 NAMESPACE: mdn-dev
 STATUS: DEPLOYED
 
 RESOURCES:
-==> v1/Secret
-NAME                    TYPE    DATA  AGE
-mdn-dev-mysql  Opaque  2     1s
-
 ==> v1/PersistentVolumeClaim
-NAME                    STATUS   VOLUME  CAPACITY  ACCESSMODES  AGE
-mdn-dev-mysql  Pending  1s
+NAME     STATUS  VOLUME                                    CAPACITY  ACCESSMODES  AGE
+x-mysql  Bound   pvc-2a526a70-261b-11e7-b08b-0e6e19522d98  40Gi      RWO          1s
 
 ==> v1/Service
-NAME                    CLUSTER-IP     EXTERNAL-IP  PORT(S)   AGE
-mdn-dev-mysql  100.69.195.67  <none>       3306/TCP  1s
+NAME     CLUSTER-IP      EXTERNAL-IP  PORT(S)   AGE
+x-mysql  100.69.143.152  <none>       3306/TCP  1s
 
 ==> extensions/v1beta1/Deployment
-NAME                    DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
-mdn-dev-mysql  1        1        1           0          1s
+NAME     DESIRED  CURRENT  UP-TO-DATE  AVAILABLE  AGE
+x-mysql  1        1        1           0          1s
+
+==> v1/Secret
+NAME     TYPE    DATA  AGE
+x-mysql  Opaque  2     1s
 
 
 NOTES:
 MySQL can be accessed via port 3306 on the following DNS name from within your cluster:
-mdn-dev-mysql.mdn-dev.svc.cluster.local
+x-mysql.mdn-dev.svc.cluster.local
 
 To get your root password run:
 
-kubectl get secret --namespace mdn-dev mdn-dev-mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode; echo
+    kubectl get secret --namespace mdn-dev x-mysql -o jsonpath="{.data.mysql-root-password}" | base64 --decode; echo
 
 To connect to your database:
 
 1. Run an Ubuntu pod that you can use as a client:
 
-kubectl run -i --tty ubuntu --image=ubuntu:16.04 --restart=Never -- bash -il
+    kubectl run -i --tty ubuntu --image=ubuntu:16.04 --restart=Never -- bash -il
 
 2. Install the mysql client:
 
-$ apt-get update && apt-get install mysql-client -y
+    $ apt-get update && apt-get install mysql-client -y
 
 3. Connect using the mysql cli, then provide your password:
-
-$ mysql -h mdn-dev-mysql -p
+    $ mysql -h x-mysql -p
 ```
 
 - instead of opening a separate container as in the example output above, we're going to exec a bash shell in the mysql container directly
@@ -153,7 +136,8 @@ zcat /var/lib/mysql/backups/$BACKUP | mysql -p $DATABASE
 ## Install memcached
 
 ```sh
-helm install stable/memcached -n mdn-dev --namespace=mdn-dev
+export MEMCACHED_RELEASE=mdn-dev
+helm install stable/memcached --name $MEMCACHED_RELEASE --namespace=mdn-dev
 ```
 
 - example output
@@ -193,4 +177,22 @@ You should see:
   STORED
 
 
+```
+
+## Install the MDN "web" service
+
+- install j2cli (Jinja2 command-line tool)
+
+```sh
+pip install j2cli
+```
+
+- install the MDN web service template
+  - ``j2`` will populate the template via env vars
+  - within our Jenkins runs, GIT_COMMIT_SHORT is set automatically via setGitEnvironmentVariables()
+  - assume MYSQL_RELEASE and MEMCACHED_RELEASE have been set above
+
+```sh
+export GIT_COMMIT_SHORT=a3a53b7
+j2 mdn-dev.yaml | kubectl create -n mdn-dev -f -
 ```
