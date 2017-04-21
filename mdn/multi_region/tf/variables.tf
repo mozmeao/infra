@@ -1,0 +1,2 @@
+variable "region" {}
+variable "subnets" {}

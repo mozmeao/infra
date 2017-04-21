@@ -18,16 +18,8 @@ check_prereqs() {
 
 TF_ARGS=$@
 
-MDN_PROVISIONING_BUCKET="mdn-provisioning-tf-state"
+MDN_PROVISIONING_BUCKET="mdn-multi-region-tf-state"
 STATE_BUCKET_REGION="us-west-2"
-
-check_k8s_context() {
-  current=$(kubectl config current-context)
-  if [ "${current}" != "${KOPS_NAME}" ]; then
-    echo "Please select the appropriate kubeconfig"
-    exit 1
-  fi
-}
 
 setup_tf_s3_state_store() {
     echo "Creating Terraform state bucket at s3://${MDN_PROVISIONING_BUCKET} (region ${STATE_BUCKET_REGION})"
@@ -67,18 +59,17 @@ tf_main() {
     terraform env select ${TERRAFORM_ENV}
 
     # import local modules
-    terraform get
+    #terraform get
 
     PLAN=$(mktemp)
     terraform plan --out $PLAN $TF_ARGS
     # if terraform plan fails, the next command won't run due to
     # set -e at the top of the script.
-    #terraform apply $PLAN
+    terraform apply $PLAN
     rm $PLAN
 }
 
 check_prereqs
-check_k8s_context
 check_state_store
 tf_main
 
