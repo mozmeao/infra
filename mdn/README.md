@@ -47,7 +47,8 @@ helm init
 
 - install mdn-mysql (i.e., mysql with MDN's custom collations) (requires mysql chart version >= 0.2.6)
 ```sh
-helm install --name x --namespace mdn-dev --version 0.2.6 stable/mysql \
+export MYSQL_RELEASE=x
+helm install --name $MYSQL_RELEASE --namespace mdn-dev --version 0.2.6 stable/mysql \
     --set image=quay.io/mozmar/mdn-mysql,imageTag=latest,persistence.size=40Gi
 ```
 
@@ -135,7 +136,8 @@ zcat /var/lib/mysql/backups/$BACKUP | mysql -p $DATABASE
 ## Install memcached
 
 ```sh
-helm install stable/memcached -n mdn-dev --namespace=mdn-dev
+export MEMCACHED_RELEASE=mdn-dev
+helm install stable/memcached --name $MEMCACHED_RELEASE --namespace=mdn-dev
 ```
 
 - example output
@@ -175,4 +177,22 @@ You should see:
   STORED
 
 
+```
+
+## Install the MDN "web" service
+
+- install j2cli (Jinja2 command-line tool)
+
+```sh
+pip install j2cli
+```
+
+- install the MDN web service template
+  - ``j2`` will populate the template via env vars
+  - within our Jenkins runs, GIT_COMMIT_SHORT is set automatically via setGitEnvironmentVariables()
+  - assume MYSQL_RELEASE and MEMCACHED_RELEASE have been set above
+
+```sh
+export GIT_COMMIT_SHORT=a3a53b7
+j2 mdn-dev.yaml | kubectl create -n mdn-dev -f -
 ```
