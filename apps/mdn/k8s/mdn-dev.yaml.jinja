@@ -14,7 +14,11 @@
 #   * export MYSQL_RELEASE=manageable-puffin
 #   * j2 mdn-dev.yaml | kubectl create -n mdn-dev -f -
 #------------------------------------------------------------------------------
-
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mdn-dev
 ---
 apiVersion: v1
 kind: Service

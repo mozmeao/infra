@@ -12,10 +12,9 @@ stage('tokyo') {
   env.NAMESPACE = env.BRANCH_NAME
   env.MYSQL_RELEASE = env.BRANCH_NAME
   env.MEMCACHED_RELEASE = env.BRANCH_NAME
-  sh 'kubectl create namespace $NAMESPACE'
-  sh 'helm install --namespace $NAMESPACE --name $MEMCACHED_RELEASE --reuse-name stable/memcached'
-  //sh 'helm install --namespace $NAMESPACE --name $MYSQL_RELEASE --reuse-name --set persistence.size=40Gi stable/mysql '
   env.GIT_COMMIT_SHORT = 'a3a53b7'
   //TODO use j2 from docker to eliminate system dependency
   sh 'j2 mdn/k8s/mdn-dev.yaml.jinja | kubectl apply -n mdn-dev -f -'
+  sh 'helm install --namespace $NAMESPACE --name $MEMCACHED_RELEASE --reuse-name stable/memcached'
+  //sh 'helm install --namespace $NAMESPACE --name $MYSQL_RELEASE --reuse-name --set persistence.size=40Gi stable/mysql '
 }
