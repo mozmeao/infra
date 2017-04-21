@@ -2,6 +2,14 @@ provider "aws" {
   region = "${var.region}"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "mdn-shared-provisioning-tf-state"
+    key = "tf-state"
+    region = "us-west-2"
+  }
+}
+
 # access is controlled via private IAM policy
 # do NOT enable public access to this bucket
 resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
@@ -105,15 +113,6 @@ EOF
 /*
 Uncomment these when we're ready!
 You'll also need the variables in variables.tf
-
-resource "aws_elasticache_cluster" "mdn-redis" {
-    cluster_id = "mdn-redis"
-    engine = "redis"
-    node_type = "${var.cache-node-size}"
-    port = "${var.cache-port}"
-    num_cache_nodes = "${var.cache-num-nodes}"
-    parameter_group_name = "${var.cache-param-group}"
-}
 
 resource "aws_elasticsearch_domain" "mdn-elasticsearch" {
   domain_name           = "mdn-elasticsearch"
