@@ -67,6 +67,7 @@ spec:
             - name: CSRF_COOKIE_SECURE
               value: "False"
             - name: MYSQL_ROOT_PASSWORD
+              #TODO: consider using DATABASE_URL as secret instead
               valueFrom:
                 secretKeyRef:
                   name: manageable-puffin-mysql
@@ -104,12 +105,14 @@ spec:
               value: "False"
           livenessProbe:
             httpGet:
+              #TODO: better liveness path, perhaps /its-alive?
               path: /contribute.json
               port: 8000
             initialDelaySeconds: 20
             periodSeconds: 3
           readinessProbe:
             httpGet:
+              #TODO: /healthz
               path: /en-US
               port: 8000
             initialDelaySeconds: 20
@@ -118,3 +121,4 @@ spec:
             requests:
               cpu: 100m
               memory: 256Mi
+          #TODO: limits
