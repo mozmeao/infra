@@ -35,6 +35,7 @@ check_state_store() {
     set -e
 }
 
+# useful for initial importing of existing TF resources
 import_existing_buckets() {
     terraform import aws_s3_bucket.mdn-db-storage-anonymized mdn-db-storage-anonymized
     terraform import aws_s3_bucket.mdn-db-storage-production mdn-db-storage-production
@@ -57,7 +58,7 @@ tf_main() {
     terraform plan --out $PLAN
     # if terraform plan fails, the next command won't run due to
     # set -e at the top of the script.
-    #terraform apply $PLAN
+    terraform apply $PLAN
     rm $PLAN
 }
 

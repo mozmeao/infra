@@ -1,5 +1,5 @@
 /*
-Uncomment these when we're ready!
+Uncomment when we're ready!
 You'll also need the variables in variables.tf
 
 resource "aws_elasticsearch_domain" "mdn-elasticsearch" {
