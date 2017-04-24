@@ -1,7 +1,7 @@
 resource "aws_efs_file_system" "mdn-shared" {
   performance_mode = "generalPurpose"
-
   # also supported, maxIO
+
   tags {
     Name = "MDN shared"
   }
