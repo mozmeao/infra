@@ -248,3 +248,10 @@ resource "aws_s3_bucket" "mdn-legacy-samples" {
 }
 EOF
 }
+
+# backup EFS to this
+resource "aws_s3_bucket" "mdn-shared-backup" {
+  bucket              = "mdn-shared-backup"
+  region              = "${var.region}"
+  acl                 = "private"
+}
