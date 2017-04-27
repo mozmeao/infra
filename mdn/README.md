@@ -1,6 +1,6 @@
-# MDN infra
+# MDN AWS provisioning
 
-### Requirements:
+## Requirements:
 
 - Terraform
 - Access to the IAM role `admin` role via the AWS metadata API
@@ -8,27 +8,22 @@
 
 ## Usage
 
-- This command and all following assume the same directory as this file unless otherwise specified
 
-```
+#### shared resources (S3 buckets, etc):
+
+```sh
+cd ./shared/
 ./provision.sh
 ```
 
-This will setup the S3 Terraform state store if needed, and then run `terraform plan` followed by `terraform apply`.
+#### Provisioning region-specific resources:
+
+```sh
+cd ./multi_region/virginia
+./provision.sh
+```
 
 ---
-
-NOTE:
-
-As the `mdn-downloads` bucket already exists and was created outside of Terraform, it was imported with the following command:
-
-
-```
-terraform import aws_s3_bucket.mdn-downloads mdn-downloads
-```
-
-This resource is stored in the Terraform S3 state, so the command doesn't need to be run again.
-
 
 ## Restoring a database to a persistent MySQL container
 
