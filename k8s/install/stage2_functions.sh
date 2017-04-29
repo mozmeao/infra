@@ -294,3 +294,6 @@ install_cluster_autoscaler() {
         -f "${OUTPUT_FILE}"
 }
 
+install_redirector_service() {
+    (cd ${KOPS_INSTALLER}/services/http_to_https_redirector && make deploy)
+}

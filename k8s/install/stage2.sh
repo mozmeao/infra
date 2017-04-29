@@ -20,6 +20,7 @@ source ${KOPS_INSTALLER}/stage2_functions.sh
 install_deps
 install_tiller
 install_cluster_autoscaler
+install_redirector_service
 
 # k8s specific
 if [ "${INSTALL_DASHBOARD}" -eq 1 ]; then install_k8s_dashboard; fi
