@@ -176,3 +176,18 @@ kubectl proxy
 ```
 
 Open a web browser to [http://localhost:8001/ui](http://localhost:8001/ui)
+
+
+# Upgrading Deis Workflow
+
+More info on upgrading Deis Workflow is available here:
+https://deis.com/docs/workflow/managing-workflow/upgrading-workflow/
+
+Please keep in mind that we have several customizations that ***MUST*** be
+applied during install AND upgrades, so the "out-of-the-box" Deis upgrade
+***WILL NOT*** work!
+
+```
+./upgrade_workflow.sh
+```
+
