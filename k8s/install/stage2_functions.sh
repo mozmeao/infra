@@ -121,6 +121,27 @@ delete_deis_secrets() {
     kubectl -n deis get secrets | tail -n +2 | awk '{ print $1 }' | xargs kubectl -n deis delete secret
 }
 
+customize_workflow() {
+    echo "Customizing workflow"
+    rm -rf ./workflow
+    # fetch the deis/workflow charts and write them to ./workflow
+    helm fetch deis/workflow --untar
+
+    # remove components we aren't using
+    comps_to_remove=( monitor logger fluentd redis nsqd )
+    for comp in "${comps_to_remove[@]}"
+    do
+        echo "Removing ${comp}"
+        rm -rf ./workflow/charts/${comp}
+    done
+
+    # SSL is handled at the ELB, but the ELB still wants to point to the Deis router SSL
+    # port internally. We change the ssl port to be unencrypted (http) internally.
+    # TODO: use a template with condition and submit upstream
+    sed -i "s/6443/8080/" workflow/charts/router/templates/router-service.yaml
+    echo "Workflow customized"
+}
+
 install_workflow_chart() {
     # make sure we're running from a directory with config.sh
     check_cwd
@@ -185,22 +206,7 @@ install_workflow_chart() {
     # the secrets as well:
     #  kubectl -n deis get secrets | tail -n +2 | awk '{ print $1 }' | xargs kubectl -n deis delete secret
 
-    rm -rf ./workflow
-    # fetch the deis/workflow charts and write them to ./workflow
-    helm fetch deis/workflow --untar
-
-    # remove components we aren't using
-    comps_to_remove=( monitor logger fluentd redis nsqd )
-    for comp in "${comps_to_remove[@]}"
-    do
-        echo "Removing ${comp}"
-        rm -rf ./workflow/charts/${comp}
-    done
-
-    # SSL is handled at the ELB, but the ELB still wants to point to the Deis router SSL
-    # port internally. We change the ssl port to be unencrypted (http) internally.
-    # TODO: use a template with condition and submit upstream
-    sed -i "s/6443/8080/" workflow/charts/router/templates/router-service.yaml
+    customize_workflow
 
     # if installing an unmodified deis/workflow:
     # helm install deis/workflow --namespace deis -f workflow_config_moz.yaml
