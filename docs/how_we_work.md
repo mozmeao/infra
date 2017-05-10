@@ -107,3 +107,31 @@ Open source is awesome, and sometimes we get pull requests from non-Mozillians. 
 
 TODO: should we ever consider a [Developer Certificate of Origin](https://github.com/habitat-sh/habitat/blob/master/CONTRIBUTING.md#signing-your-commits). 
 
+### Github Project Columns Defined
+
+##### Backlog
+
+A list of possible tasks. Tasks in this column are not actively being worked on. In our weekly triage meeting this list is briefly discussed and if needed, prioritized. Items that will not realistically be worked in the near future should be assigned the label _icebox_.
+
+##### Queued
+
+Tasks that have been prioritized as what we should do next. These tasks can be thought of as _ready_ and can be started at any time. 
+
+##### In Progress
+
+Tasks that are actively being worked on.
+
+##### In Review
+
+Tasks that _maybe_ complete but are pending QA, PR review, discussion, or merging (or all 4).
+
+##### Complete
+
+The task is complete, it is _live_ and no additional work is required.
+
+
+### Workflow / How Cards Move Across The Board
+
+Cards from the queued column are pulled from left to right by whomever has taken that task. If you take a task please ensure you add yourself to the assignee list.
+
+We are currently not enforcing _Work In Progress_ limits for each column, however a good guideline is not to have more than 3 cards assigned to you in progress at any given time.
