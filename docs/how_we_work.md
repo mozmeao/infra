@@ -111,9 +111,7 @@ TODO: should we ever consider a [Developer Certificate of Origin](https://github
 
 ##### Backlog
 
-A list of possible tasks. Tasks in this column are not actively being worked on. In our weekly triage meeting this list is briefly discussed and if needed, prioritized. 
-
-TODO: We should have an icebox.
+A list of possible tasks. Tasks in this column are not actively being worked on. In our weekly triage meeting this list is briefly discussed and if needed, prioritized. Items that will not realistically be worked in the near future should be assigned the label _icebox_.
 
 ##### Queued
 
@@ -136,4 +134,4 @@ The task is complete, it is _live_ and no additional work is required.
 
 Cards from the queued column are pulled from left to right by whomever has taken that task. If you take a task please ensure you add yourself to the assignee list.
 
-We are currently not enforcing _Work In Progress_ limits for each column, however a good guideline is that if you should not have more than 3 cards assigned to you in progress at any given time.
+We are currently not enforcing _Work In Progress_ limits for each column, however a good guideline is not to have more than 3 cards assigned to you in progress at any given time.
