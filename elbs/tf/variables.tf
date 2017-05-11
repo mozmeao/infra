@@ -36,3 +36,26 @@ variable "careers_http_listener_instance_port" {}
 variable "careers_https_listener_instance_port" {}
 
 variable "careers_ssl_cert_id" {}
+
+# bedrock-stage ELB
+variable "bedrock-stage_elb_name" {}
+
+variable "bedrock-stage_subnets" {}
+
+variable "bedrock-stage_http_listener_instance_port" {}
+
+variable "bedrock-stage_https_listener_instance_port" {}
+
+variable "bedrock-stage_ssl_cert_id" {}
+
+# bedrock-prod ELB
+variable "bedrock-prod_elb_name" {}
+
+variable "bedrock-prod_subnets" {}
+
+variable "bedrock-prod_http_listener_instance_port" {}
+
+variable "bedrock-prod_https_listener_instance_port" {}
+
+variable "bedrock-prod_ssl_cert_id" {}
+

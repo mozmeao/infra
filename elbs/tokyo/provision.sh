@@ -13,6 +13,9 @@ SNIPPETS_VARFILE=$(pwd)/snippets-tokyo.tfvars
 SNIPPETS_STATS_VARFILE=$(pwd)/snippets-stats-tokyo.tfvars
 CAREERS_VARFILE=$(pwd)/careers-tokyo.tfvars
 
+BEDROCK_STAGE_VARFILE=$(pwd)/bedrock-stage-virginia.tfvars
+BEDROCK_PROD_VARFILE=$(pwd)/bedrock-prod-virginia.tfvars
+
 TOKYO_SUBNETS="subnet-ed79369b"
 # param order: elb name, namespace, nodeport service name, subnets
 gen_tf_elb_cfg "snippets" \
@@ -33,13 +36,27 @@ gen_tf_elb_cfg "careers" \
                "${TOKYO_SUBNETS}" \
                "arn:aws:iam::236517346949:server-certificate/careers-mozilla-org" > $CAREERS_VARFILE
 
+gen_tf_elb_cfg "bedrock-stage" \
+               "bedrock-stage" \
+               "bedrock-nodeport" \
+               "${TOKYO_SUBNETS}" \
+               "arn:aws:iam::236517346949:server-certificate/www.mozilla.org" > $BEDROCK_STAGE_VARFILE
+
+gen_tf_elb_cfg "bedrock-prod" \
+               "bedrock-prod" \
+               "bedrock-nodeport" \
+               "${TOKYO_SUBNETS}" \
+               "arn:aws:iam::236517346949:server-certificate/www.mozilla.org" > $BEDROCK_PROD_VARFILE
+
 # gen configs from other load balancers here
 
 # Apply Terraform
 cd ../tf && ./common.sh \
     -var-file $SNIPPETS_VARFILE \
     -var-file $SNIPPETS_STATS_VARFILE \
-    -var-file $CAREERS_VARFILE
+    -var-file $CAREERS_VARFILE \
+    -var-file $BEDROCK_PROD_VARFILE \
+    -var-file $BEDROCK_STAGE_VARFILE
 
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"
@@ -76,6 +93,18 @@ echo "Assigning ELB snippets-stats instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
     --load-balancer-names snippets-stats \
+    --region "${TF_VAR_region}"
+
+echo "Assigning ELB bedrock-stage instances from ASG ${ASG_NAME}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names bedrock-stage \
+    --region "${TF_VAR_region}"
+
+echo "Assigning ELB bedrock-prod instances from ASG ${ASG_NAME}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names bedrock-prod \
     --region "${TF_VAR_region}"
 
 attach_nodeport_sg_to_nodes_sg

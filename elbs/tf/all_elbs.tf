@@ -92,3 +92,22 @@ module "careers" {
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
 }
 
+module "bedrock-stage" {
+  source                       = "./elbs"
+  elb_name                     = "${var.bedrock-stage_elb_name}"
+  subnets                      = "${var.bedrock-stage_subnets}"
+  http_listener_instance_port  = "${var.bedrock-stage_http_listener_instance_port}"
+  https_listener_instance_port = "${var.bedrock-stage_https_listener_instance_port}"
+  ssl_cert_id                  = "${var.bedrock-stage_ssl_cert_id}"
+  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+}
+
+module "bedrock-prod" {
+  source                       = "./elbs"
+  elb_name                     = "${var.bedrock-prod_elb_name}"
+  subnets                      = "${var.bedrock-prod_subnets}"
+  http_listener_instance_port  = "${var.bedrock-prod_http_listener_instance_port}"
+  https_listener_instance_port = "${var.bedrock-prod_https_listener_instance_port}"
+  ssl_cert_id                  = "${var.bedrock-prod_ssl_cert_id}"
+  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+}
