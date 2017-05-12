@@ -9,10 +9,8 @@
 #   NOTE: j2 uses env variables to populate template
 #   NOTE: in our Jenkins env, GIT_COMMIT_SHORT is populated automatically
 #         (via setGitEnvironmentVariables())
-#   * export GIT_COMMIT_SHORT=a3a53b7
-#   * export MEMCACHED_RELEASE=mdn-dev
-#   * export MYSQL_RELEASE=manageable-puffin
-#   * j2 mdn-dev.yaml | kubectl create -n mdn-dev -f -
+#   * . mdn/k8s/virginia-env
+#   * j2 mdn-dev.yaml.jinja | kubectl apply -n mdn-dev -f -
 #------------------------------------------------------------------------------
 
 ---
@@ -29,6 +27,33 @@ spec:
       targetPort: 8000
       protocol: TCP
 ---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: mdn-shared-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /mdn-dev
+    #{{ NFS_PV_PATH }}
+    server: {{ NFS_SERVER }}
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mdn-shared-pvc
+spec:
+  resources:
+    requests:
+      storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  volumeName: mdn-shared-pv
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -40,10 +65,17 @@ spec:
       labels:
         app: web
     spec:
+      volumes:
+        - name: mdn-shared-pv
+          persistentVolumeClaim:
+            claimName: mdn-shared-pvc
       containers:
         - name: web
           image: "quay.io/mozmar/kuma:{{ GIT_COMMIT_SHORT }}"
           imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /data
+              name: mdn-shared-pv
           command:
             - "gunicorn"
           args:
@@ -51,6 +83,7 @@ spec:
             - "--bind=0.0.0.0"
             - "--access-logfile=-"
             - "--timeout=120"
+            - "--worker-class=meinheld.gmeinheld.MeinheldWorker"
             - "kuma.wsgi:application"
           ports:
             - containerPort: 8000
