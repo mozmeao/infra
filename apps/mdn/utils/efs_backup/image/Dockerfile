@@ -18,6 +18,5 @@ RUN pip3 install --upgrade pip
 # add awscli to the path
 ENV PATH="/root/.local/bin/:${PATH}"
 
-#ENV EFS_DIR_TO_SYNC /
 ADD efs_sync.sh /meaosync/efs_sync.sh
 CMD ["/meaosync/efs_sync.sh"]
