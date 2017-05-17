@@ -253,5 +253,14 @@ EOF
 resource "aws_s3_bucket" "mdn-shared-backup" {
   bucket              = "mdn-shared-backup"
   region              = "${var.region}"
-  acl                 = "private"
+  acl = "log-delivery-write"
+
+  logging {
+    target_bucket = "mdn-shared-backup"
+    target_prefix = "logs/"
+  }
+
+  versioning {
+    enabled = true
+  }
 }
