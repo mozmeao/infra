@@ -59,3 +59,15 @@ variable "bedrock-prod_https_listener_instance_port" {}
 
 variable "bedrock-prod_ssl_cert_id" {}
 
+
+# wilcard-allizom
+variable "wildcard-allizom_elb_name" {}
+
+variable "wildcard-allizom_subnets" {}
+
+variable "wildcard-allizom_http_listener_instance_port" {}
+
+variable "wildcard-allizom_https_listener_instance_port" {}
+
+variable "wildcard-allizom_ssl_cert_id" {}
+

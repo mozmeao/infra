@@ -113,3 +113,16 @@ module "bedrock-prod" {
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
   health_check_http_path       = "/healthz/"
 }
+
+module "wilcard-allizom" {
+  source                       = "./elbs"
+  elb_name                     = "${var.wildcard-allizom_elb_name}"
+  subnets                      = "${var.wildcard-allizom_subnets}"
+  http_listener_instance_port  = "${var.wildcard-allizom_http_listener_instance_port}"
+  https_listener_instance_port = "${var.wildcard-allizom_https_listener_instance_port}"
+  ssl_cert_id                  = "${var.wildcard-allizom_ssl_cert_id}"
+  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  health_check_target_proto    = "TCP"
+  # leave path empty!
+  health_check_http_path      = ""
+}

@@ -15,6 +15,7 @@ CAREERS_VARFILE=$(pwd)/careers-virginia.tfvars
 
 BEDROCK_STAGE_VARFILE=$(pwd)/bedrock-stage-virginia.tfvars
 BEDROCK_PROD_VARFILE=$(pwd)/bedrock-prod-virginia.tfvars
+WILCARD_ALLIZOM_VARFILE=$(pwd)/wildcard-allizom-virginia.tfvars
 
 VIRGINIA_SUBNETS="subnet-43125f6e,subnet-a699aaef,subnet-b6ceb6ed"
 
@@ -49,6 +50,12 @@ gen_tf_elb_cfg "bedrock-prod" \
                "${VIRGINIA_SUBNETS}" \
                "arn:aws:iam::236517346949:server-certificate/www.mozilla.org" > $BEDROCK_PROD_VARFILE
 
+gen_tf_elb_cfg "wildcard-allizom" \
+               "deis" \
+               "deis-router" \
+               "${VIRGINIA_SUBNETS}" \
+               "arn:aws:iam::236517346949:server-certificate/wildcard.allizom.org_20180103" > $WILCARD_ALLIZOM_VARFILE
+
 # gen configs from other load balancers here
 
 # Apply Terraform
@@ -57,7 +64,8 @@ cd ../tf && ./common.sh \
     -var-file $SNIPPETS_STATS_VARFILE \
     -var-file $CAREERS_VARFILE \
     -var-file $BEDROCK_PROD_VARFILE \
-    -var-file $BEDROCK_STAGE_VARFILE
+    -var-file $BEDROCK_STAGE_VARFILE \
+    -var-file $WILCARD_ALLIZOM_VARFILE
 
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"
@@ -106,6 +114,12 @@ echo "Assigning ELB bedrock-prod instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
     --load-balancer-names bedrock-prod \
+    --region "${TF_VAR_region}"
+
+echo "Assigning ELB wilcard-allizom instances from ASG ${ASG_NAME}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names wildcard-allizom \
     --region "${TF_VAR_region}"
 
 attach_nodeport_sg_to_nodes_sg
