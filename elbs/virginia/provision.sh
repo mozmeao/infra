@@ -41,7 +41,7 @@ gen_tf_elb_cfg "bedrock-stage" \
                "bedrock-stage" \
                "bedrock-nodeport" \
                "${VIRGINIA_SUBNETS}" \
-               "arn:aws:iam::236517346949:server-certificate/www.mozilla.org" > $BEDROCK_STAGE_VARFILE
+               "arn:aws:iam::236517346949:server-certificate/wildcard.allizom.org_20180103" > $BEDROCK_STAGE_VARFILE
 
 gen_tf_elb_cfg "bedrock-prod" \
                "bedrock-prod" \
