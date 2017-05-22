@@ -42,13 +42,13 @@ gen_tf_elb_cfg "bedrock-stage" \
                "bedrock-stage" \
                "bedrock-nodeport" \
                "${VIRGINIA_SUBNETS}" \
-               "arn:aws:iam::236517346949:server-certificate/wildcard.allizom.org_20180103" > $BEDROCK_STAGE_VARFILE
+               "arn:aws:acm:us-east-1:236517346949:certificate/ecb993c5-e2e5-4864-9509-855aaafec0c9" > $BEDROCK_STAGE_VARFILE
 
 gen_tf_elb_cfg "bedrock-prod" \
                "bedrock-prod" \
                "bedrock-nodeport" \
                "${VIRGINIA_SUBNETS}" \
-               "arn:aws:iam::236517346949:server-certificate/www.mozilla.org" > $BEDROCK_PROD_VARFILE
+               "arn:aws:acm:us-east-1:236517346949:certificate/2c9700af-4cf3-415f-9554-00d40c972fcd" > $BEDROCK_PROD_VARFILE
 
 gen_tf_elb_cfg "wildcard-allizom" \
                "deis" \
