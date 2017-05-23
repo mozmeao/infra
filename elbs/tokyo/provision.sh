@@ -47,7 +47,7 @@ gen_tf_elb_cfg "bedrock-prod" \
                "bedrock-prod" \
                "bedrock-nodeport" \
                "${TOKYO_SUBNETS}" \
-               "arn:aws:iam::236517346949:server-certificate/www.mozilla.org" > $BEDROCK_PROD_VARFILE
+               "arn:aws:acm:ap-northeast-1:236517346949:certificate/099d5838-a413-478a-abc1-afb67c4017f1" > $BEDROCK_PROD_VARFILE
 
 gen_tf_elb_cfg "wildcard-allizom" \
                "deis" \
