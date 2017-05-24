@@ -1,5 +1,9 @@
 variable "elb_name" {}
 
+variable "elb_count" {
+  default = 1
+}
+
 variable "security_group_id" {}
 
 variable "http_listener_instance_port" {}

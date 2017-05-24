@@ -71,3 +71,22 @@ variable "wildcard-allizom_https_listener_instance_port" {}
 
 variable "wildcard-allizom_ssl_cert_id" {}
 
+
+# nucleus-prod ELB
+variable "nucleus-prod_elb_name" {}
+
+variable "nucleus-prod_subnets" {}
+
+variable "nucleus-prod_http_listener_instance_port" {}
+
+variable "nucleus-prod_https_listener_instance_port" {}
+
+variable "nucleus-prod_ssl_cert_id" {}
+
+
+variable "nucleus-elbs-by-region" {
+  type = "map"
+  default = {
+    "us-east-1" = true
+  }
+}

@@ -17,6 +17,8 @@ BEDROCK_STAGE_VARFILE=$(pwd)/bedrock-stage-tokyo.tfvars
 BEDROCK_PROD_VARFILE=$(pwd)/bedrock-prod-tokyo.tfvars
 WILCARD_ALLIZOM_VARFILE=$(pwd)/wildcard-allizom-tokyo.tfvars
 
+NUCLEUS_PROD_VARFILE=$(pwd)/nucleus-prod-virginia.tfvars
+
 TOKYO_SUBNETS="subnet-ed79369b"
 # param order: elb name, namespace, nodeport service name, subnets
 gen_tf_elb_cfg "snippets" \
@@ -58,13 +60,16 @@ gen_tf_elb_cfg "wildcard-allizom" \
 # gen configs from other load balancers here
 
 # Apply Terraform
+# NOTE: we're passing in dummy values for nucleus prod as Terraform needs 
+#       them set, even though we're not creating a nucleus prod elb in Tokyo
 cd ../tf && ./common.sh \
     -var-file $SNIPPETS_VARFILE \
     -var-file $SNIPPETS_STATS_VARFILE \
     -var-file $CAREERS_VARFILE \
     -var-file $BEDROCK_PROD_VARFILE \
     -var-file $BEDROCK_STAGE_VARFILE \
-    -var-file $WILCARD_ALLIZOM_VARFILE
+    -var-file $WILCARD_ALLIZOM_VARFILE \
+    -var-file $NUCLEUS_PROD_VARFILE
 
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"
