@@ -24,6 +24,12 @@ get_https_nodeport() {
     get_nodeport "https" $NAMESPACE $NODEPORT_SERVICE
 }
 
+get_http_nodeport() {
+    NAMESPACE=$1
+    NODEPORT_SERVICE=$2
+    get_nodeport "http" $NAMESPACE $NODEPORT_SERVICE
+}
+
 get_nodeport() {
     PROTO=$1
     NAMESPACE=$2
@@ -38,9 +44,14 @@ gen_tf_elb_cfg() {
     NODEPORT_SERVICE=$3
     VPC_SUBNETS=$4
     SSL_CERT_ID=$5
+    NODEPORT_PROTO="${6:-https}"
 
     HTTP_PORT=$(get_redirector_port)
-    HTTPS_PORT=$(get_https_nodeport ${NAMESPACE} ${NODEPORT_SERVICE})
+    if [ "$NODEPORT_PROTO" == "https" ]; then
+      HTTPS_PORT=$(get_https_nodeport ${NAMESPACE} ${NODEPORT_SERVICE})
+    elif [ "$NODEPORT_PROTO" == "http" ]; then
+      HTTPS_PORT=$(get_http_nodeport ${NAMESPACE} ${NODEPORT_SERVICE})
+    fi
 
     cat <<EOF
 ${ELB_NAME}_elb_name = "${ELB_NAME}"

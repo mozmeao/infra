@@ -1,4 +1,5 @@
 resource "aws_elb" "new-elb" {
+  count           = "${var.elb_count}"
   name            = "${var.elb_name}"
   subnets         = ["${split(",", var.subnets)}"]
   security_groups = ["${var.security_group_id}"]

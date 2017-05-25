@@ -126,3 +126,20 @@ module "wilcard-allizom" {
   # leave path empty!
   health_check_http_path      = ""
 }
+
+module "nucleus-prod" {
+  # if the nucleus-elbs-by-region map contains the current region, then
+  # set elb_count to 1, otherwise, default to 0.
+  # A value of 1 will create an ELB, a value of 0 won't.
+  # NOTE: we still need to pass in dummy values for the variables below
+  # when we aren't creating an ELB to allow TF to run
+  elb_count = "${lookup(var.nucleus-elbs-by-region, var.region, 0)}"
+  source                       = "./elbs"
+  elb_name                     = "${var.nucleus-prod_elb_name}"
+  subnets                      = "${var.nucleus-prod_subnets}"
+  http_listener_instance_port  = "${var.nucleus-prod_http_listener_instance_port}"
+  https_listener_instance_port = "${var.nucleus-prod_https_listener_instance_port}"
+  ssl_cert_id                  = "${var.nucleus-prod_ssl_cert_id}"
+  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  health_check_http_path       = "/"
+}
