@@ -143,3 +143,15 @@ module "nucleus-prod" {
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
   health_check_http_path       = "/"
 }
+
+module "surveillance" {
+  elb_count = "${lookup(var.surveillance-elbs-by-region, var.region, 0)}"
+  source                       = "./elbs"
+  elb_name                     = "${var.surveillance-prod_elb_name}"
+  subnets                      = "${var.surveillance-prod_subnets}"
+  http_listener_instance_port  = "${var.surveillance-prod_http_listener_instance_port}"
+  https_listener_instance_port = "${var.surveillance-prod_https_listener_instance_port}"
+  ssl_cert_id                  = "${var.surveillance-prod_ssl_cert_id}"
+  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  health_check_http_path       = "/"
+}

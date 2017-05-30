@@ -19,6 +19,8 @@ WILCARD_ALLIZOM_VARFILE=$(pwd)/wildcard-allizom-virginia.tfvars
 
 NUCLEUS_PROD_VARFILE=$(pwd)/nucleus-prod-virginia.tfvars
 
+SURVEILLANCE_PROD_VARFILE=$(pwd)/surveillance-prod-virginia.tfvars
+
 VIRGINIA_SUBNETS="subnet-43125f6e,subnet-a699aaef,subnet-b6ceb6ed"
 
 # param order: elb name, namespace, nodeport service name, subnets, cert arn, nodeport proto (defaults to https)
@@ -65,6 +67,13 @@ gen_tf_elb_cfg "nucleus-prod" \
                "arn:aws:acm:us-east-1:236517346949:certificate/fa2f75df-e710-4e2a-b210-2647c4179dac" > $NUCLEUS_PROD_VARFILE \
                "http"
 
+gen_tf_elb_cfg "surveillance-prod" \
+               "surveillance-prod" \
+               "surveillance-nodeport" \
+               "${VIRGINIA_SUBNETS}" \
+               "arn:aws:acm:us-east-1:236517346949:certificate/2eb042da-5a62-4430-bc6e-1623ebad2030" > $SURVEILLANCE_PROD_VARFILE \
+               "http"
+
 # gen configs from other load balancers here
 
 # Apply Terraform
@@ -75,7 +84,8 @@ cd ../tf && ./common.sh \
     -var-file $BEDROCK_PROD_VARFILE \
     -var-file $BEDROCK_STAGE_VARFILE \
     -var-file $WILCARD_ALLIZOM_VARFILE \
-    -var-file $NUCLEUS_PROD_VARFILE
+    -var-file $NUCLEUS_PROD_VARFILE \
+    -var-file $SURVEILLANCE_PROD_VARFILE
 
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"
@@ -136,6 +146,13 @@ echo "Assigning ELB nucleus-prod instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
     --load-balancer-names nucleus-prod \
+    --region "${TF_VAR_region}"
+
+
+echo "Assigning ELB surveillance-prod instances from ASG ${ASG_NAME}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names surveillance-prod \
     --region "${TF_VAR_region}"
 
 attach_nodeport_sg_to_nodes_sg
