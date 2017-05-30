@@ -90,3 +90,22 @@ variable "nucleus-elbs-by-region" {
     "us-east-1" = true
   }
 }
+
+
+# surveillance
+variable "surveillance-prod_elb_name" {}
+
+variable "surveillance-prod_subnets" {}
+
+variable "surveillance-prod_http_listener_instance_port" {}
+
+variable "surveillance-prod_https_listener_instance_port" {}
+
+variable "surveillance-prod_ssl_cert_id" {}
+
+variable "surveillance-elbs-by-region" {
+  type = "map"
+  default = {
+    "us-east-1" = true
+  }
+}

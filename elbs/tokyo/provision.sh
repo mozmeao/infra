@@ -17,7 +17,9 @@ BEDROCK_STAGE_VARFILE=$(pwd)/bedrock-stage-tokyo.tfvars
 BEDROCK_PROD_VARFILE=$(pwd)/bedrock-prod-tokyo.tfvars
 WILCARD_ALLIZOM_VARFILE=$(pwd)/wildcard-allizom-tokyo.tfvars
 
-NUCLEUS_PROD_VARFILE=$(pwd)/nucleus-prod-virginia.tfvars
+NUCLEUS_PROD_VARFILE=$(pwd)/nucleus-prod-tokyo.tfvars
+
+SURVEILLANCE_PROD_VARFILE=$(pwd)/surveillance-prod-tokyo.tfvars
 
 TOKYO_SUBNETS="subnet-ed79369b"
 # param order: elb name, namespace, nodeport service name, subnets
@@ -69,7 +71,8 @@ cd ../tf && ./common.sh \
     -var-file $BEDROCK_PROD_VARFILE \
     -var-file $BEDROCK_STAGE_VARFILE \
     -var-file $WILCARD_ALLIZOM_VARFILE \
-    -var-file $NUCLEUS_PROD_VARFILE
+    -var-file $NUCLEUS_PROD_VARFILE \
+    -var-file $SURVEILLANCE_PROD_VARFILE
 
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"
