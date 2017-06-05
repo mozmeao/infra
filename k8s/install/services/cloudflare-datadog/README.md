@@ -17,7 +17,7 @@ git checkout cloudflare-datadog-0.1.0
 cd incubator/cloudflare-datadog/
 
 helm install -n cf-dd --namespace cf-dd --debug --dry-run -f ${CLOUDFLARE_DD_SECRETS} .
-helm install -n cf-dd --namespace cf-dd -f .yaml ${CLOUDFLARE_DD_SECRETS} .
+helm install -n cf-dd --namespace cf-dd -f ${CLOUDFLARE_DD_SECRETS} .
 ```
 
 ---
