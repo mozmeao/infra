@@ -58,18 +58,19 @@ gen_tf_elb_cfg "wildcard-allizom" \
                "${TOKYO_SUBNETS}" \
                "arn:aws:iam::236517346949:server-certificate/wildcard.allizom.org_20180103" > $WILCARD_ALLIZOM_VARFILE
 
-
 gen_tf_elb_cfg "basket-stage" \
                "basket-stage" \
                "basket-nodeport" \
                "${TOKYO_SUBNETS}" \
-               "" > $BASKET_STAGE_VARFILE
+               "arn:aws:acm:ap-northeast-1:236517346949:certificate/f2f3eb0a-c9c9-4404-b89d-16d3e47b8bcc" > $BASKET_STAGE_VARFILE \
+               "http"
 
 gen_tf_elb_cfg "basket-prod" \
                "basket-prod" \
                "basket-nodeport" \
                "${TOKYO_SUBNETS}" \
-               "" > $BASKET_PROD_VARFILE
+               "arn:aws:acm:ap-northeast-1:236517346949:certificate/9c13521f-c93e-42f0-b969-b11fd571ff91" > $BASKET_PROD_VARFILE \
+               "http"
 
 # gen configs from other load balancers here
 
