@@ -109,3 +109,27 @@ variable "surveillance-elbs-by-region" {
     "us-east-1" = true
   }
 }
+
+
+# basket-stage ELB
+variable "basket-stage_elb_name" {}
+
+variable "basket-stage_subnets" {}
+
+variable "basket-stage_http_listener_instance_port" {}
+
+variable "basket-stage_https_listener_instance_port" {}
+
+variable "basket-stage_ssl_cert_id" {}
+
+# basket-prod ELB
+variable "basket-prod_elb_name" {}
+
+variable "basket-prod_subnets" {}
+
+variable "basket-prod_http_listener_instance_port" {}
+
+variable "basket-prod_https_listener_instance_port" {}
+
+variable "basket-prod_ssl_cert_id" {}
+
