@@ -59,6 +59,10 @@ tf_main() {
 
     PLAN=$(mktemp)
     terraform plan --out $PLAN $TF_ARGS
+    echo "Please verify plan output above and press enter."
+    echo "Otherwise,, Ctrl-C to abort instead of applying"
+    read
+
     # if terraform plan fails, the next command won't run due to
     # set -e at the top of the script.
     terraform apply $PLAN
