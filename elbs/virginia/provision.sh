@@ -46,7 +46,7 @@ gen_tf_elb_cfg "bedrock-stage" \
                "bedrock-stage" \
                "bedrock-nodeport" \
                "${VIRGINIA_SUBNETS}" \
-               "arn:aws:acm:us-east-1:236517346949:certificate/ecb993c5-e2e5-4864-9509-855aaafec0c9" > $BEDROCK_STAGE_VARFILE
+               "arn:aws:acm:us-east-1:236517346949:certificate/50b07528-991c-449c-bb0d-537307a981e9" > $BEDROCK_STAGE_VARFILE
 
 gen_tf_elb_cfg "bedrock-prod" \
                "bedrock-prod" \
