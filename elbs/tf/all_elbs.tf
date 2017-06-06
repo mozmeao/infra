@@ -155,3 +155,25 @@ module "surveillance" {
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
   health_check_http_path       = "/"
 }
+
+module "basket-stage" {
+  source                       = "./elbs"
+  elb_name                     = "${var.basket-stage_elb_name}"
+  subnets                      = "${var.basket-stage_subnets}"
+  http_listener_instance_port  = "${var.basket-stage_http_listener_instance_port}"
+  https_listener_instance_port = "${var.basket-stage_https_listener_instance_port}"
+  ssl_cert_id                  = "${var.basket-stage_ssl_cert_id}"
+  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  health_check_http_path       = "/healthz/"
+}
+
+module "basket-prod" {
+  source                       = "./elbs"
+  elb_name                     = "${var.basket-prod_elb_name}"
+  subnets                      = "${var.basket-prod_subnets}"
+  http_listener_instance_port  = "${var.basket-prod_http_listener_instance_port}"
+  https_listener_instance_port = "${var.basket-prod_https_listener_instance_port}"
+  ssl_cert_id                  = "${var.basket-prod_ssl_cert_id}"
+  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  health_check_http_path       = "/healthz/"
+}

@@ -12,14 +12,13 @@ export KOPS_NAME="virginia.moz.works"
 SNIPPETS_VARFILE=$(pwd)/snippets-virginia.tfvars
 SNIPPETS_STATS_VARFILE=$(pwd)/snippets-stats-virginia.tfvars
 CAREERS_VARFILE=$(pwd)/careers-virginia.tfvars
-
 BEDROCK_STAGE_VARFILE=$(pwd)/bedrock-stage-virginia.tfvars
 BEDROCK_PROD_VARFILE=$(pwd)/bedrock-prod-virginia.tfvars
 WILCARD_ALLIZOM_VARFILE=$(pwd)/wildcard-allizom-virginia.tfvars
-
 NUCLEUS_PROD_VARFILE=$(pwd)/nucleus-prod-virginia.tfvars
-
 SURVEILLANCE_PROD_VARFILE=$(pwd)/surveillance-prod-virginia.tfvars
+BASKET_STAGE_VARFILE=$(pwd)/basket-stage-virginia.tfvars
+BASKET_PROD_VARFILE=$(pwd)/basket-prod-virginia.tfvars
 
 VIRGINIA_SUBNETS="subnet-43125f6e,subnet-a699aaef,subnet-b6ceb6ed"
 
@@ -74,6 +73,18 @@ gen_tf_elb_cfg "surveillance-prod" \
                "arn:aws:acm:us-east-1:236517346949:certificate/2eb042da-5a62-4430-bc6e-1623ebad2030" > $SURVEILLANCE_PROD_VARFILE \
                "http"
 
+gen_tf_elb_cfg "basket-stage" \
+               "basket-stage" \
+               "basket-nodeport" \
+               "${VIRGINIA_SUBNETS}" \
+               "" > $BASKET_STAGE_VARFILE
+
+gen_tf_elb_cfg "basket-prod" \
+               "basket-prod" \
+               "basket-nodeport" \
+               "${VIRGINIA_SUBNETS}" \
+               "" > $BASKET_PROD_VARFILE
+
 # gen configs from other load balancers here
 
 # Apply Terraform
@@ -85,7 +96,9 @@ cd ../tf && ./common.sh \
     -var-file $BEDROCK_STAGE_VARFILE \
     -var-file $WILCARD_ALLIZOM_VARFILE \
     -var-file $NUCLEUS_PROD_VARFILE \
-    -var-file $SURVEILLANCE_PROD_VARFILE
+    -var-file $SURVEILLANCE_PROD_VARFILE \
+    -var-file $BASKET_PROD_VARFILE \
+    -var-file $BASKET_STAGE_VARFILE
 
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"
@@ -153,6 +166,18 @@ echo "Assigning ELB surveillance-prod instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
     --load-balancer-names surveillance-prod \
+    --region "${TF_VAR_region}"
+
+echo "Assigning ELB basket-stage instances from ASG ${ASG_NAME}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names basket-stage \
+    --region "${TF_VAR_region}"
+
+echo "Assigning ELB basket-prod instances from ASG ${ASG_NAME}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names basket-prod \
     --region "${TF_VAR_region}"
 
 attach_nodeport_sg_to_nodes_sg
