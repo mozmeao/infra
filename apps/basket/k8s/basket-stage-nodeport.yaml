@@ -15,7 +15,4 @@ spec:
     - name: http
       port: 80
       targetPort: 8000
-    - name: https
-      port: 443
-      targetPort: 8000
 

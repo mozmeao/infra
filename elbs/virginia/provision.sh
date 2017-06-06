@@ -73,17 +73,21 @@ gen_tf_elb_cfg "surveillance-prod" \
                "arn:aws:acm:us-east-1:236517346949:certificate/2eb042da-5a62-4430-bc6e-1623ebad2030" > $SURVEILLANCE_PROD_VARFILE \
                "http"
 
+# NOTE INVALID CERT
 gen_tf_elb_cfg "basket-stage" \
                "basket-stage" \
                "basket-nodeport" \
                "${VIRGINIA_SUBNETS}" \
-               "" > $BASKET_STAGE_VARFILE
+               "arn:aws:acm:us-east-1:236517346949:certificate/2eb042da-5a62-4430-bc6e-1623ebad2030" > $BASKET_STAGE_VARFILE \
+               "http"
 
+# NOTE INVALID CERT
 gen_tf_elb_cfg "basket-prod" \
                "basket-prod" \
                "basket-nodeport" \
                "${VIRGINIA_SUBNETS}" \
-               "" > $BASKET_PROD_VARFILE
+               "arn:aws:acm:us-east-1:236517346949:certificate/2eb042da-5a62-4430-bc6e-1623ebad2030" > $BASKET_PROD_VARFILE \
+               "http"
 
 # gen configs from other load balancers here
 
