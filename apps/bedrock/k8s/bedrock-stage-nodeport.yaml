@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+  labels:
+    app: bedrock-stage
+  name: bedrock-nodeport
+  namespace: bedrock-stage
+spec:
+  type: NodePort
+  selector:
+    app: bedrock-stage
+    type: web
+  ports:
+    - name: https
+      port: 443
+      targetPort: 8000
