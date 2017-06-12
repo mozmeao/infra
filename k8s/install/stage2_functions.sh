@@ -135,11 +135,30 @@ customize_workflow() {
         rm -rf ./workflow/charts/${comp}
     done
 
+    # remove deleted components from requirements.yaml
+    cp ./workflow/requirements.yaml ./workflow/requirements.backup
+    y2j < ./workflow/requirements.yaml | \
+        jq 'del(.dependencies[] | select(.name=="fluentd"))' | \
+        jq 'del(.dependencies[] | select(.name=="redis"))' | \
+        jq 'del(.dependencies[] | select(.name=="logger"))' | \
+        jq 'del(.dependencies[] | select(.name=="monitor"))' | \
+        jq 'del(.dependencies[] | select(.name=="nsqd"))' | j2y > ./workflow/patched_requirements.yaml
+    # y2j/j2y flip out if you overwrite the file you're reading from, so
+    # write to a temp file first
+    cp ./workflow/patched_requirements.yaml ./workflow/requirements.yaml
+
+
     # SSL is handled at the ELB, but the ELB still wants to point to the Deis router SSL
     # port internally. We change the ssl port to be unencrypted (http) internally.
     # TODO: use a template with condition and submit upstream
     sed -i "s/6443/8080/" workflow/charts/router/templates/router-service.yaml
+
+
     echo "Workflow customized"
+}
+
+tf_out_cmd() {
+    (cd out/terraform && terraform output $1) 
 }
 
 install_workflow_chart() {
@@ -148,24 +167,23 @@ install_workflow_chart() {
     echo "Installing Deis Workflow"
     helm repo add deis https://charts.deis.com/workflow
     helm inspect values deis/workflow | sed -n '1!p' > workflow_config.yaml
-    TF_OUTPUT_CMD="terraform output --state ./out/terraform/.terraform/terraform.tfstate"
 
     # s3 settings
-    region=$(${TF_OUTPUT_CMD} region)
-    registry_bucket=$(${TF_OUTPUT_CMD} registry-bucket)
-    builder_bucket=$(${TF_OUTPUT_CMD} builder-bucket)
-    s3_accesskey=$(${TF_OUTPUT_CMD} deis_s3_accesskey)
-    s3_secretkey=$(${TF_OUTPUT_CMD} deis_s3_secretkey)
+    region=$(tf_out_cmd s3-region)
+    registry_bucket=$(tf_out_cmd registry-bucket)
+    builder_bucket=$(tf_out_cmd builder-bucket)
+    s3_accesskey=$(tf_out_cmd deis_s3_accesskey)
+    s3_secretkey=$(tf_out_cmd deis_s3_secretkey)
 
     # rds settings
     if [ -z "${KOPS_EXISTING_RDS}" ]
     then
         echo "Using new RDS instance"
-        pgsql_address=$(${TF_OUTPUT_CMD} pgsql_address)
-        pgsql_db_name=$(${TF_OUTPUT_CMD} pgsql_db_name)
-        pgsql_password=$(${TF_OUTPUT_CMD} pgsql_password)
-        pgsql_port=$(${TF_OUTPUT_CMD} pgsql_port)
-        pgsql_username=$(${TF_OUTPUT_CMD} pgsql_username)
+        pgsql_address=$(tf_out_cmd pgsql_address)
+        pgsql_db_name=$(tf_out_cmd pgsql_db_name)
+        pgsql_password=$(tf_out_cmd pgsql_password)
+        pgsql_port=$(tf_out_cmd pgsql_port)
+        pgsql_username=$(tf_out_cmd pgsql_username)
     else
         echo "Using existing RDS settings"
         pgsql_address=${KOPS_PGSQL_ADDRESS}
