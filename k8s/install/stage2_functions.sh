@@ -151,8 +151,6 @@ customize_workflow() {
     # port internally. We change the ssl port to be unencrypted (http) internally.
     # TODO: use a template with condition and submit upstream
     sed -i "s/6443/8080/" workflow/charts/router/templates/router-service.yaml
-
-
     echo "Workflow customized"
 }
 
