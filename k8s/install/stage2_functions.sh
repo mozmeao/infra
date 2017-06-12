@@ -147,7 +147,6 @@ customize_workflow() {
     # write to a temp file first
     cp ./workflow/patched_requirements.yaml ./workflow/requirements.yaml
 
-
     # SSL is handled at the ELB, but the ELB still wants to point to the Deis router SSL
     # port internally. We change the ssl port to be unencrypted (http) internally.
     # TODO: use a template with condition and submit upstream
