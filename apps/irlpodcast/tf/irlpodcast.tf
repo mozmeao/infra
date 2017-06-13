@@ -74,8 +74,15 @@ EOF
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = "${aws_s3_bucket.irlpodcast.bucket_domain_name}"
+    domain_name = "irlpodcast.s3-website-us-west-2.amazonaws.com"
     origin_id   = "IRLPodcast"
+    custom_origin_config {
+      origin_protocol_policy = "https-only"
+      http_port = "80"
+      https_port = "443"
+      origin_ssl_protocols = ["TLSv1"]
+      #origin_read_timeout = 4
+    }
   }
 
   enabled             = true
