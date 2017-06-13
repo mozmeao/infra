@@ -77,7 +77,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     domain_name = "irlpodcast.s3-website-us-west-2.amazonaws.com"
     origin_id   = "IRLPodcast"
     custom_origin_config {
-      origin_protocol_policy = "https-only"
+      origin_protocol_policy = "http-only"
       http_port = "80"
       https_port = "443"
       origin_ssl_protocols = ["TLSv1"]
