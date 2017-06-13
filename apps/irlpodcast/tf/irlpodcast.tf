@@ -81,7 +81,6 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       http_port = "80"
       https_port = "443"
       origin_ssl_protocols = ["TLSv1"]
-      #origin_read_timeout = 4
     }
   }
 
