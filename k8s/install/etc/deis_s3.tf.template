@@ -82,7 +82,7 @@ output "registry-bucket" {
   value = "${var.registry-bucket-name}"
 }
 
-output "region" {
+output "s3-region" {
   value = "KOPS_REGION"
 }
 

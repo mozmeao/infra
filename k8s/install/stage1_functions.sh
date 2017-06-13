@@ -58,6 +58,8 @@ run_kops() {
         --node-count=${KOPS_NODE_COUNT} \
         --node-size=${KOPS_NODE_SIZE} \
         --master-size=${KOPS_MASTER_SIZE} \
+        --master-volume-size=${KOPS_MASTER_VOLUME_SIZE_GB} \
+        --node-volume-size=${KOPS_NODE_VOLUME_SIZE_GB} \
         --ssh-public-key=${KOPS_PUBLIC_KEY} \
         --kubernetes-version=${KOPS_K8S_VERSION}
 }
@@ -85,6 +87,11 @@ render_tf_templates() {
         | sed s/TF_RESOURCE_NAME/${TF_RESOURCE_NAME}/g \
         | sed s/KOPS_NAME/${KOPS_NAME}/g \
         > ./out/terraform/deis_s3.tf
+
+    cat ${KOPS_INSTALLER}/etc/tf_backend.template \
+        | sed s/TF_STATE_BUCKET/${TF_STATE_BUCKET}/g \
+        | sed s/KOPS_REGION/${KOPS_REGION}/g \
+        > ./out/terraform/tf_backend.tf
 
     if [ -z "${KOPS_EXISTING_RDS}" ]
     then
@@ -116,15 +123,7 @@ setup_tf_s3_state_store() {
     aws s3 mb s3://${TF_STATE_BUCKET} --region ${KOPS_REGION} || true
 
     echo "Configuring Terraform to use an encrypted remote S3 bucket for state storage"
-    # store TF state in S3
-    terraform remote config \
-        -backend=s3 \
-        -backend-config="bucket=${TF_STATE_BUCKET}" \
-        -backend-config="key=${KOPS_SHORT_NAME}/terraform.tfstate" \
-        -backend-config="encrypt=1" \
-        -backend-config="region=${KOPS_REGION}"
-    echo "Encryption for TF state:"
-    aws s3api head-object --bucket=$TF_STATE_BUCKET --key=${KOPS_SHORT_NAME}/terraform.tfstate | jq -r .ServerSideEncryption
+    terraform init
     cd ../../
 }
 
