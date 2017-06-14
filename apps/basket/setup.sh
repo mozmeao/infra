@@ -11,13 +11,13 @@ if [ -z "$KUBECONFIG" ]; then
     exit 1
 fi
 
-#deis create basket-prod --no-remote
-#deis create basket-stage --no-remote
-#deis create basket-dev --no-remote
+deis create basket-prod --no-remote
+deis create basket-stage --no-remote
+deis create basket-dev --no-remote
 
-#deis pull mozmeao/basket:4094a3dcf780a1996b5b404487288643d3bacc46 -a basket-prod
-#deis pull mozmeao/basket:4094a3dcf780a1996b5b404487288643d3bacc46 -a basket-stage
-#deis pull mozmeao/basket:4094a3dcf780a1996b5b404487288643d3bacc46 -a basket-dev
+deis pull mozmeao/basket:4094a3dcf780a1996b5b404487288643d3bacc46 -a basket-prod
+deis pull mozmeao/basket:4094a3dcf780a1996b5b404487288643d3bacc46 -a basket-stage
+deis pull mozmeao/basket:4094a3dcf780a1996b5b404487288643d3bacc46 -a basket-dev
 
 deis limits:set web=150M/300M -a basket-dev
 deis limits:set web=100m/200m --cpu -a basket-dev
