@@ -157,6 +157,13 @@ Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, `ne
 ---
 # Post install
 
+- [ ] configure Deis
+- [ ] store creds
+- [ ] store kubeconfig and deis profile
+- [ ] update Jenkins
+- [ ] request app certs for new region
+- [ ] run setup.sh for each application to create nodeports / Deis apps
+- [ ] create ELB's (nodeports and certs must be ready)
 
 ### Setup a Deis Workflow user
 

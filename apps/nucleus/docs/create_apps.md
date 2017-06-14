@@ -1,5 +1,6 @@
 # Nucleus app setup
 
+```bash
 deis2 create nucleus-dev --no-remote
 deis2 create nucleus-stage --no-remote
 deis2 create nucleus-prod --no-remote
@@ -23,4 +24,4 @@ deis2 config:set  SSL_DISABLE=True -a nucleus-prod
 
 deis2 config:set ALLOWED_HOSTS=\* -a nucleus-stage
 deis2 config:set ALLOWED_HOSTS=\* -a nucleus-prod
-
+```
