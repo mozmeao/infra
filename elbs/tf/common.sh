@@ -40,6 +40,7 @@ setup_tf_envs() {
     set +e
     terraform env new tokyo
     terraform env new virginia
+    terraform env new tokyo
     set -e
 }
 

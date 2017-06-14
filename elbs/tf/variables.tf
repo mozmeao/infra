@@ -88,6 +88,7 @@ variable "nucleus-elbs-by-region" {
   type = "map"
   default = {
     "us-east-1" = true
+    "eu-central-1" = true
   }
 }
 
@@ -107,9 +108,9 @@ variable "surveillance-elbs-by-region" {
   type = "map"
   default = {
     "us-east-1" = true
+    "eu-central--1" = true
   }
 }
-
 
 # basket-stage ELB
 variable "basket-stage_elb_name" {}

@@ -158,6 +158,10 @@ Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, `ne
 # Post install
 
 
+### Setup a Deis Workflow user
+
+Follow the docs [here](https://deis.com/docs/workflow/quickstart/deploy-an-app/) to setup an initial admin user.
+
 ### Generating kubeconfig
 
 More info [here](https://github.com/kubernetes/kops/blob/master/docs/tips.md)

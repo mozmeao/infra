@@ -13,6 +13,21 @@ if [ -z "${TF_VAR_region}" ]; then
   exit -1
 fi
 
+# this returns a non-0 status code if the cert does not exist
+get_acm_cert_arn() {
+    REGION=$1
+    DOMAIN=$2
+    QUERY=".CertificateSummaryList[] | select(.DomainName == \"${DOMAIN}\") | .CertificateArn"
+    aws acm list-certificates --region "${REGION}" \
+        | jq -e -r "${QUERY}"
+}
+
+get_iam_cert_arn() {
+    DOMAIN=$1
+    QUERY=".ServerCertificateMetadataList[] | select(.ServerCertificateName == \"${DOMAIN}\") | .Arn"
+    aws iam list-server-certificates | jq -e -r "${QUERY}"
+}
+
 get_redirector_port() {
     kubectl -n redirector get service redirector -o json \
         | jq ".spec.ports[] | select(.name == \"http\") | .nodePort"
