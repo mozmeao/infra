@@ -117,9 +117,7 @@ variable "wildcard-allizom_ssl_cert_id" {}
 variable "wildcard-allizom-elbs-by-region" {
   type = "map"
   default = {
-    "eu-central-1" = true
     "us-east-1" = true
-    # skipping Frankfurt
   }
 }
 
