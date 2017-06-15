@@ -7,6 +7,6 @@ Initially, we only have dev/stage/prod SQS queues for deleted messages.
 # Applying
 
 ```shell
-cd ./portland
+cd ./infra/multi_region/portland
 ./provision.sh
 ```

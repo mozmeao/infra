@@ -32,5 +32,6 @@ touch $APPNAME/setup.sh
 touch $APPNAME/teardown.sh
 touch $APPNAME/README.md
 
+find . -name "*.sh" -exec chmod +x {} \;
 
 tree ./$APPNAME
