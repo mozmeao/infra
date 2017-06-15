@@ -194,7 +194,7 @@ variable "basket-prod_https_listener_instance_port" {}
 
 variable "basket-prod_ssl_cert_id" {}
 
-variable "bedrock-prod-elbs-by-region" {
+variable "basket-prod-elbs-by-region" {
   type = "map"
   default = {
     "ap-northeast-1" = true

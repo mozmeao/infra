@@ -120,7 +120,7 @@ module "bedrock-prod" {
 }
 
 module "wilcard-allizom" {
-  elb_count = "${lookup(var.wilcard-allizom-elbs-by-region, var.region, 0)}"
+  elb_count = "${lookup(var.wildcard-allizom-elbs-by-region, var.region, 0)}"
   source                       = "./elbs"
   elb_name                     = "${var.wildcard-allizom_elb_name}"
   subnets                      = "${var.wildcard-allizom_subnets}"
