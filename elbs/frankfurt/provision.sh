@@ -2,7 +2,7 @@
 
 export TERRAFORM_ENV="frankfurt"
 export ELB_PROVISIONING_REGION="eu-central-1"
-export TF_VAR_region="eu-central-11"
+export TF_VAR_region="eu-central-1"
 export TF_VAR_vpc_id="vpc-4d036a25"
 export KOPS_NAME="frankfurt.moz.works"
 
@@ -35,11 +35,11 @@ gen_tf_elb_cfg "snippets" \
 #               "${FRANKFURT_SUBNETS}" \
 #               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "snippets-stats.moz.works") > $SNIPPETS_STATS_VARFILE
 
-#gen_tf_elb_cfg "careers" \
-#               "careers-prod" \
-#               "careers-nodeport" \
-#               "${FRANKFURT_SUBNETS}" \
-#               $(get_iam_cert_arn "careers-mozilla-org") > $CAREERS_VARFILE
+gen_tf_elb_cfg "careers" \
+               "careers-prod" \
+               "careers-nodeport" \
+               "${FRANKFURT_SUBNETS}" \
+               $(get_iam_cert_arn "careers-mozilla-org") > $CAREERS_VARFILE
 
 # www.allizom.org has multiple validate certs, so we hardcode the desired value
 gen_tf_elb_cfg "bedrock-stage" \
@@ -66,45 +66,44 @@ gen_tf_elb_cfg "wildcard-allizom" \
 #               "nucleus-prod" \
 #               "nucleus-nodeport" \
 #               "${FRANKFURT_SUBNETS}" \
-#               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "nucleus.mozilla.org") > $NUCLEUS_PROD_VARFILE \
-#               "http"
+#               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "nucleus.mozilla.org") \
+#               "http" > $NUCLEUS_PROD_VARFILE
 #
 #gen_tf_elb_cfg "surveillance-prod" \
 #               "surveillance-prod" \
 #               "surveillance-nodeport" \
 #               "${FRANKFURT_SUBNETS}" \
-#               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "surveillance.mozilla.org") > $SURVEILLANCE_PROD_VARFILE \
-#               "http"
+#               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "surveillance.mozilla.org") \
+#               "http" > $SURVEILLANCE_PROD_VARFILE
 
 gen_tf_elb_cfg "basket-stage" \
                "basket-stage" \
                "basket-nodeport" \
                "${FRANKFURT_SUBNETS}" \
-               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "basket.allizom.org") > $BASKET_STAGE_VARFILE \
-               "http"
+               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "basket.allizom.org") \
+               "http" > $BASKET_STAGE_VARFILE
 
 gen_tf_elb_cfg "basket-prod" \
                "basket-prod" \
                "basket-nodeport" \
                "${FRANKFURT_SUBNETS}" \
-               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "baset.mozilla.org")  > $BASKET_PROD_VARFILE \
-               "http"
+               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "basket.mozilla.org") \
+               "http" > $BASKET_PROD_VARFILE
 
 # gen configs from other load balancers here
 
 # Apply Terraform
 cd ../tf && ./common.sh \
     -var-file $BASKET_PROD_VARFILE \
-    -var-file $BASKET_STAGE_VARFILE
+    -var-file $BASKET_STAGE_VARFILE \
     -var-file $BEDROCK_PROD_VARFILE \
     -var-file $BEDROCK_STAGE_VARFILE \
+    -var-file $CAREERS_VARFILE \
+    -var-file $NUCLEUS_PROD_VARFILE \
+    -var-file $SNIPPETS_STATS_VARFILE \
     -var-file $SNIPPETS_VARFILE \
+    -var-file $SURVEILLANCE_PROD_VARFILE \
     -var-file $WILCARD_ALLIZOM_VARFILE
-
-    #-var-file $NUCLEUS_PROD_VARFILE \
-    #-var-file $SURVEILLANCE_PROD_VARFILE \
-    #-var-file $SNIPPETS_STATS_VARFILE \
-    #-var-file $CAREERS_VARFILE \
 
 
 # attach each ELB to the k8s nodes ASG
@@ -127,10 +126,10 @@ ASG_NAME="nodes.${KOPS_NAME}"
 #        --region us-east-1
 
 #echo "Assigning ELB careers instances from ASG ${ASG_NAME}"
-#aws autoscaling attach-load-balancers \
-#    --auto-scaling-group-name "${ASG_NAME}" \
-#    --load-balancer-names careers \
-#    --region "${TF_VAR_region}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names careers \
+    --region "${TF_VAR_region}"
 
 echo "Assigning ELB snippets instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \

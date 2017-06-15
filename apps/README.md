@@ -38,8 +38,10 @@ testapp/
 be created. This currently consists of NodePorts (which must be created after Deis
 creates the K8s app namespace). New Relic/Datadog monitoring should be setup here 
 as well.
-  - Until we have something better in place, `setup.sh`, `teardown.sh` and `scale.sh`
-should detect that Kubernetes and Deis Workflow environment variables are set correctly.
+  - scripts should include apps/bin/common.sh, and call `check_meao_env` to ensure
+  the user has Deis and Kubernetes environment variables set.
+  - it's ok for `setup.sh` to pull older/hardcoded versions of an application,
+  as Jenkins will in most cases push the latest version out for us.
 - `teardown.sh` can delete the Deis app and K8s namespace (including any services
 in the namespace). New Relic/Datadog monitoring should be deleted here.
 - `scale.sh` should include Deis app scaling, or any HPA scaling that needs to be
