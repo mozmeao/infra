@@ -38,6 +38,8 @@ testapp/
 be created. This currently consists of NodePorts (which must be created after Deis
 creates the K8s app namespace). New Relic/Datadog monitoring should be setup here 
 as well.
+  - Until we have something better in place, `setup.sh`, `teardown.sh` and `scale.sh`
+should detect that Kubernetes and Deis Workflow environment variables are set correctly.
 - `teardown.sh` can delete the Deis app and K8s namespace (including any services
 in the namespace). New Relic/Datadog monitoring should be deleted here.
 - `scale.sh` should include Deis app scaling, or any HPA scaling that needs to be
@@ -56,4 +58,3 @@ It's divided into two separate areas: `multi_region` and `shared`.
   - IAM related resources should be created in our private repo.
 - `./k8s` contains any Kubernetes resource yaml that needs to be applied when `setup.sh`
 is run.
-
