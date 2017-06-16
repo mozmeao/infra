@@ -40,7 +40,12 @@ The purpose of this structure is to Make It Easy™ for engineers to deploy appl
 - `setup.sh` includes Deis Workflow provisioning and any K8s services that need to
 be created. This currently consists of NodePorts (which must be created after Deis
 creates the K8s app namespace). New Relic/Datadog monitoring should be setup here
-as well.
+as well. 
+
+The goal here is not to have the app production-ready, but to create 
+any components the app needs, leaving a few _documented_ manual steps such as
+pushing a Deis config. Once this is complete, Jenkins can finish the
+work of deploying the latest version of the app.
   - scripts should include `bin/common.sh`, and call `check_meao_env` to ensure
   the user has Deis and Kubernetes environment variables set.
   - it's ok for `setup.sh` to pull older/hardcoded versions of an application,
