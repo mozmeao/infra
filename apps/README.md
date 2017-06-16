@@ -46,8 +46,7 @@ or new instances of an application.
 be created. This currently consists of NodePorts (which must be created after Deis
 creates the K8s app namespace). New Relic/Datadog monitoring should be setup here
 as well. 
-
-The goal here is not to have the app production-ready, but to create 
+  - The goal here is not to have the app production-ready, but to create 
 any components the app needs, leaving a few _documented_ manual steps such as
 pushing a Deis config. Once this is complete, Jenkins can finish the
 work of deploying the latest version of the app.
