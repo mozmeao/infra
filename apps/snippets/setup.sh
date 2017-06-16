@@ -1,15 +1,7 @@
 #!/bin/bash -e
 
-if [ -z "$DEIS_PROFILE" ]; then
-    echo "Please set DEIS_PROFILE"
-    exit 1
-fi
-
-
-if [ -z "$KUBECONFIG" ]; then
-    echo "Please set KUBECONFIG"
-    exit 1
-fi
+source ../bin/common.sh
+check_meao_env
 
 wget https://raw.githubusercontent.com/mozmar/snippets-service/master/Procfile
 deis create snippets-prod --no-remote

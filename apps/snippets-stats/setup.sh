@@ -1,17 +1,9 @@
 #!/bin/bash -e
 
-if [ -z "$DEIS_PROFILE" ]; then
-    echo "Please set DEIS_PROFILE"
-    exit 1
-fi
+source ../bin/common.sh
+check_meao_env
 
-
-if [ -z "$KUBECONFIG" ]; then
-    echo "Please set KUBECONFIG"
-    exit 1
-fi
-
-deis create snippets-stats --no-remote
-deis config:set ALLOWED_HOSTS=\* -a snippets-stats
-kubectl -n snippets-stats apply -f ./snippets-stats-prod-nodeport.yaml
-deis pull mozmeao/snippets-stats:37727e -a snippets-stats
+deis create snippets-stats-prod --no-remote
+deis config:set ALLOWED_HOSTS=\* -a snippets-stats-prod
+kubectl -n snippets-stats-prod apply -f ./snippets-stats-prod-nodeport.yaml
+deis pull mozmeao/snippets-stats:37727e -a snippets-stats-prod

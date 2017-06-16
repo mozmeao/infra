@@ -1,5 +1,8 @@
 #!/bin/bash
 
+source ../bin/common.sh
+check_meao_env
+
 deis limits:set web=300M/600M -a bedrock-prod
 deis limits:set web=250m/1000m --cpu -a bedrock-prod
 deis autoscale:set web --min=5 --max=20 --cpu-percent=80 -a bedrock-prod
