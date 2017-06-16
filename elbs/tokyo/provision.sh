@@ -72,6 +72,9 @@ gen_tf_elb_cfg "basket-prod" \
                "arn:aws:acm:ap-northeast-1:236517346949:certificate/9c13521f-c93e-42f0-b969-b11fd571ff91" > $BASKET_PROD_VARFILE \
                "http"
 
+gen_dummy_elb_cfg "nucleus-prod" > $NUCLEUS_PROD_VARFILE
+gen_dummy_elb_cfg "surveillance-prod" > $SURVEILLANCE_PROD_VARFILE
+
 # gen configs from other load balancers here
 
 # Apply Terraform
@@ -79,7 +82,7 @@ gen_tf_elb_cfg "basket-prod" \
 #       them set, even though we're not creating a nucleus prod elb in Tokyo
 cd ../tf && ./common.sh \
     -var-file $BASKET_PROD_VARFILE \
-    -var-file $BASKET_STAGE_VARFILE
+    -var-file $BASKET_STAGE_VARFILE \
     -var-file $BEDROCK_PROD_VARFILE \
     -var-file $BEDROCK_STAGE_VARFILE \
     -var-file $CAREERS_VARFILE \
@@ -87,7 +90,7 @@ cd ../tf && ./common.sh \
     -var-file $SNIPPETS_STATS_VARFILE \
     -var-file $SNIPPETS_VARFILE \
     -var-file $SURVEILLANCE_PROD_VARFILE \
-    -var-file $WILCARD_ALLIZOM_VARFILE \
+    -var-file $WILCARD_ALLIZOM_VARFILE
 
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"

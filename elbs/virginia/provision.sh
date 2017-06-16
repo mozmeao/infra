@@ -92,7 +92,7 @@ gen_tf_elb_cfg "basket-prod" \
 # Apply Terraform
 cd ../tf && ./common.sh \
     -var-file $BASKET_PROD_VARFILE \
-    -var-file $BASKET_STAGE_VARFILE
+    -var-file $BASKET_STAGE_VARFILE \
     -var-file $BEDROCK_PROD_VARFILE \
     -var-file $BEDROCK_STAGE_VARFILE \
     -var-file $CAREERS_VARFILE \
@@ -100,7 +100,7 @@ cd ../tf && ./common.sh \
     -var-file $SNIPPETS_STATS_VARFILE \
     -var-file $SNIPPETS_VARFILE \
     -var-file $SURVEILLANCE_PROD_VARFILE \
-    -var-file $WILCARD_ALLIZOM_VARFILE \
+    -var-file $WILCARD_ALLIZOM_VARFILE
 
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"

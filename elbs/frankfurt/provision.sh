@@ -29,6 +29,10 @@ gen_tf_elb_cfg "snippets" \
                "${FRANKFURT_SUBNETS}" \
                $(get_iam_cert_arn "snippets.mozilla.com") > $SNIPPETS_VARFILE
 
+
+
+gen_dummy_elb_cfg "snippets-stats" > $SNIPPETS_STATS_VARFILE
+
 #gen_tf_elb_cfg "snippets-stats" \
 #               "snippets-stats" \
 #               "snippets-stats-nodeport" \
@@ -61,6 +65,11 @@ gen_tf_elb_cfg "wildcard-allizom" \
                "deis-router" \
                "${FRANKFURT_SUBNETS}" \
                $(get_iam_cert_arn "wildcard.allizom.org_20180103") > $WILCARD_ALLIZOM_VARFILE
+
+
+gen_dummy_elb_cfg "nucleus-prod" > $NUCLEUS_PROD_VARFILE
+gen_dummy_elb_cfg "surveillance-prod" > $SURVEILLANCE_PROD_VARFILE
+
 
 #gen_tf_elb_cfg "nucleus-prod" \
 #               "nucleus-prod" \

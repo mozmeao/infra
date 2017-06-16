@@ -77,6 +77,20 @@ ${ELB_NAME}_ssl_cert_id = "${SSL_CERT_ID}"
 EOF
 }
 
+# used if you don't want to create an ELB in a given region,
+# but Terraform still requires the variables to be set.
+gen_dummy_elb_cfg() {
+    ELB_NAME=$1
+    cat <<EOF
+${ELB_NAME}_elb_name = ""
+${ELB_NAME}_subnets = ""
+${ELB_NAME}_http_listener_instance_port = 0
+${ELB_NAME}_https_listener_instance_port = 0
+${ELB_NAME}_ssl_cert_id = ""
+EOF
+}
+
+
 attach_nodeport_sg_to_nodes_sg() {
     echo "Attaching nodeport security group to nodes sg"
     NODES_SECURITY_GROUP_NAME="nodes.${KOPS_NAME}"
