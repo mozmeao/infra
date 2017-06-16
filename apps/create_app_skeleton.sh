@@ -10,7 +10,7 @@ clusters=(frankfurt tokyo virginia)
 APPNAME=$1
 mkdir -p $APPNAME
 mkdir -p $APPNAME/docs
-touch $APPNAME/docs/support.md
+echo "# ${APPNAME} support documentation" > $APPNAME/docs/support.md
 mkdir -p $APPNAME/k8s
 mkdir -p $APPNAME/infra/multi_region
 mkdir -p $APPNAME/infra/multi_region/tf
@@ -27,10 +27,10 @@ touch $APPNAME/infra/multi_region/tf/outputs.tf
 mkdir -p $APPNAME/infra/shared
 touch $APPNAME/infra/shared/provision.sh
 touch $APPNAME/infra/shared/main.tf
-touch $APPNAME/scale.sh
-touch $APPNAME/setup.sh
-touch $APPNAME/teardown.sh
-touch $APPNAME/README.md
+cp ./etc/script_template.sh $APPNAME/scale.sh
+cp ./etc/script_template.sh $APPNAME/setup.sh
+cp ./etc/script_template.sh $APPNAME/teardown.sh
+echo "# ${APPNAME} provisioning\n" > $APPNAME/README.md
 
 find . -name "*.sh" -exec chmod +x {} \;
 

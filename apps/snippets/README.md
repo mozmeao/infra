@@ -20,3 +20,8 @@ git commit
 cd ./my_snippets_region
 ./provision.sh
 ```
+
+### Project Source
+
+https://github.com/mozmar/snippets-service/
+
