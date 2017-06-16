@@ -11,7 +11,6 @@ if [ -z "$KUBECONFIG" ]; then
     exit 1
 fi
 
-# TODO: gitignore?
 wget https://raw.githubusercontent.com/mozmar/basket/master/Procfile
 
 deis create basket-prod --no-remote
