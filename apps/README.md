@@ -34,7 +34,12 @@ testapp/
 └── teardown.sh
 ```
   
-The purpose of this structure is to Make It Easy™ for engineers to deploy applications without having to search through Github issues, other repos, or running commands manually. While our application installs aren't 100% automated _yet_, adding as many commands as possible to the scripts in an application directory will make it easier down the road to setup new regions or new instances of an application.
+The purpose of this structure is to Make It Easy™ for engineers to deploy 
+applications without having to search through Github issues, other repos, 
+or running many commands manually. While our application installs aren't 100% 
+automated _yet_, adding as many commands as possible to the scripts in an 
+application directory will make it easier down the road to setup new regions 
+or new instances of an application.
 
 
 - `setup.sh` includes Deis Workflow provisioning and any K8s services that need to
@@ -50,19 +55,22 @@ work of deploying the latest version of the app.
   the user has Deis and Kubernetes environment variables set.
   - it's ok for `setup.sh` to pull older/hardcoded versions of an application,
   as Jenkins will in most cases push the latest version out for us.
-  - when creating Deis applications, keep in mind that a `Procfile` is needed in the current directory. For now, we can download a Procfile into the current directory with a command such as:
+  - when creating Deis applications, keep in mind that a `Procfile` is needed in
+  the current directory. For now, we can download a Procfile into the current 
+  directory with a command such as:
     `wget https://raw.githubusercontent.com/mozilla/bedrock/master/Procfile`
 - `teardown.sh` can delete the Deis app and K8s namespace (including any services
 in the namespace). New Relic/Datadog monitoring should be deleted here.
 - `scale.sh` should include Deis app scaling, or any HPA scaling that needs to be
 completed. The reason that it's separated into it's own script is that it can
 take quite some time to scale Deis apps.
-- `README.md` should contain any high level information regarding the application, including a link to the source repo for the app.
-More detailed documentation should be placed in the `./docs` directory.
+- `README.md` should contain any high level information regarding the application, 
+including a link to the source repo for the app.  More detailed documentation should be placed in the `./docs` directory.
 - `docs/support.md` should include any links, docs and/or commands that can be run to troubleshoot an application.
 - the `infra` directory contains any additional application-specific Terraform provisioning.
 It's divided into two separate areas: `multi_region` and `shared`.
-  - `multi-region` are resources that can be created in many regions. Examples are EC2 instances, security groups, RDS instances, SQS etc.
+  - `multi-region` are resources that can be created in many regions. Examples 
+  are EC2 instances, security groups, RDS instances, SQS etc.
   - `shared` are resources that are global across AWS.
   - **NOTE**:  Terraform state MUST be stored in an encrypted bucket. **NEVER**
   check Terraform state containing sensitive information into this Git repo.
