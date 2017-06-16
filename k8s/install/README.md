@@ -164,6 +164,8 @@ Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, `ne
 - [ ] request app certs for new region
 - [ ] run setup.sh for each application to create nodeports / Deis apps
 - [ ] create ELB's (nodeports and certs must be ready)
+- [ ] run scale.sh for each application. This can be slow and should be done
+once the app seems to be working.
 
 ### Setup a Deis Workflow user
 
