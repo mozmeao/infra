@@ -3,9 +3,9 @@ kind: Service
 metadata:
   annotations:
   labels:
-    app: snippets-stats-prod
+    app: snippets-stats
   name: snippets-stats-nodeport
-  namespace: snippets-stats-prod
+  namespace: snippets-stats
 spec:
   type: NodePort
   selector:

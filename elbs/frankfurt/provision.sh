@@ -29,15 +29,11 @@ gen_tf_elb_cfg "snippets" \
                "${FRANKFURT_SUBNETS}" \
                $(get_iam_cert_arn "snippets.mozilla.com") > $SNIPPETS_VARFILE
 
-
-
-gen_dummy_elb_cfg "snippets-stats" > $SNIPPETS_STATS_VARFILE
-
-#gen_tf_elb_cfg "snippets-stats" \
-#               "snippets-stats" \
-#               "snippets-stats-nodeport" \
-#               "${FRANKFURT_SUBNETS}" \
-#               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "snippets-stats.moz.works") > $SNIPPETS_STATS_VARFILE
+gen_tf_elb_cfg "snippets-stats" \
+               "snippets-stats" \
+               "snippets-stats-nodeport" \
+               "${FRANKFURT_SUBNETS}" \
+               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "snippets-stats.moz.works") > $SNIPPETS_STATS_VARFILE
 
 gen_tf_elb_cfg "careers" \
                "careers-prod" \
@@ -134,7 +130,7 @@ ASG_NAME="nodes.${KOPS_NAME}"
 #        --load-balancer-name snippets-stats \
 #        --region us-east-1
 
-#echo "Assigning ELB careers instances from ASG ${ASG_NAME}"
+echo "Assigning ELB careers instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
     --load-balancer-names careers \
@@ -146,11 +142,11 @@ aws autoscaling attach-load-balancers \
     --load-balancer-names snippets \
     --region "${TF_VAR_region}"
 
-#echo "Assigning ELB snippets-stats instances from ASG ${ASG_NAME}"
-#aws autoscaling attach-load-balancers \
-#    --auto-scaling-group-name "${ASG_NAME}" \
-#    --load-balancer-names snippets-stats \
-#    --region "${TF_VAR_region}"
+echo "Assigning ELB snippets-stats instances from ASG ${ASG_NAME}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names snippets-stats \
+    --region "${TF_VAR_region}"
 
 echo "Assigning ELB bedrock-stage instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
