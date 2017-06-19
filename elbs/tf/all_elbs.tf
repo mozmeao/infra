@@ -71,6 +71,7 @@ module "snippets" {
   https_listener_instance_port = "${var.snippets_https_listener_instance_port}"
   ssl_cert_id                  = "${var.snippets_ssl_cert_id}"
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  health_check_http_path       = "/healthz/"
 }
 
 module "snippets-stats" {
@@ -93,6 +94,7 @@ module "careers" {
   https_listener_instance_port = "${var.careers_https_listener_instance_port}"
   ssl_cert_id                  = "${var.careers_ssl_cert_id}"
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  health_check_http_path       = "/healthz/"
 }
 
 module "bedrock-stage" {
