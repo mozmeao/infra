@@ -13,6 +13,21 @@ if [ -z "${TF_VAR_region}" ]; then
   exit -1
 fi
 
+# this returns a non-0 status code if the cert does not exist
+get_acm_cert_arn() {
+    REGION=$1
+    DOMAIN=$2
+    QUERY=".CertificateSummaryList[] | select(.DomainName == \"${DOMAIN}\") | .CertificateArn"
+    aws acm list-certificates --region "${REGION}" \
+        | jq -e -r "${QUERY}"
+}
+
+get_iam_cert_arn() {
+    DOMAIN=$1
+    QUERY=".ServerCertificateMetadataList[] | select(.ServerCertificateName == \"${DOMAIN}\") | .Arn"
+    aws iam list-server-certificates | jq -e -r "${QUERY}"
+}
+
 get_redirector_port() {
     kubectl -n redirector get service redirector -o json \
         | jq ".spec.ports[] | select(.name == \"http\") | .nodePort"
@@ -61,6 +76,20 @@ ${ELB_NAME}_https_listener_instance_port = ${HTTPS_PORT}
 ${ELB_NAME}_ssl_cert_id = "${SSL_CERT_ID}"
 EOF
 }
+
+# used if you don't want to create an ELB in a given region,
+# but Terraform still requires the variables to be set.
+gen_dummy_elb_cfg() {
+    ELB_NAME=$1
+    cat <<EOF
+${ELB_NAME}_elb_name = ""
+${ELB_NAME}_subnets = ""
+${ELB_NAME}_http_listener_instance_port = 0
+${ELB_NAME}_https_listener_instance_port = 0
+${ELB_NAME}_ssl_cert_id = ""
+EOF
+}
+
 
 attach_nodeport_sg_to_nodes_sg() {
     echo "Attaching nodeport security group to nodes sg"

@@ -63,6 +63,7 @@ resource "aws_security_group" "elb_to_nodeport" {
 ### ELBS
 
 module "snippets" {
+  elb_count = "${lookup(var.snippets-elbs-by-region, var.region, 0)}"
   source                       = "./elbs"
   elb_name                     = "${var.snippets_elb_name}"
   subnets                      = "${var.snippets_subnets}"
@@ -70,9 +71,11 @@ module "snippets" {
   https_listener_instance_port = "${var.snippets_https_listener_instance_port}"
   ssl_cert_id                  = "${var.snippets_ssl_cert_id}"
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  health_check_http_path       = "/healthz/"
 }
 
 module "snippets-stats" {
+  elb_count = "${lookup(var.snippets-stats-elbs-by-region, var.region, 0)}"
   source                       = "./elbs"
   elb_name                     = "${var.snippets-stats_elb_name}"
   subnets                      = "${var.snippets-stats_subnets}"
@@ -83,6 +86,7 @@ module "snippets-stats" {
 }
 
 module "careers" {
+  elb_count = "${lookup(var.careers-elbs-by-region, var.region, 0)}"
   source                       = "./elbs"
   elb_name                     = "${var.careers_elb_name}"
   subnets                      = "${var.careers_subnets}"
@@ -90,9 +94,11 @@ module "careers" {
   https_listener_instance_port = "${var.careers_https_listener_instance_port}"
   ssl_cert_id                  = "${var.careers_ssl_cert_id}"
   security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  health_check_http_path       = "/healthz/"
 }
 
 module "bedrock-stage" {
+  elb_count = "${lookup(var.bedrock-stage-elbs-by-region, var.region, 0)}"
   source                       = "./elbs"
   elb_name                     = "${var.bedrock-stage_elb_name}"
   subnets                      = "${var.bedrock-stage_subnets}"
@@ -104,6 +110,7 @@ module "bedrock-stage" {
 }
 
 module "bedrock-prod" {
+  elb_count = "${lookup(var.bedrock-prod-elbs-by-region, var.region, 0)}"
   source                       = "./elbs"
   elb_name                     = "${var.bedrock-prod_elb_name}"
   subnets                      = "${var.bedrock-prod_subnets}"
@@ -115,6 +122,7 @@ module "bedrock-prod" {
 }
 
 module "wilcard-allizom" {
+  elb_count = "${lookup(var.wildcard-allizom-elbs-by-region, var.region, 0)}"
   source                       = "./elbs"
   elb_name                     = "${var.wildcard-allizom_elb_name}"
   subnets                      = "${var.wildcard-allizom_subnets}"
@@ -157,6 +165,7 @@ module "surveillance" {
 }
 
 module "basket-stage" {
+  elb_count = "${lookup(var.basket-stage-elbs-by-region, var.region, 0)}"
   source                       = "./elbs"
   elb_name                     = "${var.basket-stage_elb_name}"
   subnets                      = "${var.basket-stage_subnets}"
@@ -168,6 +177,7 @@ module "basket-stage" {
 }
 
 module "basket-prod" {
+  elb_count = "${lookup(var.basket-prod-elbs-by-region, var.region, 0)}"
   source                       = "./elbs"
   elb_name                     = "${var.basket-prod_elb_name}"
   subnets                      = "${var.basket-prod_subnets}"
