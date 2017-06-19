@@ -93,6 +93,7 @@ tf_main() {
     echo "Please verify plan output above and enter the command"
     echo "'make it so' followed by enter to continue."
     echo "Otherwise, Ctrl-C to abort"V
+    read
 
     # if terraform plan fails, the next command won't run due to
     # set -e at the top of the script.
