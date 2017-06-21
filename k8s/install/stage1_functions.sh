@@ -93,6 +93,11 @@ render_tf_templates() {
         | sed s/KOPS_REGION/${KOPS_REGION}/g \
         > ./out/terraform/tf_backend.tf
 
+
+    cat ${KOPS_INSTALLER}/etc/meao_security.tf.template \
+        | sed s/TF_RESOURCE_NAME/${TF_RESOURCE_NAME}/g \
+        > ./out/terraform/meao_security.tf
+
     if [ -z "${KOPS_EXISTING_RDS}" ]
     then
         echo "Creating new RDS instance"

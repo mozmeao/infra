@@ -20,7 +20,7 @@ SURVEILLANCE_PROD_VARFILE=$(pwd)/surveillance-prod-frankfurt.tfvars
 BASKET_STAGE_VARFILE=$(pwd)/basket-stage-frankfurt.tfvars
 BASKET_PROD_VARFILE=$(pwd)/basket-prod-frankfurt.tfvars
 
-FRANKFURT_SUBNETS="subnet-10685f78,subnet-57ef9f2d"
+FRANKFURT_SUBNETS="subnet-10685f78"
 
 # param order: elb name, namespace, nodeport service name, subnets, cert arn, nodeport proto (defaults to https)
 gen_tf_elb_cfg "snippets" \

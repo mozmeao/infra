@@ -11,55 +11,6 @@ terraform {
   }
 }
 
-
-# NodePort Security Group
-# shared between all ELB's
-resource "aws_security_group" "elb_to_nodeport" {
-  name        = "elb_to_nodeport"
-  description = "Allow all inbound traffic to reach K8s nodeports"
-  vpc_id      = "${var.vpc_id}"
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 30000
-    to_port     = 32767
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol    = "tcp"
-    from_port   = 443
-    to_port     = 443
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
-    protocol = "icmp"
-
-    # https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml#icmp-parameters-codes-3
-    # ICMP Destination Unreachable
-    from_port = 3
-
-    # Fragmentation Needed and Don't Fragment was Set
-    to_port     = 4
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    protocol    = "-1"
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
-
 ### ELBS
 
 module "snippets" {
@@ -70,7 +21,7 @@ module "snippets" {
   http_listener_instance_port  = "${var.snippets_http_listener_instance_port}"
   https_listener_instance_port = "${var.snippets_https_listener_instance_port}"
   ssl_cert_id                  = "${var.snippets_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
   health_check_http_path       = "/healthz/"
 }
 
@@ -82,7 +33,7 @@ module "snippets-stats" {
   http_listener_instance_port  = "${var.snippets-stats_http_listener_instance_port}"
   https_listener_instance_port = "${var.snippets-stats_https_listener_instance_port}"
   ssl_cert_id                  = "${var.snippets-stats_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
 }
 
 module "careers" {
@@ -93,7 +44,7 @@ module "careers" {
   http_listener_instance_port  = "${var.careers_http_listener_instance_port}"
   https_listener_instance_port = "${var.careers_https_listener_instance_port}"
   ssl_cert_id                  = "${var.careers_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
   health_check_http_path       = "/healthz/"
 }
 
@@ -105,7 +56,7 @@ module "bedrock-stage" {
   http_listener_instance_port  = "${var.bedrock-stage_http_listener_instance_port}"
   https_listener_instance_port = "${var.bedrock-stage_https_listener_instance_port}"
   ssl_cert_id                  = "${var.bedrock-stage_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
   health_check_http_path       = "/healthz/"
 }
 
@@ -117,7 +68,7 @@ module "bedrock-prod" {
   http_listener_instance_port  = "${var.bedrock-prod_http_listener_instance_port}"
   https_listener_instance_port = "${var.bedrock-prod_https_listener_instance_port}"
   ssl_cert_id                  = "${var.bedrock-prod_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
   health_check_http_path       = "/healthz/"
 }
 
@@ -129,7 +80,7 @@ module "wilcard-allizom" {
   http_listener_instance_port  = "${var.wildcard-allizom_http_listener_instance_port}"
   https_listener_instance_port = "${var.wildcard-allizom_https_listener_instance_port}"
   ssl_cert_id                  = "${var.wildcard-allizom_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
   health_check_target_proto    = "TCP"
   # leave path empty!
   health_check_http_path      = ""
@@ -148,7 +99,7 @@ module "nucleus-prod" {
   http_listener_instance_port  = "${var.nucleus-prod_http_listener_instance_port}"
   https_listener_instance_port = "${var.nucleus-prod_https_listener_instance_port}"
   ssl_cert_id                  = "${var.nucleus-prod_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
   health_check_http_path       = "/"
 }
 
@@ -160,7 +111,7 @@ module "surveillance" {
   http_listener_instance_port  = "${var.surveillance-prod_http_listener_instance_port}"
   https_listener_instance_port = "${var.surveillance-prod_https_listener_instance_port}"
   ssl_cert_id                  = "${var.surveillance-prod_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
   health_check_http_path       = "/"
 }
 
@@ -172,7 +123,7 @@ module "basket-stage" {
   http_listener_instance_port  = "${var.basket-stage_http_listener_instance_port}"
   https_listener_instance_port = "${var.basket-stage_https_listener_instance_port}"
   ssl_cert_id                  = "${var.basket-stage_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
   health_check_http_path       = "/healthz/"
 }
 
@@ -184,6 +135,6 @@ module "basket-prod" {
   http_listener_instance_port  = "${var.basket-prod_http_listener_instance_port}"
   https_listener_instance_port = "${var.basket-prod_https_listener_instance_port}"
   ssl_cert_id                  = "${var.basket-prod_ssl_cert_id}"
-  security_group_id            = "${aws_security_group.elb_to_nodeport.id}"
+  security_group_id            = "${var.elb_access_id}"
   health_check_http_path       = "/healthz/"
 }
