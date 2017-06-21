@@ -13,6 +13,12 @@ deis config:set ALLOWED_HOSTS=\* -a bedrock-prod
 deis config:set ALLOWED_HOSTS=\* -a bedrock-stage
 deis config:set ALLOWED_HOSTS=\* -a bedrock-dev
 
+deis domains:add www.allizom.org -a bedrock-stage
+deis config:set DEIS_DOMAIN=frankfurt.moz.works -a bedrock-stage
+
+deis domains:add www.mozilla.org -a bedrock-prod
+deis config:set DEIS_DOMAIN=frankfurt.moz.works -a bedrock-prod
+
 kubectl -n bedrock-prod apply -f ./k8s/bedrock-prod-nodeport.yaml
 kubectl -n bedrock-stage apply -f ./k8s/bedrock-stage-nodeport.yaml
 
