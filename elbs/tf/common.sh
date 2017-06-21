@@ -21,6 +21,11 @@ TF_ARGS=$@
 ELB_PROVISIONING_BUCKET="elb-provisioning-tf-state"
 STATE_BUCKET_REGION="us-west-2"
 
+get_elb_access_group_id() {
+    aws ec2 describe-security-groups --region ${TF_VAR_region} | \
+        jq -er '.SecurityGroups[] | select(.GroupName == "elb_access") | .GroupId'
+}
+
 check_k8s_context() {
   current=$(kubectl config current-context)
   if [ "${current}" != "${KOPS_NAME}" ]; then
@@ -64,12 +69,10 @@ check_state_store() {
     #terraform refresh $TF_ARGS
     #
     # virginia
-    #terraform import aws_security_group.elb_to_nodeport sg-ba095cc5
     #terraform import module.careers.aws_elb.new-elb careers
     #terraform import module.snippets.aws_elb.new-elb snippets
 
     # tokyo
-    #terraform import aws_security_group.elb_to_nodeport sg-ac070bcb
     #terraform import module.careers.aws_elb.new-elb careers
     #terraform import module.snippets.aws_elb.new-elb snippets
     #### end repairing TF state
@@ -80,6 +83,10 @@ tf_main() {
     terraform init
 
     setup_tf_envs
+
+    # get the id of the elb_access security group that's
+    # created as part of the meao k8s install
+    export TF_VAR_elb_access_id=$(get_elb_access_group_id)
 
     # switch env to virginia, tokyo etc
     terraform env select ${TERRAFORM_ENV}
@@ -102,6 +109,7 @@ tf_main() {
 }
 
 check_prereqs
+
 check_k8s_context
 check_state_store
 tf_main

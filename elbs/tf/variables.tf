@@ -3,6 +3,9 @@ variable "region" {}
 # general
 variable "vpc_id" {}
 
+# security group id of group named "elb_access"
+variable "elb_access_id" {}
+
 # snippets ELB
 variable "snippets_elb_name" {}
 
