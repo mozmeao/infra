@@ -35,4 +35,9 @@ check_neres_env() {
         exit 1
     fi
     check_neres_bin
-e
+}
+
+# get a newrelic monitor id based on its name
+get_newrelic_monitor_id() {
+    neres list-monitors --raw | jq -er ".[] | select(.name == \"$1\") | .id"
+}

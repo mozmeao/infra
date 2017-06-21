@@ -1,8 +1,6 @@
 #!/bin/bash
 
 source ../bin/common.sh
-#check_meao_env
-
 check_neres_env
 
 neres add-monitor "Viewsourceconf prod" \
