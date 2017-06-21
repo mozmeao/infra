@@ -20,8 +20,6 @@ check_neres_bin() {
     fi
 }
 
-
-
 check_neres_env() {
     if [ -z "$NERES_EMAIL_1" ]; then
         echo "Please set NERES_EMAIL_1"
