@@ -10,3 +10,32 @@ check_meao_env() {
         exit 1
     fi
 }
+
+check_neres_bin() {
+    which neres > /dev/null
+    if [ $? -ne 0 ]; then
+        echo "Please install neres:"
+        echo "https://github.com/glogiotatidis/neres/"
+        exit 1
+    fi
+}
+
+check_neres_env() {
+    if [ -z "$NERES_EMAIL_1" ]; then
+        echo "Please set NERES_EMAIL_1"
+        echo "More information here: https://github.com/mozmar/ee-infra-private/tree/master/synthetics"
+        exit 1
+    fi
+
+    if [ -z "$NERES_EMAIL_2" ]; then
+        echo "Please set NERES_EMAIL_2"
+        echo "More information here: https://github.com/mozmar/ee-infra-private/tree/master/synthetics"
+        exit 1
+    fi
+    check_neres_bin
+}
+
+# get a newrelic monitor id based on its name
+get_newrelic_monitor_id() {
+    neres list-monitors --raw | jq -er ".[] | select(.name == \"$1\") | .id"
+}
