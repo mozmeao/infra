@@ -105,15 +105,13 @@ spec:
               value: "False"
           livenessProbe:
             httpGet:
-              #TODO: better liveness path, perhaps /its-alive?
-              path: /contribute.json
+              path: /healthz
               port: 8000
             initialDelaySeconds: 20
             periodSeconds: 3
           readinessProbe:
             httpGet:
-              #TODO: /healthz
-              path: /en-US
+              path: /readiness
               port: 8000
             initialDelaySeconds: 20
             periodSeconds: 3
