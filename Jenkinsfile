@@ -1,8 +1,10 @@
-@Library('github.com/mozmar/jenkins-pipeline@master')
+#!groovy
+
+@Library('github.com/mozmar/jenkins-pipeline@20170607.1')
 
 def loadBranch(String branch) {
-  if (fileExists("./Jenkinsfiles/${branch}.yaml")) {
-    config = readYaml file: "./Jenkinsfiles/${branch}.yaml"
+  if (fileExists("./jenkins/${branch}.yaml")) {
+    config = readYaml file: "./jenkins/${branch}.yaml"
     println "config ==> ${config}"
   }
   else {
@@ -14,12 +16,12 @@ def loadBranch(String branch) {
   }
   else {
     if (config && config.pipeline && config.pipeline.script) {
-      println "Loading ./Jenkinsfiles/${config.pipeline.script}.groovy"
-      load "./Jenkinsfiles/${config.pipeline.script}.groovy"
+      println "Loading ./jenkins/${config.pipeline.script}.groovy"
+      load "./jenkins/${config.pipeline.script}.groovy"
     }
     else {
-      println "Loading ./Jenkinsfiles/${branch}.groovy"
-      load "./Jenkinsfiles/${branch}.groovy"
+      println "Loading ./jenkins/${branch}.groovy"
+      load "./jenkins/${branch}.groovy"
     }
   }
 }
@@ -27,13 +29,11 @@ def loadBranch(String branch) {
 node {
   stage("Prepare") {
     checkout scm
-    sh 'git submodule sync'
-    sh 'git submodule update --init --recursive'
     setGitEnvironmentVariables()
 
     // When checking in a file exists in another directory start with './' or
     // prepare to fail.
-    if (fileExists("./Jenkinsfiles/${env.BRANCH_NAME}.groovy") || fileExists("./Jenkinsfiles/${env.BRANCH_NAME}.yaml")) {
+    if (fileExists("./jenkins/${env.BRANCH_NAME}.groovy") || fileExists("./jenkins/${env.BRANCH_NAME}.yaml")) {
       loadBranch(env.BRANCH_NAME)
     }
     else {
