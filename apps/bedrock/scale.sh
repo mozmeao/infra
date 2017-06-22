@@ -14,3 +14,8 @@ deis autoscale:set web --min=5 --max=20 --cpu-percent=80 -a bedrock-stage
 deis limits:set web=120M/300M -a bedrock-dev
 deis limits:set web=250m/500m --cpu  -a bedrock-dev
 deis autoscale:set web --min=3 --max=5 --cpu-percent=80 -a bedrock-dev
+
+# scale the clock process
+# this will run DB migrations on it's first run
+deis scale clock=1 -a bedrock-prod
+deis scale clock=1 -a bedrock-stage

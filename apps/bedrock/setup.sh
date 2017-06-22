@@ -26,4 +26,4 @@ deis pull mozorg/bedrock:latest -a bedrock-prod
 deis pull mozorg/bedrock:latest -a bedrock-stage
 deis pull mozorg/bedrock:latest -a bedrock-dev
 
-
+echo "See README.md for additional manual installation steps"
