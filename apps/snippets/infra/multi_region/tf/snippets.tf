@@ -2,6 +2,14 @@ provider "aws" {
   region = "${var.region}"
 }
 
+terraform {
+  backend "s3" {
+    bucket = "snippets-shared-tf-state"
+    key    = "tf-state"
+    region = "us-west-2"
+  }
+}
+
 ##### Buckets
 
 module "bucket-stage" {

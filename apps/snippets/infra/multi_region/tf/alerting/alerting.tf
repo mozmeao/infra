@@ -8,7 +8,7 @@ resource "aws_route53_health_check" "health_check" {
   fqdn                    = "${var.fqdn}"
   port                    = 443
   type                    = "HTTPS"
-  resource_path           = "/"
+  resource_path           = "/healthz/"
   failure_threshold       = "3"
   request_interval        = "30"
   cloudwatch_alarm_name   = ""
