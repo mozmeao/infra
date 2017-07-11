@@ -127,12 +127,3 @@ check_prereqs
 check_state_store
 tf_main
 
-#terraform get
-#
-#PLAN=$(mktemp)
-#terraform plan --out $PLAN
-## if terraform plan fails, the next command won't run due to
-## set -e at the top of the script.
-#terraform apply $PLAN
-#rm $PLAN
-
