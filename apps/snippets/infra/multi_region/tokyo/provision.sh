@@ -1,7 +1,7 @@
 #!/bin/sh
 
 export SNIPPETS_REGION="ap-northeast-1"
-
+export TERRAFORM_ENV="tokyo"
 export TF_VAR_region="ap-northeast-1"
 export TF_VAR_region_short="tokyo"
 export TF_VAR_fqdn_prod="snippets-prod.tokyo.moz.works"

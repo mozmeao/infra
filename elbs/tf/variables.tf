@@ -42,6 +42,7 @@ variable "snippets-stats-elbs-by-region" {
   default = {
     "ap-northeast-1" = true
     "us-east-1" = true
+    "eu-central-1" = true
   }
 }
 
