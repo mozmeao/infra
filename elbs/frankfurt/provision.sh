@@ -14,7 +14,7 @@ SNIPPETS_STATS_VARFILE=$(pwd)/snippets-stats-frankfurt.tfvars
 CAREERS_VARFILE=$(pwd)/careers-frankfurt.tfvars
 BEDROCK_STAGE_VARFILE=$(pwd)/bedrock-stage-frankfurt.tfvars
 BEDROCK_PROD_VARFILE=$(pwd)/bedrock-prod-frankfurt.tfvars
-WILCARD_ALLIZOM_VARFILE=$(pwd)/wildcard-allizom-frankfurt.tfvars
+WILDCARD_ALLIZOM_VARFILE=$(pwd)/wildcard-allizom-frankfurt.tfvars
 NUCLEUS_PROD_VARFILE=$(pwd)/nucleus-prod-frankfurt.tfvars
 SURVEILLANCE_PROD_VARFILE=$(pwd)/surveillance-prod-frankfurt.tfvars
 BASKET_STAGE_VARFILE=$(pwd)/basket-stage-frankfurt.tfvars
@@ -55,31 +55,11 @@ gen_tf_elb_cfg "bedrock-prod" \
                "${FRANKFURT_SUBNETS}" \
                $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "www.mozilla.org") > $BEDROCK_PROD_VARFILE
 
-# wildcard uses an iam cert
-gen_tf_elb_cfg "wildcard-allizom" \
-               "deis" \
-               "deis-router" \
-               "${FRANKFURT_SUBNETS}" \
-               $(get_iam_cert_arn "wildcard.allizom.org_20180103") > $WILCARD_ALLIZOM_VARFILE
-
-
+# for now, we won't be installing these in frankfurt, so generate
+# an empty config so Terraform can run to create the other ELB's
+gen_dummy_elb_cfg "wildcard-allizom" > $WILDCARD_ALLIZOM_VARFILE
 gen_dummy_elb_cfg "nucleus-prod" > $NUCLEUS_PROD_VARFILE
 gen_dummy_elb_cfg "surveillance-prod" > $SURVEILLANCE_PROD_VARFILE
-
-
-#gen_tf_elb_cfg "nucleus-prod" \
-#               "nucleus-prod" \
-#               "nucleus-nodeport" \
-#               "${FRANKFURT_SUBNETS}" \
-#               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "nucleus.mozilla.org") \
-#               "http" > $NUCLEUS_PROD_VARFILE
-#
-#gen_tf_elb_cfg "surveillance-prod" \
-#               "surveillance-prod" \
-#               "surveillance-nodeport" \
-#               "${FRANKFURT_SUBNETS}" \
-#               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "surveillance.mozilla.org") \
-#               "http" > $SURVEILLANCE_PROD_VARFILE
 
 gen_tf_elb_cfg "basket-stage" \
                "basket-stage" \
@@ -95,8 +75,6 @@ gen_tf_elb_cfg "basket-prod" \
                $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "basket.mozilla.org") \
                "http" > $BASKET_PROD_VARFILE
 
-# gen configs from other load balancers here
-
 # Apply Terraform
 cd ../tf && ./common.sh \
     -var-file $BASKET_PROD_VARFILE \
@@ -108,27 +86,18 @@ cd ../tf && ./common.sh \
     -var-file $SNIPPETS_STATS_VARFILE \
     -var-file $SNIPPETS_VARFILE \
     -var-file $SURVEILLANCE_PROD_VARFILE \
-    -var-file $WILCARD_ALLIZOM_VARFILE
-
+    -var-file $WILDCARD_ALLIZOM_VARFILE
 
 # attach each ELB to the k8s nodes ASG
 ASG_NAME="nodes.${KOPS_NAME}"
 
-# Run these if reattaching ELBs to ASG
+# This command can be used to detach an ELB from an ASG,
+# just replace the appropriate params
 #aws autoscaling detach-load-balancers \
 #        --auto-scaling-group-name nodes.frankfurt.moz.works \
 #        --load-balancer-name careers \
 #        --region us-east-1
 #
-#aws autoscaling detach-load-balancers \
-#        --auto-scaling-group-name nodes.frankfurt.moz.works \
-#        --load-balancer-name snippets \
-#        --region us-east-1
-#
-#aws autoscaling detach-load-balancers \
-#        --auto-scaling-group-name nodes.frankfurt.moz.works \
-#        --load-balancer-name snippets-stats \
-#        --region us-east-1
 
 echo "Assigning ELB careers instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
@@ -160,25 +129,6 @@ aws autoscaling attach-load-balancers \
     --load-balancer-names bedrock-prod \
     --region "${TF_VAR_region}"
 
-echo "Assigning ELB wilcard-allizom instances from ASG ${ASG_NAME}"
-aws autoscaling attach-load-balancers \
-    --auto-scaling-group-name "${ASG_NAME}" \
-    --load-balancer-names wildcard-allizom \
-    --region "${TF_VAR_region}"
-
-#echo "Assigning ELB nucleus-prod instances from ASG ${ASG_NAME}"
-#aws autoscaling attach-load-balancers \
-#    --auto-scaling-group-name "${ASG_NAME}" \
-#    --load-balancer-names nucleus-prod \
-#    --region "${TF_VAR_region}"
-
-
-#echo "Assigning ELB surveillance-prod instances from ASG ${ASG_NAME}"
-#aws autoscaling attach-load-balancers \
-#    --auto-scaling-group-name "${ASG_NAME}" \
-#    --load-balancer-names surveillance-prod \
-#    --region "${TF_VAR_region}"
-
 echo "Assigning ELB basket-stage instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
@@ -191,5 +141,7 @@ aws autoscaling attach-load-balancers \
     --load-balancer-names basket-prod \
     --region "${TF_VAR_region}"
 
-attach_nodeport_sg_to_nodes_sg
-
+# we used to call attach_nodeport_sg_to_nodes_sg here,
+# but the way we do security groups with k8s is a bit different
+# now.
+attach_elb_access_group_to_nodes_sg

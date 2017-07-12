@@ -107,3 +107,27 @@ attach_nodeport_sg_to_nodes_sg() {
         --port -1 \
         --region "${TF_VAR_region}"
 }
+
+
+# NOTE duplicated from common.sh to prevent circular sourcing
+get_elb_access_group_id() {
+    aws ec2 describe-security-groups --region ${TF_VAR_region} | \
+        jq -er '.SecurityGroups[] | select(.GroupName == "elb_access") | .GroupId'
+}
+
+attach_elb_access_group_to_nodes_sg() {
+    echo "Attaching nodeport security group to nodes sg"
+    NODES_SECURITY_GROUP_NAME="nodes.${KOPS_NAME}"
+    NODEPORT_SECURITY_GROUP_ID=$(get_elb_access_group_id)
+    NODES_SECURITY_GROUP_ID=$(aws ec2 describe-security-groups --region ${TF_VAR_region} \
+        | jq -r ".SecurityGroups[] | select(.GroupName==\"${NODES_SECURITY_GROUP_NAME}\") | .GroupId")
+
+    echo "Security group id = ${NODEPORT_SECURITY_GROUP_ID}"
+    echo "Nodes security group id = ${NODES_SECURITY_GROUP_ID}"
+    aws ec2 authorize-security-group-ingress \
+        --source-group "${NODEPORT_SECURITY_GROUP_ID}" \
+        --group-id "${NODES_SECURITY_GROUP_ID}" \
+        --protocol "all" \
+        --port -1 \
+        --region "${TF_VAR_region}"
+}
