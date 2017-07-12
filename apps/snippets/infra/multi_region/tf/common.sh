@@ -62,9 +62,12 @@ get_k8s_nodes_security_group() {
     echo "${SECURITY_GROUP}"
 }
 
+# used to recreating tf state if needed
 import_tokyo() {
-    terraform import aws_s3_bucket.logs-prod snippets-prod-tokyo-logs
-    terraform import aws_s3_bucket.logs-stage snippets-stage-tokyo-logs
+    # unsure if the following 2 commands are needed, but leaving in
+    # for future Terraform cleanup
+    #terraform import aws_s3_bucket.logs-prod snippets-prod-tokyo-logs
+    #terraform import aws_s3_bucket.logs-stage snippets-stage-tokyo-logs
     terraform import module.redis.aws_elasticache_replication_group.shared-redis-rg shared-redis
     terraform import module.redis.aws_elasticache_subnet_group.shared-redis-subnet-group shared-redis-subnet-group
     terraform import module.bucket-prod.aws_s3_bucket.bundles snippets-prod-tokyo
@@ -75,10 +78,12 @@ import_tokyo() {
     terraform import module.stage-alerts.aws_route53_health_check.health_check 6501092d-c633-4dde-b016-189adb567b18
 }
 
-
+# used to recreating tf state if needed
 import_frankfurt() {
-    terraform import aws_s3_bucket.logs-prod snippets-prod-frankfurt-logs
-    terraform import aws_s3_bucket.logs-stage snippets-stage-frankfurt-logs
+    # unsure if the following 2 commands are needed, but leaving in
+    # for future Terraform cleanup
+    #terraform import aws_s3_bucket.logs-prod snippets-prod-frankfurt-logs
+    #terraform import aws_s3_bucket.logs-stage snippets-stage-frankfurt-logs
     terraform import module.redis.aws_elasticache_replication_group.shared-redis-rg shared-redis
     terraform import module.redis.aws_elasticache_subnet_group.shared-redis-subnet-group shared-redis-subnet-group
     terraform import module.bucket-prod.aws_s3_bucket.bundles snippets-prod-frankfurt
@@ -88,8 +93,6 @@ import_frankfurt() {
     terraform import module.prod-alerts.aws_route53_health_check.health_check 37e2e791-4710-46b1-94ea-4fdb8b71a77c
     terraform import module.stage-alerts.aws_route53_health_check.health_check 02c895c0-6333-4508-9978-e66d9f872f36
 }
-
-
 
 check_state_store
 
