@@ -12,4 +12,5 @@ deis config:set ALLOWED_HOSTS=snippets-prod.frankfurt,snippets-prod.moz.works,sn
 deis pull mozorg/snippets:9973b1 -a snippets-prod
 
 
+echo "See README.md for additional setup"
 
