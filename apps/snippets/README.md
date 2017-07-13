@@ -11,6 +11,8 @@
 
 3. [Create an ELB](https://github.com/mozmar/infra/tree/master/elbs) for the app in the new region.
 
+> Note: if the application is reinstalled via Deis Workflow, the snippets ELB **must** be recreated as the port #'s have changed.
+
 ### How to apply Terraform in a given region
 
 ```shell
