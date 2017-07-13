@@ -5,9 +5,9 @@
 
 2. Install the application 
     1. Ensure your Kubernetes and Deis Workflow environments are set correctly!
-    1. run `./setup.sh`
-    2. run `./scale.sh`
-    1. follow the "Additional app installation steps" section below 
+    2. run `./setup.sh`
+    3. follow the "Additional app installation steps" section below 
+    4. run `./scale.sh`
 
 3. [Create an ELB](https://github.com/mozmar/infra/tree/master/elbs) for the app in the new region.
 
