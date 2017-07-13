@@ -11,7 +11,7 @@ deis domains:add snippets.mozilla.com -a snippets-prod
 
 deis config:set ALLOWED_HOSTS=snippets-prod.frankfurt,snippets-prod.moz.works,snippets.cdn.mozilla.net,snippets-prod-cdn.moz.works,snippets.mozilla.com -a snippets-prod
 
-deis pull mozorg/snippets:9973b1 -a snippets-prod
+deis pull mozorg/snippets:06ce45 -a snippets-prod
 
 
 echo "See README.md for additional setup"
