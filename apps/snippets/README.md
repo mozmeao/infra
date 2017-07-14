@@ -41,7 +41,7 @@ repo), set the following values:
 - `DEIS_DOMAIN`
 - `NEW_RELIC_APP_NAME`
 - `SITE_URL`
-- `STATSD_PREFIX
+- `STATSD_PREFIX`
 
 Once you have a config file ready with the correct values, use a command similar to the following to load the new values:
 
