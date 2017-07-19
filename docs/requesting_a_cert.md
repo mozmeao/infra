@@ -2,12 +2,12 @@
 
 ### (non-SRE's) If you don't have access to AWS ACM
 
-1. Create a new [Github issue](https://github.com/mozmar/infra) (or use an existing issue) and mention [@jgmize](https://github.com/jgmize) and [@metadave](https://github.com/metadave) saying that you would like to request a certificate. Please list ALL domains that you are requesting (including wildcard if needed).
+1. Create a new [Github issue](https://github.com/mozmeao/infra) (or use an existing issue) and mention [@jgmize](https://github.com/jgmize) and [@metadave](https://github.com/metadave) saying that you would like to request a certificate. Please list ALL domains that you are requesting (including wildcard if needed).
 2. Once the request has been received, we'll prioritize and notify you when the request is complete.
 
 ### (SRE's) If you have access to AWS ACM
 
-1. Create a [Github issue](https://github.com/mozmar/infra) (or use an existing issue) and mention [@jgmize](https://github.com/jgmize) and [@metadave](https://github.com/metadave) saying that you would like to request a certificate. Please list ALL domains that you are requesting (including wildcard if needed).
+1. Create a [Github issue](https://github.com/mozmeao/infra) (or use an existing issue) and mention [@jgmize](https://github.com/jgmize) and [@metadave](https://github.com/metadave) saying that you would like to request a certificate. Please list ALL domains that you are requesting (including wildcard if needed).
 2. from the AWS console, select the `Certificate Manager` app
 3. click the `Request a certificate` button at the top left
 4. Enter the domain names specified in the issue from step 1.

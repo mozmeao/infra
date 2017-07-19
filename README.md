@@ -25,7 +25,7 @@ This repo is maintained by the [Mozilla Marketing Engineering and Operations](ht
 
 - [Kubernetes](https://kubernetes.io/)
 	- container orchestration in the cloud
-	- See [this](https://github.com/mozmar/infra/tree/master/k8s) page for more info.
+	- See [this](https://github.com/mozmeao/infra/tree/master/k8s) page for more info.
 - [Kops](https://github.com/kubernetes/kops)
 	- Kubernetes installation in AWS
 - [Deis 1 and Deis Workflow](https://deis.com/)
@@ -50,7 +50,7 @@ This repo is maintained by the [Mozilla Marketing Engineering and Operations](ht
 
 ## How we manage our work
 
-Our team manages it's work via a simple [Github project](https://github.com/mozmar/infra/projects/2). All data in the project is "standalone": we try to keep all links and references as public as possible, but there are obviously tasks that include sensitive data. These sensitive tasks are managed internally, and also tracked in private [Bugzilla](https://bugzilla.mozilla.org/) issues.
+Our team manages it's work via a simple [Github project](https://github.com/mozmeao/infra/projects/2). All data in the project is "standalone": we try to keep all links and references as public as possible, but there are obviously tasks that include sensitive data. These sensitive tasks are managed internally, and also tracked in private [Bugzilla](https://bugzilla.mozilla.org/) issues.
 
 ## Contributing
 

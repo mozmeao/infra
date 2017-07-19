@@ -3,7 +3,7 @@
 source ../bin/common.sh
 check_meao_env
 
-wget https://raw.githubusercontent.com/mozmar/basket/master/Procfile
+wget https://raw.githubusercontent.com/mozmeao/basket/master/Procfile
 
 deis create basket-prod --no-remote
 deis create basket-stage --no-remote

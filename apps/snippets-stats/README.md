@@ -11,10 +11,10 @@
 
     4. run `./scale.sh`
 
-3. [Create an ELB](https://github.com/mozmar/infra/tree/master/elbs) for the app in the new region.
+3. [Create an ELB](https://github.com/mozmeao/infra/tree/master/elbs) for the app in the new region.
 
 > Note: if the application is reinstalled via Deis Workflow, the snippets ELB **must** be recreated as the port #'s have changed.
 
 ### Project Source
 
-https://github.com/mozmar/snippets-stats-proxy
+https://github.com/mozmeao/snippets-stats-proxy

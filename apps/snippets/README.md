@@ -16,7 +16,7 @@ the following role:
 arn:aws:iam::236517346949:user/snippets_prod 
 ```
 
-4. [Create an ELB](https://github.com/mozmar/infra/tree/master/elbs) for the app in the new region.
+4. [Create an ELB](https://github.com/mozmeao/infra/tree/master/elbs) for the app in the new region.
 
 5. IT owns the cloudfront CDN so we need to add a new origin there
 
@@ -69,5 +69,5 @@ deis config:push -p ./foo.cfg -a snippets-prod
 
 ### Project Source
 
-https://github.com/mozmar/snippets-service/
+https://github.com/mozmeao/snippets-service/
 
