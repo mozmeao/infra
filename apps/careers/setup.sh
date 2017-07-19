@@ -6,6 +6,8 @@ check_meao_env
 wget https://raw.githubusercontent.com/mozmar/lumbergh/master/Procfile
 
 deis create careers-prod --no-remote
+deis perms:create jenkins -a careers-prod
+
 deis config:set ALLOWED_HOSTS=\* -a careers-prod
 deis domains:add careers.mozilla.com -a careers-prod
 kubectl -n careers-prod apply -f ./k8s/careers-prod-nodeport.yaml

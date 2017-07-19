@@ -4,6 +4,7 @@ source ../bin/common.sh
 check_meao_env
 
 deis create snippets-stats --no-remote
+deis perms:create jenkins -a snippets-stats
 deis domains:add snippets-stats.moz.works -a snippets-stats
 
 deis config:set ALLOWED_HOSTS=\* -a snippets-stats

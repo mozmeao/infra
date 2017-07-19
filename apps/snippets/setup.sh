@@ -5,6 +5,8 @@ check_meao_env
 
 wget https://raw.githubusercontent.com/mozmar/snippets-service/master/Procfile
 deis create snippets-prod --no-remote
+deis perms:create jenkins -a snippets-prod
+
 kubectl -n snippets-prod apply -f ./k8s/snippets-prod-nodeport.yaml
 
 deis domains:add snippets.mozilla.com -a snippets-prod

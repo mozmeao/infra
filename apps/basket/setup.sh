@@ -9,6 +9,10 @@ deis create basket-prod --no-remote
 deis create basket-stage --no-remote
 deis create basket-dev --no-remote
 
+deis perms:create jenkins -a basket-prod
+deis perms:create jenkins -a basket-stage
+deis perms:create jenkins -a basket-dev
+
 deis config:set ALLOWED_HOSTS=\* -a basket-prod
 deis config:set ALLOWED_HOSTS=\* -a basket-stage
 deis config:set ALLOWED_HOSTS=\* -a basket-dev
