@@ -9,7 +9,18 @@
     3. follow the "Additional app installation steps" section below 
     4. run `./scale.sh`
 
-3. [Create an ELB](https://github.com/mozmar/infra/tree/master/elbs) for the app in the new region.
+3. Until we automate the IAM roles for snippets, add the appropriate values to
+the following role:
+
+```
+arn:aws:iam::236517346949:user/snippets_prod 
+```
+
+4. [Create an ELB](https://github.com/mozmar/infra/tree/master/elbs) for the app in the new region.
+
+5. IT owns the cloudfront CDN so we need to add a new origin there
+
+    - See [this bug](https://bugzilla.mozilla.org/show_bug.cgi?id=1382211) for more info.
 
 > Note: if the application is reinstalled via Deis Workflow, the snippets ELB **must** be recreated as the port #'s have changed.
 
@@ -39,6 +50,9 @@ repo), set the following values:
 - `CACHE_URL`
 - `DATABASE_URL`
 - `DEIS_DOMAIN`
+- `MEDIA_BUNDLES_URL`
+    - This is in the form `<regionname>/bundles/`
+    - ex: `frankfurt/bundles/`
 - `NEW_RELIC_APP_NAME`
 - `SITE_URL`
 - `STATSD_PREFIX`
