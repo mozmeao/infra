@@ -46,6 +46,8 @@ cd ./infra/<some_region>
 In additional to the standard set of app variables (which can be found in our private
 repo), set the following values:
 
+- `AWS_S3_HOST`
+    - ex: `s3-eu-central-1.amazonaws.com`
 - `AWS_STORAGE_BUCKET_NAME`
 - `CACHE_URL`
 - `DATABASE_URL`
