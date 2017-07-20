@@ -8,12 +8,14 @@ setup_monitors() {
     create_monitor_if_missing \
         "Snippets Prod Tokyo" \
         "https://snippets-prod.tokyo.moz.works/4/Firefox/30.0/20140605174243/WINNT_x86-msvc/en-US/release/Windows_NT%206.1/default/default/" \
-        "AWS_AP_NORTHEAST_1"
+        "AWS_AP_NORTHEAST_1" \
+        "var ABOUTHOME_SNIPPETS ="
 
     create_monitor_if_missing \
         "Snippets Prod Frankfurt" \
         "https://snippets-prod.frankfurt.moz.works/4/Firefox/30.0/20140605174243/WINNT_x86-msvc/en-US/release/Windows_NT%206.1/default/default/" \
-        "AWS_EU_CENTRAL_1"
+        "AWS_EU_CENTRAL_1" \
+        "var ABOUTHOME_SNIPPETS ="
 
 }
 

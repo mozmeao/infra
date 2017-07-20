@@ -50,6 +50,7 @@ create_monitor_if_missing() {
     NAME=$1
     URL=$2
     LOCATION=$3
+    VALIDATION=$4
     echo "Checking ${NAME}..."
     if ! monitor_exists "${NAME}" ; then
         neres add-monitor "${NAME}" \
@@ -57,7 +58,9 @@ create_monitor_if_missing() {
             --location "${LOCATION}" \
             --frequency 5 \
             --email "${NERES_EMAIL_1}" \
-            --email "${NERES_EMAIL_2}"
+            --email "${NERES_EMAIL_2}" \
+            ${VALIDATION:+ --validation-string "${VALIDATION}"}
+            # only pass VALIDATION if it's set
     else
 
         echo "Monitor '${NAME}' already exists, skipping."
