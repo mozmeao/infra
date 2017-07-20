@@ -2,6 +2,21 @@
 
 source ../bin/common.sh
 check_meao_env
+check_neres_env
+
+
+setup_monitors() {
+    create_monitor_if_missing \
+        "Bedrock Prod Tokyo" \
+        "https://bedrock-prod.tokyo.moz.works/en-US/" \
+        "AWS_AP_NORTHEAST_1"
+
+    create_monitor_if_missing \
+        "Bedrock Prod Frankfurt" \
+        "https://bedrock-prod.frankfurt.moz.works/en-US/" \
+        "AWS_EU_CENTRAL_1"
+
+}
 
 wget https://raw.githubusercontent.com/mozilla/bedrock/master/Procfile
 
@@ -25,5 +40,8 @@ kubectl -n bedrock-stage apply -f ./k8s/bedrock-stage-nodeport.yaml
 deis pull mozorg/bedrock:latest -a bedrock-prod
 deis pull mozorg/bedrock:latest -a bedrock-stage
 deis pull mozorg/bedrock:latest -a bedrock-dev
+
+setup_monitors
+
 
 echo "See README.md for additional manual installation steps"

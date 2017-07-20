@@ -35,6 +35,35 @@ check_neres_env() {
     check_neres_bin
 }
 
+get_k8s_shortname() {
+    shortname=$(kubectl config current-context | cut -d. -f1)
+    echo "$(tr '[:lower:]' '[:upper:]' <<< ${shortname:0:1})${shortname:1}"
+}
+
+monitor_exists() {
+    all_monitors=$(neres list-monitors --raw)
+    monitor_name="${1}"
+    jq -r -e ".[] | select(.name == \"${monitor_name}\")" <<< "${all_monitors}" > /dev/null
+}
+
+create_monitor_if_missing() {
+    NAME=$1
+    URL=$2
+    LOCATION=$3
+    echo "Checking ${NAME}..."
+    if ! monitor_exists "${NAME}" ; then
+        neres add-monitor "${NAME}" \
+            "${URL}" \
+            --location "${LOCATION}" \
+            --frequency 5 \
+            --email "${NERES_EMAIL_1}" \
+            --email "${NERES_EMAIL_2}"
+    else
+
+        echo "Monitor '${NAME}' already exists, skipping."
+    fi
+}
+
 # get a newrelic monitor id based on its name
 get_newrelic_monitor_id() {
     neres list-monitors --raw | jq -er ".[] | select(.name == \"$1\") | .id"

@@ -2,6 +2,19 @@
 
 source ../bin/common.sh
 check_meao_env
+check_neres_env
+
+setup_monitors() {
+    create_monitor_if_missing \
+        "Careers Tokyo" \
+        "https://careers-prod.tokyo.moz.works" \
+        "AWS_AP_NORTHEAST_1"
+
+    create_monitor_if_missing \
+        "Careers Frankfurt" \
+        "https://careers-prod.frankfurt.moz.works" \
+        "AWS_EU_CENTRAL_1"
+}
 
 wget https://raw.githubusercontent.com/mozmar/lumbergh/master/Procfile
 
