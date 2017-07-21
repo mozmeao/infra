@@ -3,7 +3,7 @@
 source ../bin/common.sh
 check_meao_env
 
-wget https://raw.githubusercontent.com/mozmar/snippets-service/master/Procfile
+wget https://raw.githubusercontent.com/mozmeao/snippets-service/master/Procfile
 deis create snippets-prod --no-remote
 deis perms:create jenkins -a snippets-prod
 

@@ -25,4 +25,4 @@ repo), set the following values:
 
 ### Project Source
 
-https://github.com/mozmar/basket
+https://github.com/mozmeao/basket

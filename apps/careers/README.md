@@ -23,4 +23,4 @@ deis config:push -p ./foo.cfg -a careers-prod
 
 ### Project Source
 
-https://github.com/mozmar/lumbergh
+https://github.com/mozmeao/lumbergh

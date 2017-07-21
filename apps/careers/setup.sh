@@ -3,7 +3,7 @@
 source ../bin/common.sh
 check_meao_env
 
-wget https://raw.githubusercontent.com/mozmar/lumbergh/master/Procfile
+wget https://raw.githubusercontent.com/mozmeao/lumbergh/master/Procfile
 
 deis create careers-prod --no-remote
 deis perms:create jenkins -a careers-prod

@@ -1,6 +1,6 @@
 #!groovy
 
-@Library('github.com/mozmar/jenkins-pipeline@20170607.1')
+@Library('github.com/mozmeao/jenkins-pipeline@20170607.1')
 
 def loadBranch(String branch) {
   if (fileExists("./jenkins/${branch}.yaml")) {

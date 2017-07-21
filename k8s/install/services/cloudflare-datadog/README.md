@@ -22,4 +22,4 @@ helm install -n cf-dd --namespace cf-dd -f ${CLOUDFLARE_DD_SECRETS} .
 
 ---
 
-> Additional info here: https://github.com/mozmar/cloudflare-datadog/issues/4
+> Additional info here: https://github.com/mozmeao/cloudflare-datadog/issues/4

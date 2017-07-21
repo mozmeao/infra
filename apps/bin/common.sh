@@ -23,13 +23,13 @@ check_neres_bin() {
 check_neres_env() {
     if [ -z "$NERES_EMAIL_1" ]; then
         echo "Please set NERES_EMAIL_1"
-        echo "More information here: https://github.com/mozmar/ee-infra-private/tree/master/synthetics"
+        echo "More information here: https://github.com/mozmeao/ee-infra-private/tree/master/synthetics"
         exit 1
     fi
 
     if [ -z "$NERES_EMAIL_2" ]; then
         echo "Please set NERES_EMAIL_2"
-        echo "More information here: https://github.com/mozmar/ee-infra-private/tree/master/synthetics"
+        echo "More information here: https://github.com/mozmeao/ee-infra-private/tree/master/synthetics"
         exit 1
     fi
     check_neres_bin
