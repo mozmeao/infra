@@ -35,11 +35,6 @@ check_neres_env() {
     check_neres_bin
 }
 
-get_k8s_shortname() {
-    shortname=$(kubectl config current-context | cut -d. -f1)
-    echo "$(tr '[:lower:]' '[:upper:]' <<< ${shortname:0:1})${shortname:1}"
-}
-
 monitor_exists() {
     all_monitors=$(neres list-monitors --raw)
     monitor_name="${1}"

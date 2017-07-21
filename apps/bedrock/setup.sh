@@ -15,7 +15,6 @@ setup_monitors() {
         "Bedrock Prod Frankfurt" \
         "https://bedrock-prod.frankfurt.moz.works/en-US/" \
         "AWS_EU_CENTRAL_1"
-
 }
 
 wget https://raw.githubusercontent.com/mozilla/bedrock/master/Procfile

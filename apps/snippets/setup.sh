@@ -16,7 +16,6 @@ setup_monitors() {
         "https://snippets-prod.frankfurt.moz.works/4/Firefox/30.0/20140605174243/WINNT_x86-msvc/en-US/release/Windows_NT%206.1/default/default/" \
         "AWS_EU_CENTRAL_1" \
         "var ABOUTHOME_SNIPPETS ="
-
 }
 
 
