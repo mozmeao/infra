@@ -1,0 +1,121 @@
+# generated with `helm install --dry-run --debug kuma`
+# from a local checkout of https://github.com/mdn/helm-charts
+# then modified for mdn-dev
+#------------------------------------------------------------------------------
+# Setup:
+#   * pip install j2cli
+#
+# Deploy "web" service:
+#   NOTE: j2 uses env variables to populate template
+#   NOTE: in our Jenkins env, GIT_COMMIT_SHORT is populated automatically
+#         (via setGitEnvironmentVariables())
+#   * export GIT_COMMIT_SHORT=a3a53b7
+#   * export MEMCACHED_RELEASE=mdn-dev
+#   * export MYSQL_RELEASE=manageable-puffin
+#   * j2 mdn-dev.yaml | kubectl create -n mdn-dev -f -
+#------------------------------------------------------------------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ KUMA_K8S_NAME }}
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ KUMA_K8S_NAME }}
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ KUMA_K8S_NAME }}
+spec:
+  replicas: {{ KUMA_K8S_REPLICAS }}
+  template:
+    metadata:
+      labels:
+        app: {{ KUMA_K8S_NAME }}
+    spec:
+      containers:
+        - name: {{ KUMA_K8S_NAME }}
+          image: "quay.io/mozmar/kuma:{{ KUMA_GIT_COMMIT_SHORT }}"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "gunicorn"
+          args:
+            - "-w={{ KUMA_GUNICORN_WORKERS }}"
+            - "--bind=0.0.0.0"
+            - "--access-logfile=-"
+            - "--timeout=120"
+            - "kuma.wsgi:application"
+          ports:
+            - containerPort: 8000
+          env:
+            # Django settings overrides:
+            - name: ACCOUNT_DEFAULT_HTTP_PROTOCOL
+              value: {{ KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL }}
+            - name: ALLOWED_HOSTS
+              value: {{ KUMA_ALLOWED_HOSTS }}
+            - name: BROKER_URL
+              value: {{ KUMA_CELERY_BROKER_URL }}
+            - name: CELERY_ALWAYS_EAGER
+              value: "False"
+            - name: CSRF_COOKIE_SECURE
+              value: {{ KUMA_CSRF_COOKIE_SECURE }}
+            - name: MYSQL_ROOT_PASSWORD
+              #TODO: consider using DATABASE_URL as secret instead
+              valueFrom:
+                secretKeyRef:
+                  name: {{ MYSQL_RELEASE }}-mysql
+                  key: mysql-root-password
+            - name: DATABASE_URL
+              value: mysql://root:$(MYSQL_ROOT_PASSWORD)@{{ MYSQL_RELEASE }}-mysql:3306/developer_mozilla_org
+            - name: DEBUG
+              value: {{ KUMA_DEBUG }}
+            - name: DEBUG_TOOLBAR
+              value: {{ KUMA_DEBUG_TOOLBAR }}
+            - name: DOMAIN
+              value: {{ KUMA_DOMAIN }}
+            - name: ES_URLS
+              value: {{ ELASTICSEARCH_URL }}
+            - name: KUMASCRIPT_URL_TEMPLATE
+              value: {{ KUMASCRIPT_URL_TEMPLATE }}
+            - name: MEMCACHE_SERVERS
+              value: {{ MEMCACHED_URL }}
+            - name: PROD_DETAILS_DIR
+              value: /app/product_details_json
+            - name: PROTOCOL
+              value: {{ KUMA_PROTOCOL }}
+            - name: SESSION_COOKIE_SECURE
+              value: {{ KUMA_SESSION_COOKIE_SECURE }}
+            - name: SITE_URL
+              value: {{ KUMA_SITE_URL }}
+            # Other environment overrides
+            - name: PYTHONDONTWRITEBYTECODE
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "True"
+            - name: WEB_CONCURRENCY
+              value: {{ KUMA_WEB_CONCURRENCY }}
+            - name: MAINTENANCE_MODE
+              value: {{ KUMA_MAINTENANCE_MODE }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+          #TODO: limits
