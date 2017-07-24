@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: pv-claim-for-kuma
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ KUMA_STORAGE_SIZE }}
+  volumeName: {{ KUMA_PV_NAME }}

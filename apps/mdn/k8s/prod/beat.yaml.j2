@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ KUMA_NAME }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ KUMA_NAME }}
+    spec:
+      volumes:
+        - name: kuma-fs
+          persistentVolumeClaim:
+            claimName: pv-claim-for-kuma
+      containers:
+        - name: {{ KUMA_NAME }}
+          image: "quay.io/mozmar/kuma:{{ KUMA_GIT_COMMIT_SHORT }}"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /data/www
+              name: kuma-fs
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 16
+              memory: 16Gi
+          command:
+            - ./manage.py
+          args:
+            - celery
+            - beat
+          env:
+            {% include 'kuma-env.yaml.j2' %}
