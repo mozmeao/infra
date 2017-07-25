@@ -1,0 +1,15 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ PV_DB_NAME }}
+  annotations:
+    volume.beta.kubernetes.io/storage-class: {{ PV_DB_STORAGE_CLASS_NAME }}
+spec:
+  capacity:
+    storage: {{ PV_DB_CAPACITY }}
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: {{ PV_DB_RECLAIM_POLICY }}
+  awsElasticBlockStore:
+    fsType: ext4
+    volumeID: {{ PV_DB_ARN }}

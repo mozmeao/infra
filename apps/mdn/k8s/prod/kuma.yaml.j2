@@ -1,0 +1,66 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ KUMA_NAME }}
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ KUMA_NAME }}
+  ports:
+    - port: 80
+      targetPort: 8000
+      protocol: TCP
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ KUMA_NAME }}
+spec:
+  replicas: {{ KUMA_REPLICAS }}
+  template:
+    metadata:
+      labels:
+        app: {{ KUMA_NAME }}
+    spec:
+      volumes:
+        - name: kuma-fs
+          persistentVolumeClaim:
+            claimName: pv-claim-for-kuma
+      containers:
+        - name: {{ KUMA_NAME }}
+          image: "quay.io/mozmar/kuma:{{ KUMA_GIT_COMMIT_SHORT }}"
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: {{ KUMA_MOUNT_PATH }}
+              name: kuma-fs
+          command:
+            - gunicorn
+          args:
+            - "-w={{ KUMA_GUNICORN_WORKERS }}"
+            - "--bind=0.0.0.0"
+            - "--access-logfile=-"
+            - "--timeout={{ KUMA_GUNICORN_TIMEOUT }}"
+            - "kuma.wsgi:application"
+          ports:
+            - containerPort: 8000
+          env:
+            {% include 'kuma-env.yaml.j2' %}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: 2
+              memory: 16Gi
