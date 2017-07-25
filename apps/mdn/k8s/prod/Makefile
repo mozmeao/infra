@@ -69,7 +69,7 @@ k8s-kuma-beat:
 	env KUMA_NAME=beat \
 	    j2 beat.yaml.j2 | kubectl create -n ${K8S_NAMESPACE} -f -
 
-k8s-mysql-install:
+k8s-mysql:
 	helm install \
 	    --name ${MYSQL_RELEASE} \
 		--namespace ${K8S_NAMESPACE} \
