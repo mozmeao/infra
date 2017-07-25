@@ -31,15 +31,15 @@ spec:
           image: "quay.io/mozmar/kuma:{{ KUMA_GIT_COMMIT_SHORT }}"
           imagePullPolicy: IfNotPresent
           volumeMounts:
-            - mountPath: /data/www
+            - mountPath: {{ KUMA_MOUNT_PATH }}
               name: kuma-fs
           command:
             - gunicorn
           args:
-            - "-w=4"
+            - "-w={{ KUMA_GUNICORN_WORKERS }}"
             - "--bind=0.0.0.0"
             - "--access-logfile=-"
-            - "--timeout=120"
+            - "--timeout={{ KUMA_GUNICORN_TIMEOUT }}"
             - "kuma.wsgi:application"
           ports:
             - containerPort: 8000
@@ -62,5 +62,5 @@ spec:
               cpu: 100m
               memory: 256Mi
             limits:
-              cpu: 16
+              cpu: 2
               memory: 16Gi
