@@ -15,7 +15,7 @@
                   name: {{ MYSQL_RELEASE }}-mysql
                   key: mysql-root-password
             - name: DATABASE_URL
-              value: mysql://root:$(MYSQL_ROOT_PASSWORD)@{{ MYSQL_RELEASE }}-mysql:3306/developer_mozilla_org
+              value: mysql://root:$(MYSQL_ROOT_PASSWORD)@{{ MYSQL_RELEASE }}-mysql:3306/{{ MYSQL_DATABASE }}
             - name: DEBUG
               value: {{ KUMA_DEBUG }}
             - name: DEBUG_TOOLBAR

@@ -28,7 +28,7 @@ spec:
             claimName: pv-claim-for-kuma
       containers:
         - name: {{ KUMA_NAME }}
-          image: "quay.io/mozmar/kuma:{{ KUMA_GIT_COMMIT_SHORT }}"
+          image: quay.io/mozmar/kuma:{{ KUMA_GIT_COMMIT_SHORT }}
           imagePullPolicy: IfNotPresent
           volumeMounts:
             - mountPath: {{ KUMA_MOUNT_PATH }}
