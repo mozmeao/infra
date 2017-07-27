@@ -9,13 +9,8 @@
               value: "False"
             - name: CSRF_COOKIE_SECURE
               value: {{ KUMA_CSRF_COOKIE_SECURE }}
-            - name: MYSQL_ROOT_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ MYSQL_RELEASE }}-mysql
-                  key: mysql-root-password
             - name: DATABASE_URL
-              value: mysql://root:$(MYSQL_ROOT_PASSWORD)@{{ MYSQL_RELEASE }}-mysql:3306/{{ MYSQL_DATABASE }}
+              value: mysql://{{ MYSQL_USER }}:{{ MYSQL_PASSWORD }}@{{ MYSQL_NAME }}:3306/{{ MYSQL_DATABASE }}
             - name: DEBUG
               value: {{ KUMA_DEBUG }}
             - name: DEBUG_TOOLBAR

@@ -2,8 +2,6 @@ kind: PersistentVolume
 apiVersion: v1
 metadata:
   name: {{ PV_SHARED_NAME }}
-  annotations:
-    volume.beta.kubernetes.io/storage-class: {{ PV_SHARED_STORAGE_CLASS_NAME }}
 spec:
   capacity:
     storage: {{ PV_SHARED_CAPACITY }}

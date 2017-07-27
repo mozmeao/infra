@@ -1,19 +1,18 @@
-export PV_DB_NAME ?= pv-mdn-fast-db
-export PV_DB_CAPACITY ?= 50Gi
-export PV_DB_RECLAIM_POLICY ?= Retain
-export PV_DB_STORAGE_CLASS_NAME ?= mdn-fast-db
-export PV_DB_ARN ?= vol-03d328b4c516cd557
-export PV_SHARED_NAME ?= pv-mdn-shared
+export PV_SHARED_NAME ?= mdn-kuma-shared
 export PV_SHARED_CAPACITY ?= 1000Gi
 export PV_SHARED_RECLAIM_POLICY ?= Retain
-export PV_SHARED_STORAGE_CLASS_NAME ?= mdn-shared
 export PV_SHARED_MOUNT_PATH ?= /mdn-dev
 export PV_SHARED_ARN ?= fs-1b4cfe52.efs.us-east-1.amazonaws.com
-export MYSQL_RELEASE ?= mdn
+export MYSQL_NAME ?= mysql
 export MYSQL_IMAGE ?= quay.io/mozmar/mdn-mysql
 export MYSQL_IMAGE_TAG ?= latest
-export MYSQL_STORAGE_CLASS ?= ${PV_DB_STORAGE_CLASS_NAME}
-export MYSQL_STORAGE_SIZE ?= ${PV_DB_CAPACITY}
+export MYSQL_IMAGE_PULL_POLICY ?= IfNotPresent
+export MYSQL_STORAGE_SIZE ?= 50Gi
+export MYSQL_STORAGE_RECLAIM_POLICY ?= Retain
+export MYSQL_STORAGE_EBS_ARN ?= vol-03d328b4c516cd557
+export MYSQL_USER ?= kuma
+export MYSQL_PASSWORD ?= kuma
+export MYSQL_ROOT_PASSWORD ?= kuma
 export MYSQL_DATABASE ?= developer_mozilla_org
 export K8S_NAMESPACE ?= mdn-dev
 # "KUMA_REPLICAS" controls replicas for k8s-kuma-web and k8s-kuma-api.
@@ -22,7 +21,7 @@ export KUMA_REPLICAS ?= 1
 export KUMA_WORKER_REPLICAS ?= 6
 # "KUMA_PV_CLAIM_SIZE" controls the size of the claim made against KUMA_PV_NAME.
 export KUMA_PV_CLAIM_SIZE ?= 40Gi
-export KUMA_PV_NAME ?= pv-mdn-shared
+export KUMA_PV_NAME ?= ${PV_SHARED_NAME}
 export KUMA_GIT_COMMIT_SHORT ?= 2fcf608
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH ?= /data/www
@@ -45,41 +44,36 @@ export KUMASCRIPT_URL_TEMPLATE ?= http://kumascript:9080/docs/{path}
 export MEMCACHED_URL ?= mdndevmemcache.4pxwyy.0001.use1.cache.amazonaws.com:1121
 
 
-k8s-pv-db:
-	j2 pv-db.yaml.j2 | kubectl create -n ${K8S_NAMESPACE} -f -
-
 k8s-pv-shared:
-	j2 pv-shared.yaml.j2 | kubectl create -n ${K8S_NAMESPACE} -f -
+	j2 pv-shared.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-kuma-pvc:
-	j2 kuma-pvc.yaml.j2 | kubectl create -n ${K8S_NAMESPACE} -f -
+	j2 kuma-pvc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-kuma-web:
 	env KUMA_NAME=web \
-	    j2 kuma.yaml.j2 | kubectl create -n ${K8S_NAMESPACE} -f -
+	    j2 kuma.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-kuma-api:
 	env KUMA_NAME=api \
-	    j2 kuma.yaml.j2 | kubectl create -n ${K8S_NAMESPACE} -f -
+	    j2 kuma.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-kuma-workers:
 	env KUMA_NAME=worker \
-	    j2 workers.yaml.j2 | kubectl create -n ${K8S_NAMESPACE} -f -
+	    j2 workers.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-kuma-beat:
 	env KUMA_NAME=beat \
-	    j2 beat.yaml.j2 | kubectl create -n ${K8S_NAMESPACE} -f -
+	    j2 beat.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-mysql:
-	helm install \
-	    --name ${MYSQL_RELEASE} \
-		--namespace ${K8S_NAMESPACE} \
-		--version 0.2.6 \
-		stable/mysql \
-		--set image=${MYSQL_IMAGE},imageTag=${MYSQL_IMAGE_TAG},mysqlDatabase=${MYSQL_DATABASE},persistence.storageClass=${MYSQL_STORAGE_CLASS},persistence.size=${MYSQL_STORAGE_SIZE}
+	j2 mysql.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-mysql:
-	helm delete --purge ${MYSQL_RELEASE}
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${MYSQL_NAME}
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${MYSQL_NAME}
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${MYSQL_NAME}
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${MYSQL_NAME}
 
 # Those tasks don't have file targets
-.PHONY: k8s-pv-db k8s-pv-shared k8s-kuma-pvc k8s-kuma-web k8s-kuma-api k8s-kuma-workers k8s-kuma-beat k8s-mysql k8s-delete-mysql
+.PHONY: k8s-pv-shared k8s-kuma-pvc k8s-kuma-web k8s-kuma-api k8s-kuma-workers k8s-kuma-beat k8s-mysql k8s-delete-mysql
