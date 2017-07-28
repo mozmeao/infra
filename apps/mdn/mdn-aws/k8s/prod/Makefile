@@ -1,3 +1,4 @@
+export AWS_REGION ?= us-west-2
 export PV_SHARED_NAME ?= mdn-kuma-shared
 export PV_SHARED_CAPACITY ?= 1000Gi
 export PV_SHARED_RECLAIM_POLICY ?= Retain
@@ -7,9 +8,9 @@ export MYSQL_NAME ?= mysql
 export MYSQL_IMAGE ?= quay.io/mozmar/mdn-mysql
 export MYSQL_IMAGE_TAG ?= latest
 export MYSQL_IMAGE_PULL_POLICY ?= IfNotPresent
-export MYSQL_STORAGE_SIZE ?= 50Gi
+export MYSQL_STORAGE_SIZE ?= 40Gi
 export MYSQL_STORAGE_RECLAIM_POLICY ?= Retain
-export MYSQL_STORAGE_EBS_ARN ?= vol-03d328b4c516cd557
+export MYSQL_STORAGE_EBS_ARN ?= vol-0ddfa112775841355
 export MYSQL_USER ?= kuma
 export MYSQL_PASSWORD ?= kuma
 export MYSQL_ROOT_PASSWORD ?= kuma
@@ -59,6 +60,22 @@ export KUMASCRIPT_DOCUMENT_URL_TEMPLATE ?= http://${API_NAME}/en-US/docs/{path}?
 export KUMASCRIPT_MEMCHACHED_URL ?= ${MEMCACHED_URL}
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT ?= http://${KUMASCRIPT_NAME}:${KUMASCRIPT_PORT}/docs/{path}
 
+
+aws-create-mysql-vol:
+	aws ec2 create-volume \
+		--region ${AWS_REGION} \
+	    --size 40 \
+	    --volume-type gp2 \
+		--availability-zone us-west-2a \
+		--tag-specifications 'ResourceType=volume,Tags=[{Key=name,Value=mdn-mysql},{Key=purpose,Value=test},{Key=created-by,Value=${USER}}]'
+
+aws-describe-mysql-vols:
+	aws ec2 describe-volumes \
+		--region ${AWS_REGION} \
+	    --filters Name=tag:name,Values="mdn-mysql"
+
+k8s-ns:
+	kubectl create ns ${K8S_NAMESPACE}
 
 k8s-pv-shared:
 	j2 pv-shared.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
