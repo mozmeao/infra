@@ -8,7 +8,6 @@ spec:
   accessModes:
     - ReadWriteMany
   persistentVolumeReclaimPolicy: {{ PV_SHARED_RECLAIM_POLICY }}
-  storageClassName: {{ PV_SHARED_STORAGE_CLASS_NAME }}
   nfs:
     path: {{ PV_SHARED_MOUNT_PATH }}
     server: {{ PV_SHARED_ARN }}
