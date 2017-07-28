@@ -9,6 +9,7 @@
     - ${KOPS_NAME}
     - *.${KOPS_NAME}
     - viewsourceconf (and any others you may want on the same cert)
+- create a new Papertrail group and log destination to use in `config.sh`
 
 The easiest way to run our K8s install is via a [dev node](https://github.com/mozmeao/infra/blob/master/k8s/dev_node/README.md).
 
