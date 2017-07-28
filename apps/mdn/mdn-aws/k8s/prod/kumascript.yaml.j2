@@ -1,0 +1,62 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ KUMASCRIPT_NAME }}
+spec:
+  type: ClusterIP
+  selector:
+    app: {{ KUMASCRIPT_NAME }}
+  ports:
+    - port: {{ KUMASCRIPT_PORT }}
+      targetPort: {{ KUMASCRIPT_PORT }}
+      protocol: TCP
+---
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ KUMASCRIPT_NAME }}
+spec:
+  replicas: {{ KUMASCRIPT_REPLICAS }}
+  template:
+    metadata:
+      labels:
+        app: {{ KUMASCRIPT_NAME }}
+    spec:
+      containers:
+        - name: {{ KUMASCRIPT_NAME }}
+          image: "{{ KUMASCRIPT_IMAGE }}:{{ KUMASCRIPT_IMAGE_TAG }}"
+          imagePullPolicy: {{ KUMASCRIPT_IMAGE_PULL_POLICY }}
+          command:
+            - node
+          args:
+            - run.js
+          ports:
+            - containerPort: {{ KUMASCRIPT_PORT }}
+          env:
+            - name: log__console
+              value: "true"
+            - name: server__template_root_dir
+              value: macros
+            - name: server__document_url_template
+              value: {{ KUMASCRIPT_DOCUMENT_URL_TEMPLATE }}
+              value: http://api/en-US/docs/{path}?raw=1
+            - name: server__memcache__server
+              value: {{ KUMASCRIPT_MEMCHACHED_URL }}
+            - name: server__template_class
+              value: EJSTemplate
+            - name: server__autorequire__mdn
+              value: MDN:Common
+            - name: server__autorequire__Page
+              value: DekiScript:Page
+            - name: server__autorequire__String
+              value: DekiScript:String
+            - name: server__autorequire__Uri
+              value: DekiScript:Uri
+            - name: server__autorequire__Web
+              value: DekiScript:Web
+            - name: server__autorequire__Wiki
+              value: DekiScript:Wiki
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
