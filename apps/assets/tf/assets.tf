@@ -95,7 +95,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     prefix          = "cflogs"
   }
 
-  aliases = ["assets.moz.works"]
+  aliases = ["assets.moz.works", "assets.mozilla.net"]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
@@ -123,7 +123,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/500bd7d7-90bb-46b4-b0dc-8b31eea030d4"
+    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/6f34d370-0b81-4a0a-a19c-74f4c3898a4a"
     ssl_support_method  = "sni-only"
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
