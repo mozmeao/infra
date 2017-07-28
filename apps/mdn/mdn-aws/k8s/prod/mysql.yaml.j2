@@ -11,19 +11,19 @@ spec:
   awsElasticBlockStore:
     fsType: ext4
     volumeID: {{ MYSQL_STORAGE_EBS_ARN }}
+  storageClassName: db-fast
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ MYSQL_NAME }}
-  labels:
-    app: {{ MYSQL_NAME }}
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
       storage: {{ MYSQL_STORAGE_SIZE }}
+  storageClassName: db-fast
   volumeName: {{ MYSQL_NAME }}
 ---
 kind: Service
