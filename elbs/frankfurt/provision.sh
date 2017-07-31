@@ -55,10 +55,15 @@ gen_tf_elb_cfg "bedrock-prod" \
                "${FRANKFURT_SUBNETS}" \
                $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "www.mozilla.org") > $BEDROCK_PROD_VARFILE
 
+gen_tf_elb_cfg "nucleus-prod" \
+               "nucleus-prod" \
+               "nucleus-nodeport" \
+               "${FRANKFURT_SUBNETS}" \
+               $(get_acm_cert_arn ${ELB_PROVISIONING_REGION} "nucleus.mozilla.org") > $NUCLEUS_PROD_VARFILE
+
 # for now, we won't be installing these in frankfurt, so generate
 # an empty config so Terraform can run to create the other ELB's
 gen_dummy_elb_cfg "wildcard-allizom" > $WILDCARD_ALLIZOM_VARFILE
-gen_dummy_elb_cfg "nucleus-prod" > $NUCLEUS_PROD_VARFILE
 gen_dummy_elb_cfg "surveillance-prod" > $SURVEILLANCE_PROD_VARFILE
 
 gen_tf_elb_cfg "basket-stage" \
@@ -139,6 +144,12 @@ echo "Assigning ELB basket-prod instances from ASG ${ASG_NAME}"
 aws autoscaling attach-load-balancers \
     --auto-scaling-group-name "${ASG_NAME}" \
     --load-balancer-names basket-prod \
+    --region "${TF_VAR_region}"
+
+echo "Assigning ELB nucleus-prod instances from ASG ${ASG_NAME}"
+aws autoscaling attach-load-balancers \
+    --auto-scaling-group-name "${ASG_NAME}" \
+    --load-balancer-names nucleus-prod \
     --region "${TF_VAR_region}"
 
 # we used to call attach_nodeport_sg_to_nodes_sg here,
