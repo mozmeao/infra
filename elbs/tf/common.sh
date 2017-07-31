@@ -28,7 +28,7 @@ get_elb_access_group_id() {
 
 check_k8s_context() {
   current=$(kubectl config current-context)
-  if [ "${current}" != "${KOPS_NAME}" ]; then
+  if [[ ! "${KOPS_NAME}" =~ "${current}" ]]; then
     echo "Please select the appropriate kubeconfig"
     exit 1
   fi

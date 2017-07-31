@@ -140,7 +140,7 @@ variable "nucleus-prod_ssl_cert_id" {}
 variable "nucleus-elbs-by-region" {
   type = "map"
   default = {
-    "us-east-1" = true
+    "eu-central-1" = true
   }
 }
 
