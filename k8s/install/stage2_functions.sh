@@ -232,6 +232,7 @@ install_workflow_chart() {
 # configure Deis Workflow annotations for ELB timeout, DNS, proxy protocol,
 # and SSL certs
 config_annotations() {
+    set +e
     # https://deis.com/docs/workflow/managing-workflow/configuring-load-balancers/
     # Configure proxy protocol
     kubectl --namespace=deis annotate service/deis-router \
@@ -261,6 +262,7 @@ config_annotations() {
 
     ANNOTATION2="service.beta.kubernetes.io/aws-load-balancer-ssl-ports=https"
     kubectl --namespace=deis annotate service/deis-router ${ANNOTATION2}
+    set -e
 }
 
 config_deis_router_hpa() {
