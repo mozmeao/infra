@@ -25,7 +25,7 @@ spec:
       volumes:
         - name: kuma-fs
           persistentVolumeClaim:
-            claimName: pv-claim-for-kuma
+            claimName: {{ KUMA_PVC_NAME }}
       containers:
         - name: {{ KUMA_NAME }}
           image: {{ KUMA_IMAGE }}:{{ KUMA_IMAGE_TAG }}
@@ -59,8 +59,8 @@ spec:
             periodSeconds: 3
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: {{ KUMA_CPU_REQUEST }}
+              memory: {{ KUMA_MEMORY_REQUEST }}
             limits:
-              cpu: 2
-              memory: 16Gi
+              cpu: {{ KUMA_CPU_LIMIT }}
+              memory: {{ KUMA_MEMORY_LIMIT }}

@@ -1,20 +1,20 @@
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
-  name: {{ KUMA_NAME }}
+  name: {{ WORKER_NAME }}
 spec:
-  replicas: 1
+  replicas: {{ WORKER_REPLICAS }}
   template:
     metadata:
       labels:
-        app: {{ KUMA_NAME }}
+        app: {{ WORKER_NAME }}
     spec:
       volumes:
         - name: kuma-fs
           persistentVolumeClaim:
-            claimName: pv-claim-for-kuma
+            claimName: {{ KUMA_PVC_NAME }}
       containers:
-        - name: {{ KUMA_NAME }}
+        - name: {{ WORKER_NAME }}
           image: {{ KUMA_IMAGE }}:{{ KUMA_IMAGE_TAG }}
           imagePullPolicy: {{ KUMA_IMAGE_PULL_POLICY }}
           volumeMounts:
@@ -22,15 +22,19 @@ spec:
               name: kuma-fs
           resources:
             requests:
-              cpu: 100m
-              memory: 256Mi
+              cpu: {{ WORKER_CPU_REQUEST }}
+              memory: {{ WORKER_MEMORY_REQUEST }}
             limits:
-              cpu: 2
-              memory: 16Gi
+              cpu: {{ WORKER_CPU_LIMIT }}
+              memory: {{ WORKER_MEMORY_LIMIT }}
           command:
             - ./manage.py
           args:
             - celery
-            - beat
+            - worker
+            - "--events"
+            - "--autoreload"
+            - "--concurrency=4"
+            - "-Q mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery"
           env:
             {% include 'kuma-env.yaml.j2' %}
