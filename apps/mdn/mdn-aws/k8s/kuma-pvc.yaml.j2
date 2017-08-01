@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+    name: {{ KUMA_PVC_NAME }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ KUMA_PVC_SIZE }}
+  volumeName: {{ KUMA_PVC_TARGET_VOLUME }}
+  storageClassName: {{ KUMA_PVC_TARGET_STORAGE_CLASS }}
