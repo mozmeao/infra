@@ -52,6 +52,10 @@ export KUMASCRIPT_SERVICE_PORT ?= 9080
 export KUMASCRIPT_SERVICE_TARGET_PORT ?= 9080
 export KUMASCRIPT_SERVICE_PROTOCOL ?= TCP
 
+export MEMCACHED_URL ?= mdn-dev-memcached.9zzabg.cfg.usw2.cache.amazonaws.com:11211
+
+export ELASTICSEARCH_URL ?= elasticsearch:9200
+
 export WEB_NAME ?= web
 export WEB_REPLICAS ?= 1
 export WEB_GUNICORN_WORKERS ?= 4
@@ -60,7 +64,6 @@ export WEB_CPU_LIMIT ?= 2
 export WEB_CPU_REQUEST ?= 100m
 export WEB_MEMORY_LIMIT ?= 16Gi
 export WEB_MEMORY_REQUEST ?= 256Mi
-export WEB_PERSONALITY ?= kuma.personality.yaml.j2
 
 export API_NAME ?= api
 export API_REPLICAS ?= 1
@@ -70,7 +73,6 @@ export API_CPU_LIMIT ?= 2
 export API_CPU_REQUEST ?= 100m
 export API_MEMORY_LIMIT ?= 16Gi
 export API_MEMORY_REQUEST ?= 256Mi
-export API_PERSONALITY ?= kuma.personality.yaml.j2
 
 export CELERY_WORKERS_NAME ?= celery-worker
 export CELERY_WORKERS_REPLICAS ?= 1
@@ -80,7 +82,6 @@ export CELERY_WORKERS_MEMORY_LIMIT ?= 16Gi
 export CELERY_WORKERS_MEMORY_REQUEST ?= 256Mi
 export CELERY_WORKERS_CONCURRENCY ?= 4
 export CELERY_WORKERS_QUEUES ?= mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery
-export CELERY_WORKERS_PERSONALITY ?= celery.workers.personality.yaml.j2
 
 export CELERY_BEAT_NAME ?= celery-beat
 export CELERY_BEAT_REPLICAS ?= 1
@@ -88,7 +89,6 @@ export CELERY_BEAT_CPU_LIMIT ?= 2
 export CELERY_BEAT_CPU_REQUEST ?= 100m
 export CELERY_BEAT_MEMORY_LIMIT ?= 16Gi
 export CELERY_BEAT_MEMORY_REQUEST ?= 256Mi
-export CELERY_BEAT_PERSONALITY ?= celery.beat.personality.yaml.j2
 
 export CELERY_CAM_NAME ?= celery-cam
 export CELERY_CAM_REPLICAS ?= 1
@@ -96,7 +96,6 @@ export CELERY_CAM_CPU_LIMIT ?= 2
 export CELERY_CAM_CPU_REQUEST ?= 100m
 export CELERY_CAM_MEMORY_LIMIT ?= 16Gi
 export CELERY_CAM_MEMORY_REQUEST ?= 256Mi
-export CELERY_CAM_PERSONALITY ?= celery.cam.personality.yaml.j2
 
 export KUMASCRIPT_NAME ?= kumascript
 export KUMASCRIPT_REPLICAS ?= 1
@@ -128,8 +127,6 @@ export KUMA_WEB_CONCURRENCY ?= "4"
 export KUMA_MAINTENANCE_MODE ?= "False"
 export KUMA_CSRF_COOKIE_SECURE ?= "True"
 export KUMA_CELERY_BROKER_URL ?= "redis://mdndevredis.9zzabg.0001.usw2.cache.amazonaws.com:6379/0"
-export ELASTICSEARCH_URL ?= elasticsearch:9200
-export MEMCACHED_URL ?= mdn-dev-memcached.9zzabg.cfg.usw2.cache.amazonaws.com:11211
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT ?= http://${KUMASCRIPT_NAME}:${KUMASCRIPT_PORT}/docs/{path}
 
 
@@ -305,7 +302,6 @@ k8s-celery-beat:
 		KUMA_MEMORY_LIMIT=${CELERY_BEAT_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${CELERY_BEAT_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_BEAT_MEMORY_REQUEST} \
-		KUMA_PERSONALITY=${CELERY_BEAT_PERSONALITY} \
 		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-beat:
@@ -319,14 +315,13 @@ k8s-celery-cam:
 		KUMA_MEMORY_LIMIT=${CELERY_CAM_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${CELERY_CAM_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_CAM_MEMORY_REQUEST} \
-		KUMA_PERSONALITY=${CELERY_CAM_PERSONALITY} \
 		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-cam:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_CAM_NAME}
 
-# Those tasks don't have file targets
+# These tasks don't have file targets
 .PHONY: aws-infra aws-create-mysql-vol aws-describe-mysql-vols k8s-services \
 		k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
 		k8s-delete-pv-shared k8s-pvc-shared k8s-delete-pvc-shared \
