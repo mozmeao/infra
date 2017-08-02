@@ -1,0 +1,21 @@
+{% include 'kuma.base.deploy.yaml.j2' %}
+          command:
+            - gunicorn
+          args:
+            - "-w={{ KUMA_GUNICORN_WORKERS }}"
+            - "--bind=0.0.0.0"
+            - "--access-logfile=-"
+            - "--timeout={{ KUMA_GUNICORN_TIMEOUT }}"
+            - "kuma.wsgi:application"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ KUMA_CONTAINER_PORT }}
+            initialDelaySeconds: 20
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: {{ KUMA_CONTAINER_PORT }}
+            initialDelaySeconds: 20
+            periodSeconds: 3

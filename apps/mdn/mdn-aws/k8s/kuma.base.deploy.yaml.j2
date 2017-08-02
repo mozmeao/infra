@@ -1,4 +1,36 @@
-# Django settings overrides:
+kind: Deployment
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ KUMA_NAME }}
+spec:
+  replicas: {{ KUMA_REPLICAS }}
+  template:
+    metadata:
+      labels:
+        app: {{ KUMA_NAME }}
+    spec:
+      volumes:
+        - name: kuma-fs
+          persistentVolumeClaim:
+            claimName: {{ SHARED_PVC_NAME }}
+      containers:
+        - name: {{ KUMA_NAME }}
+          image: {{ KUMA_IMAGE }}:{{ KUMA_IMAGE_TAG }}
+          imagePullPolicy: {{ KUMA_IMAGE_PULL_POLICY }}
+          volumeMounts:
+            - mountPath: {{ KUMA_MOUNT_PATH }}
+              name: kuma-fs
+          resources:
+            requests:
+              cpu: {{ KUMA_CPU_REQUEST }}
+              memory: {{ KUMA_MEMORY_REQUEST }}
+            limits:
+              cpu: {{ KUMA_CPU_LIMIT }}
+              memory: {{ KUMA_MEMORY_LIMIT }}
+          ports:
+            - containerPort: {{ KUMA_CONTAINER_PORT }}
+          env:
+            # Django settings overrides:
             - name: ACCOUNT_DEFAULT_HTTP_PROTOCOL
               value: {{ KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL }}
             - name: ALLOWED_HOSTS

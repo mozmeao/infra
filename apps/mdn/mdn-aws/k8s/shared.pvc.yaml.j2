@@ -1,0 +1,12 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+    name: {{ SHARED_PVC_NAME }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {{ SHARED_PVC_SIZE }}
+  volumeName: {{ SHARED_PVC_TARGET_VOLUME }}
+  storageClassName: {{ SHARED_PVC_TARGET_STORAGE_CLASS }}
