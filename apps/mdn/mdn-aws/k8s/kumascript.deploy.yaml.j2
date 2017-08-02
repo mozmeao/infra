@@ -18,7 +18,7 @@ spec:
           args:
             - run.js
           ports:
-            - containerPort: {{ KUMASCRIPT_PORT }}
+            - containerPort: {{ KUMASCRIPT_CONTAINER_PORT }}
           env:
             - name: log__console
               value: "true"
