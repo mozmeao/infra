@@ -2,13 +2,24 @@
 export TARGET_ENVIRONMENT ?= dev
 export K8S_NAMESPACE ?= mdn-${TARGET_ENVIRONMENT}
 export AWS_REGION ?= us-west-2
-export PV_SHARED_NAME ?= shared
-export PV_SHARED_CAPACITY ?= 1000Gi
-export PV_SHARED_RECLAIM_POLICY ?= Retain
-export PV_SHARED_MOUNT_PATH ?= /
-export PV_SHARED_ARN ?= fs-a313ca0a.efs.us-west-2.amazonaws.com
-export PV_SHARED_STORAGE_CLASS_NAME ?= efs
+
+export SHARED_PV_NAME ?= shared
+export SHARED_PV_SIZE ?= 1000Gi
+export SHARED_PV_RECLAIM_POLICY ?= Retain
+export SHARED_PV_MOUNT_PATH ?= /
+export SHARED_PV_ARN ?= fs-a313ca0a.efs.us-west-2.amazonaws.com
+export SHARED_PV_STORAGE_CLASS_NAME ?= efs
+
+export SHARED_PVC_NAME ?= shared
+export SHARED_PVC_SIZE ?= 40Gi
+export SHARED_PVC_TARGET_VOLUME ?= ${SHARED_PV_NAME}
+export SHARED_PVC_TARGET_STORAGE_CLASS ?= ${SHARED_PV_STORAGE_CLASS_NAME}
+
 export MYSQL_NAME ?= mysql
+export MYSQL_SERVICE_TYPE ?= ClusterIP
+export MYSQL_SERVICE_PORT ?= 3306
+export MYSQL_SERVICE_TARGET_PORT ?= mysql
+export MYSQL_SERVICE_PROTOCOL ?= TCP
 export MYSQL_IMAGE ?= quay.io/mozmar/mdn-mysql
 export MYSQL_IMAGE_TAG ?= latest
 export MYSQL_IMAGE_PULL_POLICY ?= IfNotPresent
@@ -22,14 +33,25 @@ export MYSQL_USER ?= kuma
 export MYSQL_PASSWORD ?= kuma
 export MYSQL_ROOT_PASSWORD ?= kuma
 export MYSQL_DATABASE ?= developer_mozilla_org
-export API_NAME ?= api
-export API_REPLICAS ?= 1
-export API_GUNICORN_WORKERS ?= 4
-export API_GUNICORN_TIMEOUT ?= 120
-export API_CPU_LIMIT ?= 2
-export API_CPU_REQUEST ?= 100m
-export API_MEMORY_LIMIT ?= 16Gi
-export API_MEMORY_REQUEST ?= 256Mi
+
+export WEB_SERVICE_NAME ?= web
+export WEB_SERVICE_TYPE ?= LoadBalancer
+export WEB_SERVICE_PORT ?= 80
+export WEB_SERVICE_TARGET_PORT ?= 8000
+export WEB_SERVICE_PROTOCOL ?= TCP
+
+export API_SERVICE_NAME ?= api
+export API_SERVICE_TYPE ?= ClusterIP
+export API_SERVICE_PORT ?= 80
+export API_SERVICE_TARGET_PORT ?= 8000
+export API_SERVICE_PROTOCOL ?= TCP
+
+export KUMASCRIPT_SERVICE_NAME ?= kumascript
+export KUMASCRIPT_SERVICE_TYPE ?= ClusterIP
+export KUMASCRIPT_SERVICE_PORT ?= 9080
+export KUMASCRIPT_SERVICE_TARGET_PORT ?= 9080
+export KUMASCRIPT_SERVICE_PROTOCOL ?= TCP
+
 export WEB_NAME ?= web
 export WEB_REPLICAS ?= 1
 export WEB_GUNICORN_WORKERS ?= 4
@@ -38,28 +60,63 @@ export WEB_CPU_LIMIT ?= 2
 export WEB_CPU_REQUEST ?= 100m
 export WEB_MEMORY_LIMIT ?= 16Gi
 export WEB_MEMORY_REQUEST ?= 256Mi
-export WORKER_NAME ?= worker
-export WORKER_REPLICAS ?= 1
-export WORKER_CPU_LIMIT ?= 2
-export WORKER_CPU_REQUEST ?= 100m
-export WORKER_MEMORY_LIMIT ?= 16Gi
-export WORKER_MEMORY_REQUEST ?= 256Mi
-export WORKER_BEAT_NAME ?= beat
-export WORKER_BEAT_REPLICAS ?= 1
-export WORKER_BEAT_CPU_LIMIT ?= 2
-export WORKER_BEAT_CPU_REQUEST ?= 100m
-export WORKER_BEAT_MEMORY_LIMIT ?= 16Gi
-export WORKER_BEAT_MEMORY_REQUEST ?= 256Mi
+export WEB_PERSONALITY ?= kuma.personality.yaml.j2
+
+export API_NAME ?= api
+export API_REPLICAS ?= 1
+export API_GUNICORN_WORKERS ?= 4
+export API_GUNICORN_TIMEOUT ?= 120
+export API_CPU_LIMIT ?= 2
+export API_CPU_REQUEST ?= 100m
+export API_MEMORY_LIMIT ?= 16Gi
+export API_MEMORY_REQUEST ?= 256Mi
+export API_PERSONALITY ?= kuma.personality.yaml.j2
+
+export CELERY_WORKERS_NAME ?= celery-worker
+export CELERY_WORKERS_REPLICAS ?= 1
+export CELERY_WORKERS_CPU_LIMIT ?= 2
+export CELERY_WORKERS_CPU_REQUEST ?= 100m
+export CELERY_WORKERS_MEMORY_LIMIT ?= 16Gi
+export CELERY_WORKERS_MEMORY_REQUEST ?= 256Mi
+export CELERY_WORKERS_CONCURRENCY ?= 4
+export CELERY_WORKERS_QUEUES ?= mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery
+export CELERY_WORKERS_PERSONALITY ?= celery.workers.personality.yaml.j2
+
+export CELERY_BEAT_NAME ?= celery-beat
+export CELERY_BEAT_REPLICAS ?= 1
+export CELERY_BEAT_CPU_LIMIT ?= 2
+export CELERY_BEAT_CPU_REQUEST ?= 100m
+export CELERY_BEAT_MEMORY_LIMIT ?= 16Gi
+export CELERY_BEAT_MEMORY_REQUEST ?= 256Mi
+export CELERY_BEAT_PERSONALITY ?= celery.beat.personality.yaml.j2
+
+export CELERY_CAM_NAME ?= celery-cam
+export CELERY_CAM_REPLICAS ?= 1
+export CELERY_CAM_CPU_LIMIT ?= 2
+export CELERY_CAM_CPU_REQUEST ?= 100m
+export CELERY_CAM_MEMORY_LIMIT ?= 16Gi
+export CELERY_CAM_MEMORY_REQUEST ?= 256Mi
+export CELERY_CAM_PERSONALITY ?= celery.cam.personality.yaml.j2
+
+export KUMASCRIPT_NAME ?= kumascript
+export KUMASCRIPT_REPLICAS ?= 1
+export KUMASCRIPT_PORT ?= 9080
+export KUMASCRIPT_IMAGE ?= quay.io/mozmar/kumascript
+export KUMASCRIPT_IMAGE_TAG ?= latest
+export KUMASCRIPT_IMAGE_PULL_POLICY ?= IfNotPresent
+export KUMASCRIPT_CPU_LIMIT ?= 2
+export KUMASCRIPT_CPU_REQUEST ?= 100m
+export KUMASCRIPT_MEMORY_LIMIT ?= 16Gi
+export KUMASCRIPT_MEMORY_REQUEST ?= 256Mi
+export KUMASCRIPT_DOCUMENT_URL_TEMPLATE ?= http://${API_NAME}/en-US/docs/{path}?raw=1
+export KUMASCRIPT_MEMCHACHED_URL ?= ${MEMCACHED_URL}
+
 export KUMA_IMAGE ?= quay.io/mozmar/kuma
 export KUMA_IMAGE_TAG ?= 2fcf608
 export KUMA_IMAGE_PULL_POLICY ?= IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH ?= /www
-# "KUMA_PV_CLAIM_SIZE" controls the size of the claim made against KUMA_PV_NAME.
-export KUMA_PVC_NAME ?= shared
-export KUMA_PVC_SIZE ?= 40Gi
-export KUMA_PVC_TARGET_VOLUME ?= ${PV_SHARED_NAME}
-export KUMA_PVC_TARGET_STORAGE_CLASS ?= ${PV_SHARED_STORAGE_CLASS_NAME}
+export KUMA_CONTAINER_PORT ?= 8000
 export KUMA_DEBUG ?= "False"
 export KUMA_DEBUG_TOOLBAR ?= "False"
 export KUMA_PROTOCOL ?= "https://"
@@ -74,16 +131,10 @@ export KUMA_CSRF_COOKIE_SECURE ?= "True"
 export KUMA_CELERY_BROKER_URL ?= "redis://mdndevredis.9zzabg.0001.usw2.cache.amazonaws.com:6379/0"
 export ELASTICSEARCH_URL ?= elasticsearch:9200
 export MEMCACHED_URL ?= mdn-dev-memcached.9zzabg.cfg.usw2.cache.amazonaws.com:11211
-export KUMASCRIPT_NAME ?= kumascript
-export KUMASCRIPT_PORT ?= 9080
-export KUMASCRIPT_IMAGE ?= quay.io/mozmar/kumascript
-export KUMASCRIPT_IMAGE_TAG ?= latest
-export KUMASCRIPT_IMAGE_PULL_POLICY ?= IfNotPresent
-export KUMASCRIPT_REPLICAS ?= 1
-export KUMASCRIPT_DOCUMENT_URL_TEMPLATE ?= http://${API_NAME}/en-US/docs/{path}?raw=1
-export KUMASCRIPT_MEMCHACHED_URL ?= ${MEMCACHED_URL}
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT ?= http://${KUMASCRIPT_NAME}:${KUMASCRIPT_PORT}/docs/{path}
 
+
+aws-infra: aws-create-mysql-vol
 
 aws-create-mysql-vol:
 	aws ec2 create-volume \
@@ -98,89 +149,192 @@ aws-describe-mysql-vols:
 		--region ${AWS_REGION} \
 	    --filters Name=tag:name,Values="mdn-mysql"
 
+k8s-services: k8s-ns k8s-shared-storage k8s-mysql-storage k8s-mysql-svc \
+			  k8s-web-svc k8s-api-svc k8s-kumascript-svc
+
+k8s-delete-services: k8s-delete-ns k8s-delete-shared-storage \
+					 k8s-delete-mysql-storage k8s-delete-mysql-svc \
+					 k8s-delete-web-svc k8s-delete-api-svc \
+					 k8s-delete-kumascript-svc
+
 k8s-ns:
-	kubectl create ns ${K8S_NAMESPACE}
+	kubectl create ns ${K8S_NAMESPACE} | true
 
 k8s-delete-ns:
 	kubectl delete --ignore-not-found ns ${K8S_NAMESPACE}
 
 k8s-pv-shared:
-	j2 pv-shared.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 shared.pv.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-pv-shared:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${PV_SHARED_NAME}
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${SHARED_PV_NAME}
 
 k8s-pvc-shared:
-	j2 kuma-pvc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 shared.pvc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-pvc-shared:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${KUMA_PVC_NAME}
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${SHARED_PVC_NAME}
 
-k8s-shared: k8s-pv-shared k8s-pvc-shared
+k8s-shared-storage: k8s-pv-shared k8s-pvc-shared
 
-k8s-delete-shared: k8s-delete-pvc-shared k8s-delete-pv-shared
+k8s-delete-shared-storage: k8s-delete-pvc-shared k8s-delete-pv-shared
 
-k8s-kumascript:
-	j2 kumascript.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+k8s-mysql-storage:
+	j2 mysql.pv.pvc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-kumascript:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${KUMASCRIPT_NAME}
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${KUMASCRIPT_NAME}
+k8s-delete-mysql-storage:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${MYSQL_NAME}
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${MYSQL_NAME}
+
+k8s-web-svc:
+	env SERVICE_NAME=${WEB_SERVICE_NAME} \
+		SERVICE_TYPE=${WEB_SERVICE_TYPE} \
+		SERVICE_PORT=${WEB_SERVICE_PORT} \
+		SERVICE_TARGET_PORT=${WEB_SERVICE_TARGET_PORT} \
+		SERVICE_PROTOCOL=${WEB_SERVICE_PROTOCOL} \
+		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-web-svc:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+		svc ${WEB_SERVICE_NAME}
+
+k8s-api-svc:
+	env SERVICE_NAME=${API_SERVICE_NAME} \
+		SERVICE_TYPE=${API_SERVICE_TYPE} \
+		SERVICE_PORT=${API_SERVICE_PORT} \
+		SERVICE_TARGET_PORT=${API_SERVICE_TARGET_PORT} \
+		SERVICE_PROTOCOL=${API_SERVICE_PROTOCOL} \
+		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-api-svc:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+		svc ${API_SERVICE_NAME}
+
+k8s-kumascript-svc:
+	env SERVICE_NAME=${KUMASCRIPT_SERVICE_NAME} \
+		SERVICE_TYPE=${KUMASCRIPT_SERVICE_TYPE} \
+		SERVICE_PORT=${KUMASCRIPT_SERVICE_PORT} \
+		SERVICE_TARGET_PORT=${KUMASCRIPT_SERVICE_TARGET_PORT} \
+		SERVICE_PROTOCOL=${KUMASCRIPT_SERVICE_PROTOCOL} \
+		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-kumascript-svc:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+		svc ${KUMASCRIPT_SERVICE_NAME}
+
+k8s-mysql-svc:
+	env SERVICE_NAME=${MYSQL_NAME} \
+		SERVICE_TYPE=${MYSQL_SERVICE_TYPE} \
+		SERVICE_PORT=${MYSQL_SERVICE_PORT} \
+		SERVICE_TARGET_PORT=${MYSQL_SERVICE_TARGET_PORT} \
+		SERVICE_PROTOCOL=${MYSQL_SERVICE_PROTOCOL} \
+		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-mysql-svc:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${MYSQL_NAME}
+
+k8s-deployments: k8s-mysql k8s-web k8s-api k8s-kumascript k8s-celery
+
+k8s-delete-deployments: k8s-delete-mysql k8s-delete-web k8s-delete-api \
+						k8s-delete-kumascript k8s-delete-celery
+
+k8s-mysql:
+	j2 mysql.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-mysql:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${MYSQL_NAME}
 
 k8s-web:
 	env KUMA_NAME=${WEB_NAME} \
-	    KUMA_REPLICAS=${WEB_REPLICAS} \
+		KUMA_REPLICAS=${WEB_REPLICAS} \
 		KUMA_GUNICORN_WORKERS=${WEB_GUNICORN_WORKERS} \
 		KUMA_GUNICORN_TIMEOUT=${WEB_GUNICORN_TIMEOUT} \
 		KUMA_CPU_LIMIT=${WEB_CPU_LIMIT} \
 		KUMA_MEMORY_LIMIT=${WEB_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${WEB_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${WEB_MEMORY_REQUEST} \
-	    j2 kuma.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-web:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${WEB_NAME}
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${WEB_NAME}
 
 k8s-api:
 	env KUMA_NAME=${API_NAME} \
-	    KUMA_REPLICAS=${API_REPLICAS} \
+		KUMA_REPLICAS=${API_REPLICAS} \
 		KUMA_GUNICORN_WORKERS=${API_GUNICORN_WORKERS} \
 		KUMA_GUNICORN_TIMEOUT=${API_GUNICORN_TIMEOUT} \
 		KUMA_CPU_LIMIT=${API_CPU_LIMIT} \
 		KUMA_MEMORY_LIMIT=${API_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${API_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${API_MEMORY_REQUEST} \
-	    j2 kuma.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-api:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${API_NAME}
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${API_NAME}
 
-k8s-workers:
-	j2 workers.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+k8s-kumascript:
+	j2 kumascript.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-workers:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${WORKER_NAME}
+k8s-delete-kumascript:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+		deploy ${KUMASCRIPT_NAME}
 
-k8s-workers-beat:
-	j2 workers-beat.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+k8s-celery: k8s-celery-workers k8s-celery-beat k8s-celery-cam
 
-k8s-delete-workers-beat:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${WORKER_BEAT_NAME}
+k8s-delete-celery: k8s-delete-celery-workers k8s-delete-celery-beat \
+				   k8s-delete-celery-cam
 
-k8s-mysql:
-	j2 mysql.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+k8s-celery-workers:
+	env KUMA_NAME=${CELERY_WORKERS_NAME} \
+		KUMA_REPLICAS=${CELERY_WORKERS_REPLICAS} \
+		KUMA_CPU_LIMIT=${CELERY_WORKERS_CPU_LIMIT} \
+		KUMA_MEMORY_LIMIT=${CELERY_WORKERS_MEMORY_LIMIT} \
+		KUMA_CPU_REQUEST=${CELERY_WORKERS_CPU_REQUEST} \
+		KUMA_MEMORY_REQUEST=${CELERY_WORKERS_MEMORY_REQUEST} \
+		j2 celery.workers.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-mysql:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${MYSQL_NAME}
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${MYSQL_NAME}
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${MYSQL_NAME}
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${MYSQL_NAME}
+k8s-delete-celery-workers:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+		deploy ${CELERY_WORKERS_NAME}
+
+k8s-celery-beat:
+	env KUMA_NAME=${CELERY_BEAT_NAME} \
+		KUMA_REPLICAS=${CELERY_BEAT_REPLICAS} \
+		KUMA_CPU_LIMIT=${CELERY_BEAT_CPU_LIMIT} \
+		KUMA_MEMORY_LIMIT=${CELERY_BEAT_MEMORY_LIMIT} \
+		KUMA_CPU_REQUEST=${CELERY_BEAT_CPU_REQUEST} \
+		KUMA_MEMORY_REQUEST=${CELERY_BEAT_MEMORY_REQUEST} \
+		KUMA_PERSONALITY=${CELERY_BEAT_PERSONALITY} \
+		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-celery-beat:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+		deploy ${CELERY_BEAT_NAME}
+
+k8s-celery-cam:
+	env KUMA_NAME=${CELERY_CAM_NAME} \
+		KUMA_REPLICAS=${CELERY_CAM_REPLICAS} \
+		KUMA_CPU_LIMIT=${CELERY_CAM_CPU_LIMIT} \
+		KUMA_MEMORY_LIMIT=${CELERY_CAM_MEMORY_LIMIT} \
+		KUMA_CPU_REQUEST=${CELERY_CAM_CPU_REQUEST} \
+		KUMA_MEMORY_REQUEST=${CELERY_CAM_MEMORY_REQUEST} \
+		KUMA_PERSONALITY=${CELERY_CAM_PERSONALITY} \
+		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-celery-cam:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+		deploy ${CELERY_CAM_NAME}
 
 # Those tasks don't have file targets
-.PHONY: aws-create-mysql-vol aws-describe-mysql-vols k8s-ns k8s-delete-ns \
-	    k8s-pv-shared k8s-delete-pv-shared k8s-pvc-shared \
-		k8s-delete-pvc-shared k8s-shared k8s-delete-shared k8s-web \
-	    k8s-delete-web k8s-api k8s-delete-api k8s-workers k8s-delete-workers \
-		k8s-workers-beat k8s-delete-workers-beat k8s-mysql k8s-delete-mysql
+.PHONY: aws-infra aws-create-mysql-vol aws-describe-mysql-vols k8s-services \
+		k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
+		k8s-delete-pv-shared k8s-pvc-shared k8s-delete-pvc-shared \
+		k8s-shared-storage k8s-delete-shared-storage k8s-mysql-storage \
+		k8s-delete-mysql-storage k8s-web-svc k8s-delete-web-svc k8s-api-svc \
+		k8s-delete-api-svc k8s-kumascript-svc k8s-delete-kumascript-svc \
+		k8s-mysql-svc k8s-delete-mysql-svc k8s-deployments \
+		k8s-delete-deployments k8s-mysql k8s-delete-mysql k8s-web \
+		k8s-delete-web k8s-api k8s-delete-api k8s-kumascript \
+		k8s-delete-kumascript k8s-celery k8s-delete-celery k8s-celery-workers \
+		k8s-delete-celery-workers k8s-celery-beat k8s-delete-celery-beat \
+		k8s-celery-cam k8s-delete-celery-cam

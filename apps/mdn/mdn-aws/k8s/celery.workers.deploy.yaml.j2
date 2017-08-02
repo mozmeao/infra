@@ -1,0 +1,10 @@
+{% include 'kuma.base.deploy.yaml.j2' %}
+          command:
+            - ./manage.py
+          args:
+            - celery
+            - worker
+            - "--events"
+            - "--autoreload"
+            - "--concurrency={{ CELERY_WORKERS_CONCURRENCY }}"
+            - "-Q {{ CELERY_WORKERS_QUEUES }}"

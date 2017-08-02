@@ -1,45 +1,3 @@
-kind: PersistentVolume
-apiVersion: v1
-metadata:
-  name: {{ MYSQL_NAME }}
-spec:
-  capacity:
-    storage: {{ MYSQL_STORAGE_SIZE }}
-  accessModes:
-  - ReadWriteOnce
-  persistentVolumeReclaimPolicy: {{ MYSQL_STORAGE_RECLAIM_POLICY }}
-  awsElasticBlockStore:
-    fsType: ext4
-    volumeID: {{ MYSQL_STORAGE_EBS_ARN }}
-  storageClassName: db-fast
----
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: {{ MYSQL_NAME }}
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: {{ MYSQL_STORAGE_SIZE }}
-  storageClassName: db-fast
-  volumeName: {{ MYSQL_NAME }}
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: {{ MYSQL_NAME }}
-  labels:
-    app: {{ MYSQL_NAME }}
-spec:
-  ports:
-  - name: mysql
-    port: 3306
-    targetPort: mysql
-  selector:
-    app: {{ MYSQL_NAME }}
----
 kind: Deployment
 apiVersion: extensions/v1beta1
 metadata:
@@ -108,4 +66,3 @@ spec:
        - name: data
          persistentVolumeClaim:
            claimName: {{ MYSQL_NAME }}
----

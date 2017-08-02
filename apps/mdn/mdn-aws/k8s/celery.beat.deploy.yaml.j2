@@ -1,0 +1,6 @@
+{% include 'kuma.base.deploy.yaml.j2' %}
+          command:
+            - ./manage.py
+          args:
+            - celerybeat
+            - "--loglevel=INFO"
