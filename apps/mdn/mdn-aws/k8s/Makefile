@@ -3,7 +3,9 @@ export TARGET_ENVIRONMENT ?= dev
 export K8S_NAMESPACE ?= mdn-${TARGET_ENVIRONMENT}
 export AWS_REGION ?= us-west-2
 
-export SHARED_PV_NAME ?= shared
+# Note PVs are available within ALL namespaces, so delimit them with
+# the name of the target environment.
+export SHARED_PV_NAME ?= shared-${TARGET_ENVIRONMENT}
 export SHARED_PV_SIZE ?= 1000Gi
 export SHARED_PV_RECLAIM_POLICY ?= Retain
 export SHARED_PV_MOUNT_PATH ?= /
@@ -12,8 +14,6 @@ export SHARED_PV_STORAGE_CLASS_NAME ?= efs
 
 export SHARED_PVC_NAME ?= shared
 export SHARED_PVC_SIZE ?= 40Gi
-export SHARED_PVC_TARGET_VOLUME ?= ${SHARED_PV_NAME}
-export SHARED_PVC_TARGET_STORAGE_CLASS ?= ${SHARED_PV_STORAGE_CLASS_NAME}
 
 export MYSQL_NAME ?= mysql
 export MYSQL_SERVICE_TYPE ?= ClusterIP
@@ -129,8 +129,6 @@ export KUMA_CSRF_COOKIE_SECURE ?= "True"
 export KUMA_CELERY_BROKER_URL ?= "redis://mdndevredis.9zzabg.0001.usw2.cache.amazonaws.com:6379/0"
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT ?= http://${KUMASCRIPT_NAME}:${KUMASCRIPT_PORT}/docs/{path}
 
-
-aws-infra: aws-create-mysql-vol
 
 aws-create-mysql-vol:
 	aws ec2 create-volume \
@@ -322,7 +320,7 @@ k8s-delete-celery-cam:
 		deploy ${CELERY_CAM_NAME}
 
 # These tasks don't have file targets
-.PHONY: aws-infra aws-create-mysql-vol aws-describe-mysql-vols k8s-services \
+.PHONY: aws-create-mysql-vol aws-describe-mysql-vols k8s-services \
 		k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
 		k8s-delete-pv-shared k8s-pvc-shared k8s-delete-pvc-shared \
 		k8s-shared-storage k8s-delete-shared-storage k8s-mysql-storage \

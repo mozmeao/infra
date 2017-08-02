@@ -1,7 +1,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: {{ MYSQL_NAME }}
+  name: {{ MYSQL_NAME }}-{{ TARGET_ENVIRONMENT }}
 spec:
   capacity:
     storage: {{ MYSQL_STORAGE_SIZE }}
@@ -24,4 +24,4 @@ spec:
     requests:
       storage: {{ MYSQL_STORAGE_SIZE }}
   storageClassName: db-fast
-  volumeName: {{ MYSQL_NAME }}
+  volumeName: {{ MYSQL_NAME }}-{{ TARGET_ENVIRONMENT }}
