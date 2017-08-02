@@ -1,4 +1,6 @@
 {% include 'kuma.base.deploy.yaml.j2' %}
+          ports:
+            - containerPort: {{ KUMA_CONTAINER_PORT }}
           command:
             - gunicorn
           args:

@@ -27,8 +27,6 @@ spec:
             limits:
               cpu: {{ KUMA_CPU_LIMIT }}
               memory: {{ KUMA_MEMORY_LIMIT }}
-          ports:
-            - containerPort: {{ KUMA_CONTAINER_PORT }}
           env:
             # Django settings overrides:
             - name: ACCOUNT_DEFAULT_HTTP_PROTOCOL
