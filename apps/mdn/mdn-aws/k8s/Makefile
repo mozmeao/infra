@@ -7,7 +7,7 @@ export SHARED_PV_NAME ?= shared
 export SHARED_PV_SIZE ?= 1000Gi
 export SHARED_PV_RECLAIM_POLICY ?= Retain
 export SHARED_PV_MOUNT_PATH ?= /
-export SHARED_PV_ARN ?= fs-a313ca0a.efs.us-west-2.amazonaws.com
+export SHARED_PV_ARN ?= fs-667aa3cf.efs.us-west-2.amazonaws.com
 export SHARED_PV_STORAGE_CLASS_NAME ?= efs
 
 export SHARED_PVC_NAME ?= shared
