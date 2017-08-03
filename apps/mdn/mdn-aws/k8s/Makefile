@@ -115,18 +115,18 @@ export KUMA_IMAGE_TAG ?= 2fcf608
 export KUMA_IMAGE_PULL_POLICY ?= IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH ?= /www
-export KUMA_DEBUG ?= "False"
-export KUMA_DEBUG_TOOLBAR ?= "False"
+export KUMA_DEBUG ?= False
+export KUMA_DEBUG_TOOLBAR ?= False
 export KUMA_PROTOCOL ?= "https://"
 export KUMA_DOMAIN ?= developer.mozilla.org
 export KUMA_SITE_URL ?= "https://developer.mozilla.org"
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
-export KUMA_ALLOWED_HOSTS ?= "*"
-export KUMA_SESSION_COOKIE_SECURE ?= "True"
-export KUMA_WEB_CONCURRENCY ?= "4"
-export KUMA_MAINTENANCE_MODE ?= "False"
-export KUMA_CSRF_COOKIE_SECURE ?= "True"
-export KUMA_CELERY_BROKER_URL ?= "redis://mdndevredis.9zzabg.0001.usw2.cache.amazonaws.com:6379/0"
+export KUMA_ALLOWED_HOSTS ?= *
+export KUMA_SESSION_COOKIE_SECURE ?= True
+export KUMA_WEB_CONCURRENCY ?= 4
+export KUMA_MAINTENANCE_MODE ?= False
+export KUMA_CSRF_COOKIE_SECURE ?= True
+export KUMA_CELERY_BROKER_URL ?= redis://mdndevredis.9zzabg.0001.usw2.cache.amazonaws.com:6379/0
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT ?= http://${KUMASCRIPT_NAME}:${KUMASCRIPT_PORT}/docs/{path}
 
 
