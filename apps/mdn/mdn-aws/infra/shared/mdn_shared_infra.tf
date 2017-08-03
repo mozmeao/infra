@@ -17,6 +17,10 @@ resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
   region              = "${var.region}"
   acceleration_status = "Enabled"
   acl                 = "private"
+
+  tags {
+     Stack = "MDN-prod"
+  }
 }
 
 # access is controlled via private IAM policy
@@ -26,6 +30,11 @@ resource "aws_s3_bucket" "mdn-db-storage-production" {
   region              = "${var.region}"
   acceleration_status = "Enabled"
   acl                 = "private"
+
+  tags {
+     Stack = "MDN-prod"
+  }
+
 }
 
 resource "aws_s3_bucket" "mdn-downloads" {
@@ -112,6 +121,12 @@ resource "aws_s3_bucket" "mdn-downloads" {
   ]
 }
 EOF
+
+
+  tags {
+     Stack = "MDN-prod"
+  }
+
 }
 
 resource "aws_s3_bucket" "mdn-assets" {
@@ -157,6 +172,12 @@ resource "aws_s3_bucket" "mdn-assets" {
   ]
 }
 EOF
+
+
+  tags {
+     Stack = "MDN-prod"
+  }
+
 }
 
 resource "aws_s3_bucket" "mdn-legacy" {
@@ -202,6 +223,12 @@ resource "aws_s3_bucket" "mdn-legacy" {
   ]
 }
 EOF
+
+
+  tags {
+     Stack = "MDN-prod"
+  }
+
 }
 
 resource "aws_s3_bucket" "mdn-legacy-samples" {
@@ -247,6 +274,12 @@ resource "aws_s3_bucket" "mdn-legacy-samples" {
   ]
 }
 EOF
+
+
+  tags {
+     Stack = "MDN-prod"
+  }
+
 }
 
 # backup EFS to this
@@ -263,4 +296,9 @@ resource "aws_s3_bucket" "mdn-shared-backup" {
   versioning {
     enabled = true
   }
+
+  tags {
+     Stack = "MDN-prod"
+  }
+
 }

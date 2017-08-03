@@ -1,12 +1,13 @@
 
-variable "name" {}
+variable "efs_name" {}
 variable "subnets" {}
 variable "nodes_security_group" {}
 
 resource "aws_efs_file_system" "mdn-shared-efs" {
   performance_mode = "generalPurpose"
   tags {
-    Name = "mdn-shared-${var.name}"
+    Name = "mdn-shared-${var.efs_name}"
+    Stack = "MDN-${var.efs_name}"
   }
 }
 

@@ -30,7 +30,7 @@ resource "aws_elasticache_subnet_group" "mdn-redis-subnet-group" {
 
 resource "aws_elasticache_replication_group" "mdn-redis-rg" {
   replication_group_id          = "mdn-redis-${var.redis_name}"
-  replication_group_description = "Redis ${var.redis_name} cluster"
+  replication_group_description = "MDN Redis ${var.redis_name} cluster"
   node_type                     = "${var.redis_node_size}"
   number_cache_clusters         = "${var.redis_num_nodes}"
   port                          = "${var.redis_port}"
@@ -38,5 +38,9 @@ resource "aws_elasticache_replication_group" "mdn-redis-rg" {
   engine_version                = "${var.redis_engine_version}"
   subnet_group_name             = "${aws_elasticache_subnet_group.mdn-redis-subnet-group.name}"
   security_group_ids            = ["${var.nodes_security_group}"]
+
+  tags {
+    Stack = "MDN-${var.redis_name}"
+  }
 }
 
