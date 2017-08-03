@@ -57,6 +57,8 @@ tf_main() {
     # switch env to virginia, tokyo etc
     terraform env select ${TERRAFORM_ENV}
 
+    # import local modules
+    terraform get
 
     PLAN=$(mktemp)
     terraform plan --out $PLAN $TF_ARGS
