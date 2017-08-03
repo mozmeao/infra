@@ -18,7 +18,7 @@ spec:
           args:
             - run.js
           ports:
-            - containerPort: {{ KUMASCRIPT_PORT }}
+            - containerPort: {{ KUMASCRIPT_CONTAINER_PORT }}
           env:
             - name: log__console
               value: "true"
@@ -50,3 +50,15 @@ spec:
             limits:
               cpu: {{ KUMASCRIPT_CPU_LIMIT }}
               memory: {{ KUMASCRIPT_MEMORY_LIMIT }}
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: {{ KUMASCRIPT_CONTAINER_PORT }}
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readiness
+              port: {{ KUMASCRIPT_CONTAINER_PORT }}
+            initialDelaySeconds: 10
+            periodSeconds: 3

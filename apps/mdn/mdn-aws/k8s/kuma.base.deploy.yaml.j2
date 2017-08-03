@@ -27,26 +27,24 @@ spec:
             limits:
               cpu: {{ KUMA_CPU_LIMIT }}
               memory: {{ KUMA_MEMORY_LIMIT }}
-          ports:
-            - containerPort: {{ KUMA_CONTAINER_PORT }}
           env:
             # Django settings overrides:
             - name: ACCOUNT_DEFAULT_HTTP_PROTOCOL
               value: {{ KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL }}
             - name: ALLOWED_HOSTS
-              value: {{ KUMA_ALLOWED_HOSTS }}
+              value: "{{ KUMA_ALLOWED_HOSTS }}"
             - name: BROKER_URL
               value: {{ KUMA_CELERY_BROKER_URL }}
             - name: CELERY_ALWAYS_EAGER
               value: "False"
             - name: CSRF_COOKIE_SECURE
-              value: {{ KUMA_CSRF_COOKIE_SECURE }}
+              value: "{{ KUMA_CSRF_COOKIE_SECURE }}"
             - name: DATABASE_URL
               value: mysql://{{ MYSQL_USER }}:{{ MYSQL_PASSWORD }}@{{ MYSQL_NAME }}:3306/{{ MYSQL_DATABASE }}
             - name: DEBUG
-              value: {{ KUMA_DEBUG }}
+              value: "{{ KUMA_DEBUG }}"
             - name: DEBUG_TOOLBAR
-              value: {{ KUMA_DEBUG_TOOLBAR }}
+              value: "{{ KUMA_DEBUG_TOOLBAR }}"
             - name: DOMAIN
               value: {{ KUMA_DOMAIN }}
             - name: ES_URLS
@@ -60,7 +58,7 @@ spec:
             - name: PROTOCOL
               value: {{ KUMA_PROTOCOL }}
             - name: SESSION_COOKIE_SECURE
-              value: {{ KUMA_SESSION_COOKIE_SECURE }}
+              value: "{{ KUMA_SESSION_COOKIE_SECURE }}"
             - name: SITE_URL
               value: {{ KUMA_SITE_URL }}
             # Other environment overrides
@@ -69,6 +67,6 @@ spec:
             - name: PYTHONUNBUFFERED
               value: "True"
             - name: WEB_CONCURRENCY
-              value: {{ KUMA_WEB_CONCURRENCY }}
+              value: "{{ KUMA_WEB_CONCURRENCY }}"
             - name: MAINTENANCE_MODE
-              value: {{ KUMA_MAINTENANCE_MODE }}
+              value: "{{ KUMA_MAINTENANCE_MODE }}"

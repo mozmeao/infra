@@ -3,17 +3,17 @@ export TARGET_ENVIRONMENT ?= dev
 export K8S_NAMESPACE ?= mdn-${TARGET_ENVIRONMENT}
 export AWS_REGION ?= us-west-2
 
-export SHARED_PV_NAME ?= shared
+# Note PVs are available within ALL namespaces, so delimit them with
+# the name of the target environment.
+export SHARED_PV_NAME ?= shared-${TARGET_ENVIRONMENT}
 export SHARED_PV_SIZE ?= 1000Gi
 export SHARED_PV_RECLAIM_POLICY ?= Retain
 export SHARED_PV_MOUNT_PATH ?= /
-export SHARED_PV_ARN ?= fs-a313ca0a.efs.us-west-2.amazonaws.com
+export SHARED_PV_ARN ?= fs-667aa3cf.efs.us-west-2.amazonaws.com
 export SHARED_PV_STORAGE_CLASS_NAME ?= efs
 
 export SHARED_PVC_NAME ?= shared
 export SHARED_PVC_SIZE ?= 40Gi
-export SHARED_PVC_TARGET_VOLUME ?= ${SHARED_PV_NAME}
-export SHARED_PVC_TARGET_STORAGE_CLASS ?= ${SHARED_PV_STORAGE_CLASS_NAME}
 
 export MYSQL_NAME ?= mysql
 export MYSQL_SERVICE_TYPE ?= ClusterIP
@@ -52,6 +52,10 @@ export KUMASCRIPT_SERVICE_PORT ?= 9080
 export KUMASCRIPT_SERVICE_TARGET_PORT ?= 9080
 export KUMASCRIPT_SERVICE_PROTOCOL ?= TCP
 
+export MEMCACHED_URL ?= mdn-dev-memcached.9zzabg.cfg.usw2.cache.amazonaws.com:11211
+
+export ELASTICSEARCH_URL ?= elasticsearch:9200
+
 export WEB_NAME ?= web
 export WEB_REPLICAS ?= 1
 export WEB_GUNICORN_WORKERS ?= 4
@@ -60,7 +64,6 @@ export WEB_CPU_LIMIT ?= 2
 export WEB_CPU_REQUEST ?= 100m
 export WEB_MEMORY_LIMIT ?= 16Gi
 export WEB_MEMORY_REQUEST ?= 256Mi
-export WEB_PERSONALITY ?= kuma.personality.yaml.j2
 
 export API_NAME ?= api
 export API_REPLICAS ?= 1
@@ -70,7 +73,6 @@ export API_CPU_LIMIT ?= 2
 export API_CPU_REQUEST ?= 100m
 export API_MEMORY_LIMIT ?= 16Gi
 export API_MEMORY_REQUEST ?= 256Mi
-export API_PERSONALITY ?= kuma.personality.yaml.j2
 
 export CELERY_WORKERS_NAME ?= celery-worker
 export CELERY_WORKERS_REPLICAS ?= 1
@@ -80,7 +82,6 @@ export CELERY_WORKERS_MEMORY_LIMIT ?= 16Gi
 export CELERY_WORKERS_MEMORY_REQUEST ?= 256Mi
 export CELERY_WORKERS_CONCURRENCY ?= 4
 export CELERY_WORKERS_QUEUES ?= mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery
-export CELERY_WORKERS_PERSONALITY ?= celery.workers.personality.yaml.j2
 
 export CELERY_BEAT_NAME ?= celery-beat
 export CELERY_BEAT_REPLICAS ?= 1
@@ -88,7 +89,6 @@ export CELERY_BEAT_CPU_LIMIT ?= 2
 export CELERY_BEAT_CPU_REQUEST ?= 100m
 export CELERY_BEAT_MEMORY_LIMIT ?= 16Gi
 export CELERY_BEAT_MEMORY_REQUEST ?= 256Mi
-export CELERY_BEAT_PERSONALITY ?= celery.beat.personality.yaml.j2
 
 export CELERY_CAM_NAME ?= celery-cam
 export CELERY_CAM_REPLICAS ?= 1
@@ -96,11 +96,10 @@ export CELERY_CAM_CPU_LIMIT ?= 2
 export CELERY_CAM_CPU_REQUEST ?= 100m
 export CELERY_CAM_MEMORY_LIMIT ?= 16Gi
 export CELERY_CAM_MEMORY_REQUEST ?= 256Mi
-export CELERY_CAM_PERSONALITY ?= celery.cam.personality.yaml.j2
 
 export KUMASCRIPT_NAME ?= kumascript
 export KUMASCRIPT_REPLICAS ?= 1
-export KUMASCRIPT_PORT ?= 9080
+export KUMASCRIPT_CONTAINER_PORT ?= ${KUMASCRIPT_SERVICE_TARGET_PORT}
 export KUMASCRIPT_IMAGE ?= quay.io/mozmar/kumascript
 export KUMASCRIPT_IMAGE_TAG ?= latest
 export KUMASCRIPT_IMAGE_PULL_POLICY ?= IfNotPresent
@@ -116,25 +115,20 @@ export KUMA_IMAGE_TAG ?= 2fcf608
 export KUMA_IMAGE_PULL_POLICY ?= IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH ?= /www
-export KUMA_CONTAINER_PORT ?= 8000
-export KUMA_DEBUG ?= "False"
-export KUMA_DEBUG_TOOLBAR ?= "False"
+export KUMA_DEBUG ?= False
+export KUMA_DEBUG_TOOLBAR ?= False
 export KUMA_PROTOCOL ?= "https://"
 export KUMA_DOMAIN ?= developer.mozilla.org
 export KUMA_SITE_URL ?= "https://developer.mozilla.org"
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
-export KUMA_ALLOWED_HOSTS ?= "*"
-export KUMA_SESSION_COOKIE_SECURE ?= "True"
-export KUMA_WEB_CONCURRENCY ?= "4"
-export KUMA_MAINTENANCE_MODE ?= "False"
-export KUMA_CSRF_COOKIE_SECURE ?= "True"
-export KUMA_CELERY_BROKER_URL ?= "redis://mdndevredis.9zzabg.0001.usw2.cache.amazonaws.com:6379/0"
-export ELASTICSEARCH_URL ?= elasticsearch:9200
-export MEMCACHED_URL ?= mdn-dev-memcached.9zzabg.cfg.usw2.cache.amazonaws.com:11211
+export KUMA_ALLOWED_HOSTS ?= *
+export KUMA_SESSION_COOKIE_SECURE ?= True
+export KUMA_WEB_CONCURRENCY ?= 4
+export KUMA_MAINTENANCE_MODE ?= False
+export KUMA_CSRF_COOKIE_SECURE ?= True
+export KUMA_CELERY_BROKER_URL ?= redis://mdndevredis.9zzabg.0001.usw2.cache.amazonaws.com:6379/0
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT ?= http://${KUMASCRIPT_NAME}:${KUMASCRIPT_PORT}/docs/{path}
 
-
-aws-infra: aws-create-mysql-vol
 
 aws-create-mysql-vol:
 	aws ec2 create-volume \
@@ -247,6 +241,7 @@ k8s-delete-mysql:
 k8s-web:
 	env KUMA_NAME=${WEB_NAME} \
 		KUMA_REPLICAS=${WEB_REPLICAS} \
+		KUMA_CONTAINER_PORT=${WEB_SERVICE_TARGET_PORT} \
 		KUMA_GUNICORN_WORKERS=${WEB_GUNICORN_WORKERS} \
 		KUMA_GUNICORN_TIMEOUT=${WEB_GUNICORN_TIMEOUT} \
 		KUMA_CPU_LIMIT=${WEB_CPU_LIMIT} \
@@ -261,6 +256,7 @@ k8s-delete-web:
 k8s-api:
 	env KUMA_NAME=${API_NAME} \
 		KUMA_REPLICAS=${API_REPLICAS} \
+		KUMA_CONTAINER_PORT=${API_SERVICE_TARGET_PORT} \
 		KUMA_GUNICORN_WORKERS=${API_GUNICORN_WORKERS} \
 		KUMA_GUNICORN_TIMEOUT=${API_GUNICORN_TIMEOUT} \
 		KUMA_CPU_LIMIT=${API_CPU_LIMIT} \
@@ -304,7 +300,6 @@ k8s-celery-beat:
 		KUMA_MEMORY_LIMIT=${CELERY_BEAT_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${CELERY_BEAT_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_BEAT_MEMORY_REQUEST} \
-		KUMA_PERSONALITY=${CELERY_BEAT_PERSONALITY} \
 		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-beat:
@@ -318,15 +313,14 @@ k8s-celery-cam:
 		KUMA_MEMORY_LIMIT=${CELERY_CAM_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${CELERY_CAM_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_CAM_MEMORY_REQUEST} \
-		KUMA_PERSONALITY=${CELERY_CAM_PERSONALITY} \
 		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-cam:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_CAM_NAME}
 
-# Those tasks don't have file targets
-.PHONY: aws-infra aws-create-mysql-vol aws-describe-mysql-vols k8s-services \
+# These tasks don't have file targets
+.PHONY: aws-create-mysql-vol aws-describe-mysql-vols k8s-services \
 		k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
 		k8s-delete-pv-shared k8s-pvc-shared k8s-delete-pvc-shared \
 		k8s-shared-storage k8s-delete-shared-storage k8s-mysql-storage \
