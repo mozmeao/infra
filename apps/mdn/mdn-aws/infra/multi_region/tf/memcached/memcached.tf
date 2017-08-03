@@ -37,5 +37,9 @@ resource "aws_elasticache_cluster" "mdn-memcached" {
   engine_version       = "${var.memcached_engine_version}"
   subnet_group_name    = "${aws_elasticache_subnet_group.mdn-memcached-subnet-group.name}"
   security_group_ids   = ["${var.nodes_security_group}"]
+
+  tags {
+    Stack = "MDN-${var.memcached_name}"
+  }
 }
 

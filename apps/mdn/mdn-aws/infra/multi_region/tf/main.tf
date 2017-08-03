@@ -17,21 +17,21 @@ terraform {
 
 module "efs-dev" {
     source = "efs"
-    name = "dev"
+    efs_name = "dev"
     subnets = "${var.subnets}"
     nodes_security_group = "${var.nodes_security_group}"
 }
 
 #module "efs-stage" {
 #    source = "efs"
-#    name = "stage"
+#    efs_name = "stage"
 #    subnets = "${var.subnets}"
 #    nodes_security_group = "${var.nodes_security_group}"
 #}
 #
 #module "efs-prod" {
 #    source = "efs"
-#    name = "prod"
+#    efs_name = "prod"
 #    subnets = "${var.subnets}"
 #    nodes_security_group = "${var.nodes_security_group}"
 #}
