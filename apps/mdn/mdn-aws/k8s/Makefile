@@ -1,18 +1,19 @@
 # Define defaults for environment variables that personalize the commands.
 export TARGET_ENVIRONMENT ?= dev
 export K8S_NAMESPACE ?= mdn-${TARGET_ENVIRONMENT}
+export AWS_RESOURCE_STACK=MDN-${TARGET_ENVIRONMENT}
 export AWS_REGION ?= us-west-2
 
 # Note PVs are available within ALL namespaces, so delimit them with
 # the name of the target environment.
-export SHARED_PV_NAME ?= shared-${TARGET_ENVIRONMENT}
+export SHARED_PV_NAME ?= mdn-shared-${TARGET_ENVIRONMENT}
 export SHARED_PV_SIZE ?= 1000Gi
 export SHARED_PV_RECLAIM_POLICY ?= Retain
 export SHARED_PV_MOUNT_PATH ?= /
-export SHARED_PV_ARN ?= fs-667aa3cf.efs.us-west-2.amazonaws.com
+export SHARED_PV_ARN ?= fs-e89b4341.efs.us-west-2.amazonaws.com
 export SHARED_PV_STORAGE_CLASS_NAME ?= efs
 
-export SHARED_PVC_NAME ?= shared
+export SHARED_PVC_NAME ?= mdn-shared
 export SHARED_PVC_SIZE ?= 40Gi
 
 export MYSQL_NAME ?= mysql
@@ -26,7 +27,7 @@ export MYSQL_IMAGE_PULL_POLICY ?= IfNotPresent
 MYSQL_STORAGE_SIZE_IN_GB ?= 40
 export MYSQL_STORAGE_SIZE ?= ${MYSQL_STORAGE_SIZE_IN_GB}Gi
 export MYSQL_STORAGE_RECLAIM_POLICY ?= Retain
-export MYSQL_STORAGE_EBS_ARN ?= vol-0ddfa112775841355
+export MYSQL_STORAGE_EBS_ARN ?= vol-0306362068285e689
 export MYSQL_STORAGE_EBS_TYPE ?= gp2
 export MYSQL_STORAGE_EBS_AZ ?= us-west-2a
 export MYSQL_USER ?= kuma
@@ -52,8 +53,7 @@ export KUMASCRIPT_SERVICE_PORT ?= 9080
 export KUMASCRIPT_SERVICE_TARGET_PORT ?= 9080
 export KUMASCRIPT_SERVICE_PROTOCOL ?= TCP
 
-export MEMCACHED_URL ?= mdn-dev-memcached.9zzabg.cfg.usw2.cache.amazonaws.com:11211
-
+export MEMCACHED_URL ?= mdn-memcached-dev.9zzabg.cfg.usw2.cache.amazonaws.com:11121
 export ELASTICSEARCH_URL ?= elasticsearch:9200
 
 export WEB_NAME ?= web
@@ -126,7 +126,7 @@ export KUMA_SESSION_COOKIE_SECURE ?= True
 export KUMA_WEB_CONCURRENCY ?= 4
 export KUMA_MAINTENANCE_MODE ?= False
 export KUMA_CSRF_COOKIE_SECURE ?= True
-export KUMA_CELERY_BROKER_URL ?= redis://mdndevredis.9zzabg.0001.usw2.cache.amazonaws.com:6379/0
+export KUMA_CELERY_BROKER_URL ?= redis://mdn-redis-dev.9zzabg.ng.0001.usw2.cache.amazonaws.com:6379/0
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT ?= http://${KUMASCRIPT_NAME}:${KUMASCRIPT_PORT}/docs/{path}
 
 
@@ -136,7 +136,7 @@ aws-create-mysql-vol:
 	    --size ${MYSQL_STORAGE_SIZE_IN_GB} \
 	    --volume-type ${MYSQL_STORAGE_EBS_TYPE} \
 		--availability-zone ${MYSQL_STORAGE_EBS_AZ} \
-		--tag-specifications 'ResourceType=volume,Tags=[{Key=name,Value=mdn-mysql},{Key=purpose,Value=${TARGET_ENVIRONMENT}},{Key=created-by,Value=${USER}}]'
+		--tag-specifications 'ResourceType=volume,Tags=[{Key=name,Value=mdn-mysql},{Key=purpose,Value=${TARGET_ENVIRONMENT}},{Key=created-by,Value=${USER}},{Key=Stack,Value=${AWS_RESOURCE_STACK}}]'
 
 aws-describe-mysql-vols:
 	aws ec2 describe-volumes \
