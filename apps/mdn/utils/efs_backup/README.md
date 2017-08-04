@@ -53,7 +53,10 @@ docker run \
         -e AWS_ACCESS_KEY_ID="foo" \
         -e AWS_SECRET_ACCESS_KEY="bar" \
         -e PUSH_OR_PULL="PULL" \
-        -e LOCAL_DIR="/home" \
+        -e LOCAL_DIR="/mdn_stuff" \
+        -e REMOTE_DIR="/backups/www" \
+        -e BUCKET="s3://mdn-shared-backup" \
+        -v $(pwd)/stuff:/mdn_stuff \
         quay.io/mozmar/mdn-backup:latest
 ```
 
