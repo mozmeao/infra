@@ -6,14 +6,14 @@ export AWS_REGION ?= us-west-2
 
 # Note PVs are available within ALL namespaces, so delimit them with
 # the name of the target environment.
-export SHARED_PV_NAME ?= shared-${TARGET_ENVIRONMENT}
+export SHARED_PV_NAME ?= mdn-shared-${TARGET_ENVIRONMENT}
 export SHARED_PV_SIZE ?= 1000Gi
 export SHARED_PV_RECLAIM_POLICY ?= Retain
 export SHARED_PV_MOUNT_PATH ?= /
 export SHARED_PV_ARN ?= fs-e89b4341.efs.us-west-2.amazonaws.com
 export SHARED_PV_STORAGE_CLASS_NAME ?= efs
 
-export SHARED_PVC_NAME ?= shared
+export SHARED_PVC_NAME ?= mdn-shared
 export SHARED_PVC_SIZE ?= 40Gi
 
 export MYSQL_NAME ?= mysql
