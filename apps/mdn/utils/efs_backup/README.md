@@ -13,7 +13,7 @@ The default target will build and push the image to quay.io.
 ## Configuration
 
 - `LOCAL_DIR` - the directory *in the running container* that we'll push or pull from.
-- `BUCKET` - the bucket where backup data is stored. Defaults to `s3://mdn-shared-backup`
+- `BUCKET` - the bucket where backup data is stored. 
 - `REMOTE_DIR` - the directory in `$BUCKET` that we'll push or pull from.
 - `PUSH_OR_PULL` - set to either `PUSH` or `PULL`
   - `PUSH` - recursively sync from `$LOCAL_DIR` to `$BUCKET$REMOTE_DIR`

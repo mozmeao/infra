@@ -136,6 +136,19 @@ export KUMA_CELERY_BROKER_URL ?= redis://mdn-redis-dev.9zzabg.ng.0001.usw2.cache
 export KUMA_SITE_URL="${KUMA_PROTOCOL}${KUMA_DOMAIN}"
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMASCRIPT_SERVICE_PORT}/docs/{path}
 
+# MDN backup tool
+export BACKUP_SERVICE_NAME ?= mdn-backup-${TARGET_ENVIRONMENT}
+export BACKUP_SECRETS_NAME ?= mdn-backup-secrets
+export BACKUP_BUCKET ?= s3://mdn-shared-backup
+# TODO: every minute for development only!
+export BACKUP_SERVICE_SCHEDULE ?= "*/1 * * * *"
+# https://kubernetes.io/docs/concepts/configuration/secret/
+# the values below are NOT real access/secret keys
+export BACKUP_ACCESS_KEY ?= foo
+export BACKUP_SECRET_KEY ?= bar
+export BACKUP_ACCESS_KEY_BASE64 ?= $(shell echo -n "${BACKUP_ACCESS_KEY}" | base64)
+export BACKUP_SECRET_KEY_BASE64 ?= $(shell echo -n "${BACKUP_SECRET_KEY}" | base64)
+
 
 aws-create-mysql-vol:
 	aws ec2 create-volume \
@@ -151,12 +164,12 @@ aws-describe-mysql-vols:
 	    --filters Name=tag:name,Values="mdn-mysql"
 
 k8s-services: k8s-ns k8s-shared-storage k8s-mysql-storage k8s-mysql-svc \
-			  k8s-web-svc k8s-api-svc k8s-kumascript-svc
+			  k8s-web-svc k8s-api-svc k8s-kumascript-svc k8s-secrets
 
 k8s-delete-services: k8s-delete-ns k8s-delete-shared-storage \
 					 k8s-delete-mysql-storage k8s-delete-mysql-svc \
 					 k8s-delete-web-svc k8s-delete-api-svc \
-					 k8s-delete-kumascript-svc
+					 k8s-delete-kumascript-svc k8s-delete-backup-secrets
 
 k8s-ns:
 	kubectl create ns ${K8S_NAMESPACE} | true
@@ -233,6 +246,24 @@ k8s-mysql-svc:
 
 k8s-delete-mysql-svc:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${MYSQL_NAME}
+
+k8s-secrets: k8s-backup-secrets
+k8s-delete-secrets: k8s-delete-backup-secrets
+
+k8s-backup-secrets:
+	j2 mdn-backup-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-backup-secrets:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${BACKUP_SECRETS_NAME}
+
+
+################
+# TODO
+k8s-backup-cron:
+	j2 mdn-backup-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	#j2 mdn-backup-cron.yaml.j2 
+################
+
 
 k8s-deployments: k8s-mysql k8s-web k8s-api k8s-kumascript k8s-celery
 

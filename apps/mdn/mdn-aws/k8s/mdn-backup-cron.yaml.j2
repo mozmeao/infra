@@ -1,0 +1,41 @@
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: {{ BACKUP_SERVICE_NAME }}
+spec:
+  schedule: {{ BACKUP_SERVICE_SCHEDULE }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: mdn-sync
+              image: quay.io/mozmar/mdn-backup:latest
+              volumeMounts:
+                - mountPath: "/mdn"
+                  name: {{ SHARED_PVC_NAME }}
+              env:
+                - name: LOCAL_DIR
+                  value: /mdn
+                - name: REMOTE_DIR
+                  value: /backups/efs/
+                - name: BUCKET
+                  value: "{{ BACKUP_BUCKET }}"
+                - name: PUSH_OR_PULL
+                  value: PUSH
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ BACKUP_SECRETS_NAME }}
+                      key: access_key
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ BACKUP_SECRETS_NAME }}
+                      key: secret_key
+          volumes:
+            - name: {{ SHARED_PVC_NAME }}
+              persistentVolumeClaim:
+                claimName: {{ SHARED_PVC_NAME }}
+          restartPolicy: OnFailure
+
