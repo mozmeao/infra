@@ -259,6 +259,8 @@ k8s-delete-backup-secrets:
 
 ################
 # TODO
+#   parameterize backup mount point and remote dir
+#   add this to another make target, maybe services?
 k8s-backup-cron:
 	j2 mdn-backup-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 	#j2 mdn-backup-cron.yaml.j2 
