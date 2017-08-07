@@ -53,8 +53,8 @@ module "redis-dev" {
 #module "redis-stage" {
 #    source = "redis"
 #    redis_name = "stage"
-#    redis_node_size = "cache.t2.micro"
-#    redis_num_nodes = 1
+#    redis_node_size = "cache.t2.small"
+#    redis_num_nodes = 3
 #    subnets = "${var.subnets}"
 #    nodes_security_group = "${var.nodes_security_group}"
 #}
@@ -85,8 +85,8 @@ module "memcached-dev" {
 #module "memcached-stage" {
 #    source = "memcached"
 #    memcached_name = "stage"
-#    memcached_node_size = "cache.t2.micro"
-#    memcached_num_nodes = 1
+#    memcached_node_size = "cache.t2.small"
+#    memcached_num_nodes = 3
 #    subnets = "${var.subnets}"
 #    nodes_security_group = "${var.nodes_security_group}"
 #}
