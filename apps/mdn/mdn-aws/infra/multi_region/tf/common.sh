@@ -30,8 +30,7 @@ setup_tf_s3_state_store() {
 setup_tf_envs() {
     # this MUST be run in the dir that this file resides in
     set +e
-    terraform env new tokyo
-    terraform env new virginia
+    terraform env new portland
     set -e
 }
 
@@ -59,12 +58,16 @@ tf_main() {
     terraform env select ${TERRAFORM_ENV}
 
     # import local modules
-    #terraform get
+    terraform get
 
     PLAN=$(mktemp)
     terraform plan --out $PLAN $TF_ARGS
-    # if terraform plan fails, the next command won't run due to
-    # set -e at the top of the script.
+
+    echo "Please verify plan output above and enter the command"
+    echo "'make it so' followed by enter to continue."
+    echo "Otherwise, Ctrl-C to abort"V
+    read
+
     terraform apply $PLAN
     rm $PLAN
 }
