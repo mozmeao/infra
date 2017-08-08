@@ -25,6 +25,7 @@ export MYSQL_IMAGE ?= quay.io/mozmar/mdn-mysql
 export MYSQL_IMAGE_TAG ?= latest
 export MYSQL_IMAGE_PULL_POLICY ?= IfNotPresent
 MYSQL_STORAGE_SIZE_IN_GB ?= 40
+export MYSQL_STORAGE_NAME ?= ${MYSQL_NAME}-${TARGET_ENVIRONMENT}
 export MYSQL_STORAGE_SIZE ?= ${MYSQL_STORAGE_SIZE_IN_GB}Gi
 export MYSQL_STORAGE_RECLAIM_POLICY ?= Retain
 export MYSQL_STORAGE_EBS_ARN ?= vol-0306362068285e689
@@ -118,8 +119,12 @@ export KUMA_MOUNT_PATH ?= /www
 export KUMA_DEBUG ?= False
 export KUMA_DEBUG_TOOLBAR ?= False
 export KUMA_PROTOCOL ?= "https://"
+ifeq (${TARGET_ENVIRONMENT},dev)
+export KUMA_DOMAIN=$(shell kubectl get --ignore-not-found -n ${K8S_NAMESPACE} svc ${WEB_SERVICE_NAME} -o jsonpath={.status.loadBalancer.ingress[0].hostname})
+else
 export KUMA_DOMAIN ?= developer.mozilla.org
-export KUMA_SITE_URL ?= "https://developer.mozilla.org"
+endif
+export KUMA_SITE_URL ?= "${KUMA_PROTOCOL}${KUMA_DOMAIN}"
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
 export KUMA_ALLOWED_HOSTS ?= *
 export KUMA_SESSION_COOKIE_SECURE ?= True
@@ -177,8 +182,8 @@ k8s-mysql-storage:
 	j2 mysql.pv.pvc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-mysql-storage:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${MYSQL_NAME}
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${MYSQL_NAME}
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${MYSQL_STORAGE_NAME}
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${MYSQL_STORAGE_NAME}
 
 k8s-web-svc:
 	env SERVICE_NAME=${WEB_SERVICE_NAME} \
