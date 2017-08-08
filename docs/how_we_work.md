@@ -161,6 +161,17 @@ When SRE work includes activities that may impact another team or project, commu
 	- IRC/email/Slack/Github/Bugzilla
 	- use your best judgement here, each team works differently and can prefer different communication styles.
 
+Examples of changes we should communicate:
+
+- deploying applications to new clusters
+	- this may require changes to Jenkins deployments
+	- a team member that manages the app may need to run some tests against the app in a new cluster
+- deommissioning clusters
+	- this may require changes to Jenkins deployments
+	- this may affect performance if teams are gathering specific metrics
+- changing app infrastructure
+	- switching between Deis 1/K8s/S3 hosting/etc
+
 
 
 
