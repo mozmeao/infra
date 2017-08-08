@@ -153,25 +153,22 @@ Weekly status is communicated to the organization via the [https://mozilla.githu
 
 When SRE work includes activities that may impact another team or project, communicate these changes so the appropriate engineers have time to prepare:
 
-- create an issue in the appropriate Github repo stating the change and impact. Include a link back to the SRE issue in the [infra repo](https://github.com/mozmeao/infra).	 
-	- be courteous: ask the team how much notice they need to prepare.
+- create an issue in the appropriate Github repo stating the change and impact. Include a link back to the SRE issue in the [infra repo](https://github.com/mozmeao/infra).  
+    - be courteous: ask the team how much notice they need to prepare.
 
 - before the change is made, communicate via the appropriate IRC channel.
 - it doesn't hurt to over-communicate larger changes
-	- IRC/email/Slack/Github/Bugzilla
-	- use your best judgement here, each team works differently and can prefer different communication styles.
+    - IRC/email/Slack/Github/Bugzilla
+    - use your best judgement here, each team works differently and can prefer different communication styles.
 
 Examples of changes we should communicate:
 
 - deploying applications to new clusters
-	- this may require changes to Jenkins deployments
-	- a team member that manages the app may need to run some tests against the app in a new cluster
+  - this may require changes to Jenkins deployments
+  - a team member that manages the app may need to run some tests against the app in a new cluster
 - deommissioning clusters
-	- this may require changes to Jenkins deployments
-	- this may affect performance if teams are gathering specific metrics
+  - this may require changes to Jenkins deployments
+  - this may affect performance if teams are gathering specific metrics
 - changing app infrastructure
-	- switching between Deis 1/K8s/S3 hosting/etc
-
-
-
+  - switching between Deis 1/K8s/S3 hosting/etc
 
