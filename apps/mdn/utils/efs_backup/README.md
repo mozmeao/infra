@@ -80,9 +80,7 @@ data:
 
 **NOTE** `access_key` and `secret_key` values MUST be encoded with the `base64` utility.
 
-### TODO: turn this into a deployment w/ crontask
-
-Next, create a deployment.
+Next, create a deployment for testing:
 
 `mdn-backup.yaml`:
 
