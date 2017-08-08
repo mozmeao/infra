@@ -135,3 +135,32 @@ The task is complete, it is _live_ and no additional work is required.
 Cards from the queued column are pulled from left to right by whomever has taken that task. If you take a task please ensure you add yourself to the assignee list.
 
 We are currently not enforcing _Work In Progress_ limits for each column, however a good guideline is not to have more than 3 cards assigned to you in progress at any given time.
+
+# Communications
+
+## MozMEAO blog post
+
+Weekly status is communicated to the organization via the [https://mozilla.github.io/meao/](https://mozilla.github.io/meao/) blog. New posts are submitted against [this](https://github.com/mozilla/meao) repo.
+
+- Do not include the following:
+  - anything confidential or sensitive
+  - links to sites that have not yet launched
+- Include the following:
+  - future work that may impact other projects or teams. 
+  - mention non-SRE's that have contributed to SRE-related tasks
+
+## Work that will impact other teams and projects
+
+When SRE work includes activities that may impact another team or project, communicate these changes so the appropriate engineers have time to prepare:
+
+- create an issue in the appropriate Github repo stating the change and impact. Include a link back to the SRE issue in the [infra repo](https://github.com/mozmeao/infra).	 
+	- be courteous: ask the team how much notice they need to prepare.
+
+- before the change is made, communicate via the appropriate IRC channel.
+- it doesn't hurt to over-communicate larger changes
+	- IRC/email/Slack/Github/Bugzilla
+	- use your best judgement here, each team works differently and can prefer different communication styles.
+
+
+
+
