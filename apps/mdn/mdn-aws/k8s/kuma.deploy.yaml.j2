@@ -5,9 +5,10 @@
             - gunicorn
           args:
             - "-w={{ KUMA_GUNICORN_WORKERS }}"
-            - "--bind=0.0.0.0"
+            - "--bind=0.0.0.0:{{ KUMA_CONTAINER_PORT }}"
             - "--access-logfile=-"
             - "--timeout={{ KUMA_GUNICORN_TIMEOUT }}"
+            - "--worker-class=meinheld.gmeinheld.MeinheldWorker"
             - "kuma.wsgi:application"
           livenessProbe:
             httpGet:
