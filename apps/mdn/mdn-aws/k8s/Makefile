@@ -124,7 +124,6 @@ export KUMA_DOMAIN=$(shell kubectl get --ignore-not-found -n ${K8S_NAMESPACE} sv
 else
 export KUMA_DOMAIN ?= developer.mozilla.org
 endif
-export KUMA_SITE_URL ?= "${KUMA_PROTOCOL}${KUMA_DOMAIN}"
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
 export KUMA_ALLOWED_HOSTS ?= *
 export KUMA_SESSION_COOKIE_SECURE ?= True
@@ -132,7 +131,10 @@ export KUMA_WEB_CONCURRENCY ?= 4
 export KUMA_MAINTENANCE_MODE ?= False
 export KUMA_CSRF_COOKIE_SECURE ?= True
 export KUMA_CELERY_BROKER_URL ?= redis://mdn-redis-dev.9zzabg.ng.0001.usw2.cache.amazonaws.com:6379/0
-export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT ?= http://${KUMASCRIPT_NAME}:${KUMASCRIPT_PORT}/docs/{path}
+
+# Define derived variables here. These are always set, even if defined externally.
+export KUMA_SITE_URL="${KUMA_PROTOCOL}${KUMA_DOMAIN}"
+export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMASCRIPT_SERVICE_PORT}/docs/{path}
 
 
 aws-create-mysql-vol:

@@ -34,7 +34,7 @@ export MYSQL_STORAGE_RECLAIM_POLICY=Retain
 export MYSQL_STORAGE_EBS_ARN=vol-0306362068285e689
 export MYSQL_STORAGE_EBS_TYPE=gp2
 export MYSQL_STORAGE_EBS_AZ=us-west-2a
-export MYSQL_USER=kuma
+export MYSQL_USER=root
 export MYSQL_PASSWORD=kuma
 export MYSQL_ROOT_PASSWORD=kuma
 export MYSQL_DATABASE=developer_mozilla_org
@@ -57,7 +57,7 @@ export KUMASCRIPT_SERVICE_PORT=9080
 export KUMASCRIPT_SERVICE_TARGET_PORT=9080
 export KUMASCRIPT_SERVICE_PROTOCOL=TCP
 
-export MEMCACHED_URL=mdn-dev-memcached.9zzabg.cfg.usw2.cache.amazonaws.com:11211
+export MEMCACHED_URL=mdn-memcached-dev.9zzabg.cfg.usw2.cache.amazonaws.com:11121
 
 export ELASTICSEARCH_URL=elasticsearch:9200
 
@@ -129,5 +129,4 @@ export KUMA_SESSION_COOKIE_SECURE="False"
 export KUMA_WEB_CONCURRENCY="2"
 export KUMA_MAINTENANCE_MODE="False"
 export KUMA_CSRF_COOKIE_SECURE="False"
-export KUMA_CELERY_BROKER_URL=redis://mdndevredis.9zzabg.0001.usw2.cache.amazonaws.com:6379/0
-export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_NAME}:${KUMASCRIPT_PORT}/docs/{path}
+export KUMA_CELERY_BROKER_URL=redis://mdn-redis-dev.9zzabg.ng.0001.usw2.cache.amazonaws.com:6379/0
