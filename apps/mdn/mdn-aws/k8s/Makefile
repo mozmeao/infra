@@ -140,8 +140,13 @@ export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMA
 export BACKUP_SERVICE_NAME ?= mdn-backup-${TARGET_ENVIRONMENT}
 export BACKUP_SECRETS_NAME ?= mdn-backup-secrets
 export BACKUP_BUCKET ?= s3://mdn-shared-backup
-# TODO: every minute for development only!
-export BACKUP_SERVICE_SCHEDULE ?= "*/1 * * * *"
+export BACKUP_LOCAL_DIR ?= /mdn
+export BACKUP_REMOTE_DIR ?= /backups/efs/
+export BACKUP_CONTAINER_NAME ?= mdn-sync
+export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:latest
+# cronjob syntax here: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
+export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
+export SYNC_FROM_S3_SCHEDULE ?= "*/1 * * * *"
 # https://kubernetes.io/docs/concepts/configuration/secret/
 # the values below are NOT real access/secret keys
 export BACKUP_ACCESS_KEY ?= foo
@@ -164,12 +169,16 @@ aws-describe-mysql-vols:
 	    --filters Name=tag:name,Values="mdn-mysql"
 
 k8s-services: k8s-ns k8s-shared-storage k8s-mysql-storage k8s-mysql-svc \
-			  k8s-web-svc k8s-api-svc k8s-kumascript-svc k8s-secrets
+			  k8s-web-svc k8s-api-svc k8s-kumascript-svc
 
 k8s-delete-services: k8s-delete-ns k8s-delete-shared-storage \
 					 k8s-delete-mysql-storage k8s-delete-mysql-svc \
 					 k8s-delete-web-svc k8s-delete-api-svc \
-					 k8s-delete-kumascript-svc k8s-delete-backup-secrets
+					 k8s-delete-kumascript-svc
+
+k8s-admin: k8s-backup-secrets k8s-backup-cron
+
+k8s-delete-admin: k8s-delete-backup-secrets k8s-delete-backup-cron
 
 k8s-ns:
 	kubectl create ns ${K8S_NAMESPACE} | true
@@ -247,8 +256,8 @@ k8s-mysql-svc:
 k8s-delete-mysql-svc:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${MYSQL_NAME}
 
-k8s-secrets: k8s-backup-secrets
-k8s-delete-secrets: k8s-delete-backup-secrets
+
+### administrative tasks
 
 k8s-backup-secrets:
 	j2 mdn-backup-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
@@ -256,16 +265,12 @@ k8s-backup-secrets:
 k8s-delete-backup-secrets:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${BACKUP_SECRETS_NAME}
 
-
-################
-# TODO
-#   parameterize backup mount point and remote dir
-#   add this to another make target, maybe services?
 k8s-backup-cron:
 	j2 mdn-backup-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
-	#j2 mdn-backup-cron.yaml.j2 
-################
 
+k8s-delete-backup-cron:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${BACKUP_SERVICE_NAME}
+### end administrative tasks
 
 k8s-deployments: k8s-mysql k8s-web k8s-api k8s-kumascript k8s-celery
 
