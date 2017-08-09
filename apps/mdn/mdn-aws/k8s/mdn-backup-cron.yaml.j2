@@ -4,6 +4,7 @@ metadata:
   name: {{ BACKUP_SERVICE_NAME }}
 spec:
   schedule: {{ BACKUP_SERVICE_SCHEDULE }}
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:

@@ -4,12 +4,13 @@ metadata:
   name: {{ SYNC_FROM_S3_SERVICE_NAME }}
 spec:
   schedule: {{ SYNC_FROM_S3_SCHEDULE }}
+  concurrencyPolicy: Forbid
   jobTemplate:
     spec:
       template:
         spec:
           containers:
-            - name: {{ BACKUP_CONTAINER_NAME }}
+            - name: {{ SYNC_FROM_S3_CONTAINER_NAME }}
               image: {{ BACKUP_IMAGE }}
               volumeMounts:
                 - mountPath: {{ BACKUP_LOCAL_DIR }}

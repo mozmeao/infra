@@ -138,14 +138,17 @@ export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMA
 
 # MDN backup tool
 export BACKUP_SERVICE_NAME ?= mdn-backup-${TARGET_ENVIRONMENT}
+export SYNC_FROM_S3_SERVICE_NAME ?= mdn-s3-sync-${TARGET_ENVIRONMENT}
 export BACKUP_SECRETS_NAME ?= mdn-backup-secrets
 export BACKUP_BUCKET ?= s3://mdn-shared-backup
-export BACKUP_LOCAL_DIR ?= /mdn
-export BACKUP_REMOTE_DIR ?= /backups/efs/
-export BACKUP_CONTAINER_NAME ?= mdn-sync
+export BACKUP_LOCAL_DIR ?= "/mdn/www/"
+export BACKUP_REMOTE_DIR ?= "/backups/efs/"
+export BACKUP_CONTAINER_NAME ?= mdn-backup
+export SYNC_FROM_S3_CONTAINER_NAME ?= mdn-sync
 export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:latest
 # cronjob syntax here: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
 export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
+#export SYNC_FROM_S3_SCHEDULE ?= "@hourly"
 export SYNC_FROM_S3_SCHEDULE ?= "*/1 * * * *"
 # https://kubernetes.io/docs/concepts/configuration/secret/
 # the values below are NOT real access/secret keys
@@ -175,10 +178,6 @@ k8s-delete-services: k8s-delete-ns k8s-delete-shared-storage \
 					 k8s-delete-mysql-storage k8s-delete-mysql-svc \
 					 k8s-delete-web-svc k8s-delete-api-svc \
 					 k8s-delete-kumascript-svc
-
-k8s-admin: k8s-backup-secrets k8s-backup-cron
-
-k8s-delete-admin: k8s-delete-backup-secrets k8s-delete-backup-cron
 
 k8s-ns:
 	kubectl create ns ${K8S_NAMESPACE} | true
@@ -256,8 +255,9 @@ k8s-mysql-svc:
 k8s-delete-mysql-svc:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${MYSQL_NAME}
 
-
+###############################
 ### administrative tasks
+# not referenced from parent targets
 
 k8s-backup-secrets:
 	j2 mdn-backup-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
@@ -265,12 +265,23 @@ k8s-backup-secrets:
 k8s-delete-backup-secrets:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${BACKUP_SECRETS_NAME}
 
+# backup EFS to S3, for production
 k8s-backup-cron:
 	j2 mdn-backup-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-backup-cron:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${BACKUP_SERVICE_NAME}
+
+# pull files from S3 (SCL3), for dev/stage
+k8s-sync-from-s3-cron:
+	j2 mdn-sync-from-s3-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-sync-from-s3-cron:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${SYNC_FROM_S3_SERVICE_NAME}
+
+# SYNC_FROM_S3_SCHEDULE
 ### end administrative tasks
+###############################
 
 k8s-deployments: k8s-mysql k8s-web k8s-api k8s-kumascript k8s-celery
 
