@@ -21,6 +21,7 @@ The default target will build and push the image to quay.io.
 - `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`
 	- credentials for the `mdn-efs-backup` user
 	- **or**, credentials for a user with the following attached policy:
+- `SYNC_COMMAND` - defaults to `aws s3 sync`, use this to send in additional params etc.
 
 ```json
 {
