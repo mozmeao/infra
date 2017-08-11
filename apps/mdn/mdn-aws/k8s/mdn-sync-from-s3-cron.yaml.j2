@@ -13,7 +13,7 @@ spec:
             - name: {{ SYNC_FROM_S3_CONTAINER_NAME }}
               image: {{ BACKUP_IMAGE }}
               volumeMounts:
-                - mountPath: {{ BACKUP_LOCAL_DIR }}
+                - mountPath: {{ BACKUP_MOUNT_DIR }}
                   name: {{ SHARED_PVC_NAME }}
               env:
                 - name: LOCAL_DIR

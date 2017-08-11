@@ -141,6 +141,7 @@ export BACKUP_SERVICE_NAME ?= mdn-backup-${TARGET_ENVIRONMENT}
 export SYNC_FROM_S3_SERVICE_NAME ?= mdn-s3-sync-${TARGET_ENVIRONMENT}
 export BACKUP_SECRETS_NAME ?= mdn-backup-secrets
 export BACKUP_BUCKET ?= s3://mdn-shared-backup
+export BACKUP_MOUNT_DIR ?= "/mdn"
 export BACKUP_LOCAL_DIR ?= "/mdn/www/"
 export BACKUP_REMOTE_DIR ?= "/backups/efs/"
 export BACKUP_CONTAINER_NAME ?= mdn-backup
@@ -148,8 +149,8 @@ export SYNC_FROM_S3_CONTAINER_NAME ?= mdn-sync
 export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:latest
 # cronjob syntax here: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
 export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
-#export SYNC_FROM_S3_SCHEDULE ?= "@hourly"
-export SYNC_FROM_S3_SCHEDULE ?= "*/1 * * * *"
+export SYNC_FROM_S3_SCHEDULE ?= "@hourly"
+
 # https://kubernetes.io/docs/concepts/configuration/secret/
 # the values below are NOT real access/secret keys
 export BACKUP_ACCESS_KEY ?= foo
