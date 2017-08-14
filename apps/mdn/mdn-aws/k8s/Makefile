@@ -114,15 +114,18 @@ export KUMASCRIPT_MEMCHACHED_URL ?= ${MEMCACHED_URL}
 export KUMA_IMAGE ?= quay.io/mozmar/kuma
 export KUMA_IMAGE_TAG ?= 2fcf608
 export KUMA_IMAGE_PULL_POLICY ?= IfNotPresent
+export KUMA_MEDIA_ROOT ?= /mdn/www/attachments
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
-export KUMA_MOUNT_PATH ?= /www
+export KUMA_MOUNT_PATH ?= /mdn
 export KUMA_DEBUG ?= False
 export KUMA_DEBUG_TOOLBAR ?= False
 export KUMA_PROTOCOL ?= "https://"
 ifeq (${TARGET_ENVIRONMENT},dev)
 export KUMA_DOMAIN=$(shell kubectl get --ignore-not-found -n ${K8S_NAMESPACE} svc ${WEB_SERVICE_NAME} -o jsonpath={.status.loadBalancer.ingress[0].hostname})
+export KUMA_ATTACHMENT_HOST=${KUMA_DOMAIN}
 else
 export KUMA_DOMAIN ?= developer.mozilla.org
+export KUMA_ATTACHMENT_HOST ?= mdn.mozillademos.org
 endif
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
 export KUMA_ALLOWED_HOSTS ?= *
