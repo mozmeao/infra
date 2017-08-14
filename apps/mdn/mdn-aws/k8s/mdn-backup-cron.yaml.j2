@@ -1,0 +1,42 @@
+apiVersion: batch/v2alpha1
+kind: CronJob
+metadata:
+  name: {{ BACKUP_SERVICE_NAME }}
+spec:
+  schedule: {{ BACKUP_SERVICE_SCHEDULE }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: {{ BACKUP_CONTAINER_NAME }}
+              image: {{ BACKUP_IMAGE }}
+              volumeMounts:
+                - mountPath: {{ BACKUP_MOUNT_DIR }}
+                  name: {{ SHARED_PVC_NAME }}
+              env:
+                - name: LOCAL_DIR
+                  value: {{ BACKUP_LOCAL_DIR }}
+                - name: REMOTE_DIR
+                  value: {{ BACKUP_REMOTE_DIR }}
+                - name: BUCKET
+                  value: "{{ BACKUP_BUCKET }}"
+                - name: PUSH_OR_PULL
+                  value: PUSH
+                - name: AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ BACKUP_SECRETS_NAME }}
+                      key: access_key
+                - name: AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ BACKUP_SECRETS_NAME }}
+                      key: secret_key
+          volumes:
+            - name: {{ SHARED_PVC_NAME }}
+              persistentVolumeClaim:
+                claimName: {{ SHARED_PVC_NAME }}
+          restartPolicy: OnFailure
+
