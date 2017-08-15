@@ -1,0 +1,23 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ ADMIN_NODE_NAME }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ ADMIN_NODE_NAME }}
+    spec:
+      containers:
+        - name: {{ ADMIN_NODE_NAME }}
+          image: debian
+          command: [ "/bin/bash", "-c", "--" ]
+          args: [ "while true; do sleep 30; done;" ]
+          volumeMounts:
+            - mountPath: {{ BACKUP_MOUNT_DIR }}
+              name: {{ SHARED_PVC_NAME }}
+      volumes:
+        - name: {{ SHARED_PVC_NAME }}
+          persistentVolumeClaim:
+            claimName: {{ SHARED_PVC_NAME }}

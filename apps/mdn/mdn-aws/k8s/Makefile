@@ -158,6 +158,7 @@ export BACKUP_SECRET_KEY ?= bar
 export BACKUP_ACCESS_KEY_BASE64 ?= $(shell echo -n "${BACKUP_ACCESS_KEY}" | base64)
 export BACKUP_SECRET_KEY_BASE64 ?= $(shell echo -n "${BACKUP_SECRET_KEY}" | base64)
 
+export ADMIN_NODE_NAME ?= mdn-admin
 
 aws-create-mysql-vol:
 	aws ec2 create-volume \
@@ -280,7 +281,14 @@ k8s-sync-from-s3-cron:
 k8s-delete-sync-from-s3-cron:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${SYNC_FROM_S3_SERVICE_NAME}
 
-# SYNC_FROM_S3_SCHEDULE
+k8s-admin-node:
+	j2 mdn-admin-node.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	#j2 mdn-admin-node.yaml.j2
+
+k8s-delete-admin-node:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${ADMIN_NODE_NAME}
+
+
 ### end administrative tasks
 ###############################
 
