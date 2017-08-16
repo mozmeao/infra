@@ -207,7 +207,7 @@ k8s-delete-efs-setup-job:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-efs-setup
 
 # this runs and then deletes the efs-setup-job
-k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job k8s-delete-efs-setup-job
+k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job
 
 k8s-delete-shared-storage: k8s-delete-pvc-shared k8s-delete-pv-shared
 
