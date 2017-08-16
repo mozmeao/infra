@@ -199,7 +199,14 @@ k8s-pvc-shared:
 k8s-delete-pvc-shared:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${SHARED_PVC_NAME}
 
-k8s-shared-storage: k8s-pv-shared k8s-pvc-shared
+
+k8s-efs-setup-job:
+	j2 mdn-efs-setup-job.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-efs-setup-job:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-efs-setup
+
+k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job
 
 k8s-delete-shared-storage: k8s-delete-pvc-shared k8s-delete-pv-shared
 
@@ -283,7 +290,6 @@ k8s-delete-sync-from-s3-cron:
 
 k8s-admin-node:
 	j2 mdn-admin-node.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
-	#j2 mdn-admin-node.yaml.j2
 
 k8s-delete-admin-node:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${ADMIN_NODE_NAME}
