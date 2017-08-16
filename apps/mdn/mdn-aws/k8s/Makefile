@@ -38,9 +38,10 @@ export MYSQL_DATABASE ?= developer_mozilla_org
 
 export WEB_SERVICE_NAME ?= web
 export WEB_SERVICE_TYPE ?= LoadBalancer
-export WEB_SERVICE_PORT ?= 80
+export WEB_SERVICE_PORT ?= 443
 export WEB_SERVICE_TARGET_PORT ?= 8000
 export WEB_SERVICE_PROTOCOL ?= TCP
+export WEB_SERVICE_CERT_ARN ?= arn:aws:acm:us-west-2:236517346949:certificate/7cc49528-32a2-4433-8b38-506325aae062
 
 export API_SERVICE_NAME ?= api
 export API_SERVICE_TYPE ?= ClusterIP
@@ -221,7 +222,8 @@ k8s-web-svc:
 		SERVICE_PORT=${WEB_SERVICE_PORT} \
 		SERVICE_TARGET_PORT=${WEB_SERVICE_TARGET_PORT} \
 		SERVICE_PROTOCOL=${WEB_SERVICE_PROTOCOL} \
-		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		SERVICE_CERT_ARN=${WEB_SERVICE_CERT_ARN} \
+		j2 cert.svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-web-svc:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
