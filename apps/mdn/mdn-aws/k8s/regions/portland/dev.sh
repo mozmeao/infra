@@ -132,4 +132,6 @@ export KUMA_SESSION_COOKIE_SECURE="False"
 export KUMA_WEB_CONCURRENCY="2"
 export KUMA_MAINTENANCE_MODE="False"
 export KUMA_CSRF_COOKIE_SECURE="False"
+export KUMA_SERVE_LEGACY="True"
+export KUMA_LEGACY_ROOT=/mdn/www
 export KUMA_CELERY_BROKER_URL=redis://mdn-redis-dev.9zzabg.ng.0001.usw2.cache.amazonaws.com:6379/0

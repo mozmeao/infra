@@ -128,6 +128,8 @@ export KUMA_SESSION_COOKIE_SECURE ?= True
 export KUMA_WEB_CONCURRENCY ?= 4
 export KUMA_MAINTENANCE_MODE ?= False
 export KUMA_CSRF_COOKIE_SECURE ?= True
+export KUMA_SERVE_LEGACY ?= True
+export KUMA_LEGACY_ROOT ?= /mdn/www
 export KUMA_CELERY_BROKER_URL ?= redis://mdn-redis-dev.9zzabg.ng.0001.usw2.cache.amazonaws.com:6379/0
 
 # Define derived variables here. These are always set, even if defined externally.
