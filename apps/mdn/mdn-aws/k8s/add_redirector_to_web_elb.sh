@@ -5,14 +5,15 @@
 
 # wait for the ELB that was just created
 check_elb() {
+    echo "Waiting for ${WEB_SERVICE_NAME} in the namespace ${K8S_NAMESPACE}"
     kubectl -n ${K8S_NAMESPACE} get service ${WEB_SERVICE_NAME} -o json \
-            | jq -e -r .status.loadBalancer.ingress[0].hostname > /dev/null 2>&1
+            | jq -e -r .status.loadBalancer.ingress[0].hostname
+    #> /dev/null 2>&1
 }
 
 echo "Waiting for ELB"
 until check_elb
 do
-  echo -n "."
   sleep 1
 done
 echo "Found"

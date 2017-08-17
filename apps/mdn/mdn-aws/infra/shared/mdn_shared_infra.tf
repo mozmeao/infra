@@ -34,7 +34,17 @@ resource "aws_s3_bucket" "mdn-db-storage-production" {
   tags {
      Stack = "MDN-prod"
   }
+}
 
+resource "aws_s3_bucket" "mdn-elb-logs" {
+  bucket              = "mdn-elb-logs"
+  region              = "${var.region}"
+  acl    = "log-delivery-write"
+  policy = "${file("mdn-elb-logs.json")}"
+
+  tags {
+     Stack = "MDN-prod"
+  }
 }
 
 resource "aws_s3_bucket" "mdn-downloads" {

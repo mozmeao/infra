@@ -162,7 +162,13 @@ export ADMIN_NODE_NAME ?= mdn-admin
 
 # HTTP -> HTTPS redirector service port
 export REDIRECTOR_PORT ?= $(shell  kubectl -n redirector get service redirector -o json \
-											| jq ".spec.ports[] | select(.name == \"http\") | .nodePort")
+								    | jq ".spec.ports[] | select(.name == \"http\") | .nodePort")
+
+export ELB_S3_LOGGING_ENABLED ?= true
+# intervals specified in minutes
+export ELB_S3_LOGGING_INTERVAL ?= 5
+export ELB_S3_LOGGING_BUCKET ?= mdn-elb-logs
+export ELB_S3_LOGGING_PREFIX ?= ${TARGET_ENVIRONMENT}/
 
 aws-create-mysql-vol:
 	aws ec2 create-volume \
@@ -228,7 +234,12 @@ k8s-web-svc:
 		SERVICE_TARGET_PORT=${WEB_SERVICE_TARGET_PORT} \
 		SERVICE_PROTOCOL=${WEB_SERVICE_PROTOCOL} \
 		SERVICE_CERT_ARN=${WEB_SERVICE_CERT_ARN} \
-	j2 cert.svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		TARGET_ENVIRONMENT=${TARGET_ENVIRONMENT} \
+		ELB_S3_LOGGING_BUCKET=${ELB_S3_LOGGING_BUCKET} \
+		ELB_S3_LOGGING_ENABLED=${ELB_S3_LOGGING_ENABLED} \
+		ELB_S3_LOGGING_INTERVAL=${ELB_S3_LOGGING_INTERVAL} \
+		ELB_S3_LOGGING_PREFIX=${ELB_S3_LOGGING_PREFIX} \
+		j2 cert.svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 	./add_redirector_to_web_elb.sh
 
 k8s-delete-web-svc:
