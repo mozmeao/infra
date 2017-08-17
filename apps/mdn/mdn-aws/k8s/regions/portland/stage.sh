@@ -41,9 +41,10 @@ export MYSQL_DATABASE=developer_mozilla_org
 
 export WEB_SERVICE_NAME=web
 export WEB_SERVICE_TYPE=LoadBalancer
-export WEB_SERVICE_PORT=80
+export WEB_SERVICE_PORT=443
 export WEB_SERVICE_TARGET_PORT=8000
 export WEB_SERVICE_PROTOCOL=TCP
+export WEB_SERVICE_CERT_ARN=arn:aws:acm:us-west-2:236517346949:certificate/a3ab853f-7c7b-42f2-8317-766e13979be2
 
 export API_SERVICE_NAME=api
 export API_SERVICE_TYPE=ClusterIP
@@ -127,7 +128,7 @@ export KUMA_PROTOCOL="https://"
 export KUMA_DOMAIN=developer.allizom.org
 export KUMA_ATTACHMENT_HOST=developer-samples.allizom.org
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
-export KUMA_ALLOWED_HOSTS="developer.allizom.org, developer-local, developer-samples.allizom.org"
+export KUMA_ALLOWED_HOSTS="developer.allizom.org, developer-local.allizom.org, developer-samples.allizom.org"
 export KUMA_SESSION_COOKIE_SECURE="True"
 export KUMA_WEB_CONCURRENCY="4"
 export KUMA_MAINTENANCE_MODE="False"
