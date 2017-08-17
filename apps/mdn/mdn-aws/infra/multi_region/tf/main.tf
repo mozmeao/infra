@@ -112,7 +112,8 @@ module "memcached-dev" {
 #    mysql_username = "mdn"
 #    mysql_password = "${var.mysql_stage_password}"
 #    mysql_identifier = "mdnstage"
-#    mysql_instance_class = "db.m4.xlarge"
+#    # stage instace class is much smaller than prod
+#    mysql_instance_class = "db.t2.medium"
 #    mysql_backup_retention_days = 0
 #    vpc_id = "${var.vpc_id}"
 #}
