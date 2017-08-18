@@ -53,6 +53,8 @@ spec:
               value: {{ ELASTICSEARCH_URL }}
             - name: KUMASCRIPT_URL_TEMPLATE
               value: {{ KUMA_URL_TEMPLATE_FOR_KUMASCRIPT }}
+            - name: LEGACY_ROOT
+              value: "{{ KUMA_LEGACY_ROOT }}"
             - name: MEDIA_ROOT
               value: {{ KUMA_MEDIA_ROOT }}
             - name: MEMCACHE_SERVERS
@@ -61,6 +63,8 @@ spec:
               value: /app/product_details_json
             - name: PROTOCOL
               value: {{ KUMA_PROTOCOL }}
+            - name: SERVE_LEGACY
+              value: "{{ KUMA_SERVE_LEGACY }}"
             - name: SESSION_COOKIE_SECURE
               value: "{{ KUMA_SESSION_COOKIE_SECURE }}"
             - name: SITE_URL
