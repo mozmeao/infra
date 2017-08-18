@@ -31,7 +31,7 @@ create_redirector_listener() {
     # create the ELB
     aws elb create-load-balancer-listeners \
             --load-balancer-name ${ELB_NAME} \
-            --listeners "Protocol=HTTP,LoadBalancerPort=80,InstanceProtocol=HTTP,InstancePort=${REDIRECTOR_PORT}" \
+            --listeners "Protocol=TCP,LoadBalancerPort=80,InstanceProtocol=TCP,InstancePort=${REDIRECTOR_PORT}" \
             --region ${AWS_REGION}
 }
 
@@ -40,7 +40,6 @@ ELB_S3_LOGGING_PREFIX=${ELB_S3_LOGGING_PREFIX} \
 
 add_logging() {
     echo "Adding S3 logging on ELB: $ELB_NAME"
-    echo "{\"AccessLog\": {\"Enabled\": ${ELB_S3_LOGGING_ENABLED}, \"S3BucketName\": \"${ELB_S3_LOGGING_BUCKET}\", \"EmitInterval\": ${ELB_S3_LOGGING_INTERVAL}, \"S3BucketPrefix\": \"${ELB_S3_LOGGING_PREFIX}\"}}"
     aws elb modify-load-balancer-attributes \
         --load-balancer-name ${ELB_NAME} \
         --load-balancer-attributes "{\"AccessLog\": {\"Enabled\": ${ELB_S3_LOGGING_ENABLED}, \"S3BucketName\": \"${ELB_S3_LOGGING_BUCKET}\", \"EmitInterval\": ${ELB_S3_LOGGING_INTERVAL}, \"S3BucketPrefix\": \"${ELB_S3_LOGGING_PREFIX}\"}}" \
