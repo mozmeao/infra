@@ -35,6 +35,18 @@ create_redirector_listener() {
             --region ${AWS_REGION}
 }
 
+add_elb_access_security_group() {
+    ELB_ACCESS_GROUP_ID=$(aws ec2 describe-security-groups  \
+                            --filters "Name=group-name,Values=elb_access" \
+                            --region ${AWS_REGION} \
+                            | jq -e -r .SecurityGroups[0].GroupId)
+
+    aws elb apply-security-groups-to-load-balancer \
+        --load-balancer-name ${ELB_NAME} \
+        --security-groups ${ELB_ACCESS_GROUP_ID} \
+        --region ${AWS_REGION}
+}
+
 
 ELB_S3_LOGGING_PREFIX=${ELB_S3_LOGGING_PREFIX} \
 
@@ -51,5 +63,7 @@ wait_for_elb
 export ELB_NAME=$(get_elb_name)
 # add an http port that will redirect to https via the redirector service
 create_redirector_listener
+# allow ELB port 80 to connect to a NodePort
+add_elb_access_security_group
 # add S3 bucket logging
 add_logging

@@ -162,7 +162,7 @@ export ADMIN_NODE_NAME ?= mdn-admin
 
 # HTTP -> HTTPS redirector service port
 export REDIRECTOR_PORT ?= $(shell  kubectl -n redirector get service redirector -o json \
-								    | jq ".spec.ports[] | select(.name == \"http\") | .nodePort")
+                             | jq ".spec.ports[] | select(.name == \"http\") | .nodePort")
 
 # is logging enabled for this ELB? true | false
 export ELB_S3_LOGGING_ENABLED ?= true
