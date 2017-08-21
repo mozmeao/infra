@@ -11,7 +11,7 @@ terraform {
 }
 
 resource "aws_cloudfront_distribution" "mdn-cf-dist" {
-  aliases = ["cdn.mdn.mozilla.org", "cdn.mdn.moz.works"]
+  aliases = ["cdn.mdn.mozilla.net", "cdn.mdn.moz.works"]
   comment             = "CDN for AWS-hosted MDN"
   enabled             = true
   http_version        = "http2"
