@@ -41,6 +41,7 @@ export WEB_SERVICE_TYPE ?= LoadBalancer
 export WEB_SERVICE_PORT ?= 443
 export WEB_SERVICE_TARGET_PORT ?= 8000
 export WEB_SERVICE_PROTOCOL ?= TCP
+# This is the ARN for mdn-dev.moz.works
 export WEB_SERVICE_CERT_ARN ?= arn:aws:acm:us-west-2:236517346949:certificate/7cc49528-32a2-4433-8b38-506325aae062
 
 export API_SERVICE_NAME ?= api
@@ -161,6 +162,19 @@ export BACKUP_SECRET_KEY_BASE64 ?= $(shell echo -n "${BACKUP_SECRET_KEY}" | base
 
 export ADMIN_NODE_NAME ?= mdn-admin
 
+# HTTP -> HTTPS redirector service port
+export REDIRECTOR_PORT ?= $(shell  kubectl -n redirector get service redirector -o json \
+                             | jq ".spec.ports[] | select(.name == \"http\") | .nodePort")
+
+# is logging enabled for this ELB? true | false
+export ELB_S3_LOGGING_ENABLED ?= true
+# intervals specified in minutes, 5 or 60 seem to be the acceptable values in the console
+export ELB_S3_LOGGING_INTERVAL ?= 60
+# bucket name without the s3:// prefix
+export ELB_S3_LOGGING_BUCKET ?= mdn-elb-logs
+# ELB_S3_LOGGING_PREFIX can't end with a slash!
+export ELB_S3_LOGGING_PREFIX ?= ${TARGET_ENVIRONMENT}
+
 aws-create-mysql-vol:
 	aws ec2 create-volume \
 		--region ${AWS_REGION} \
@@ -225,7 +239,9 @@ k8s-web-svc:
 		SERVICE_TARGET_PORT=${WEB_SERVICE_TARGET_PORT} \
 		SERVICE_PROTOCOL=${WEB_SERVICE_PROTOCOL} \
 		SERVICE_CERT_ARN=${WEB_SERVICE_CERT_ARN} \
+		TARGET_ENVIRONMENT=${TARGET_ENVIRONMENT} \
 		j2 cert.svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	./configure_elb.sh
 
 k8s-delete-web-svc:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \

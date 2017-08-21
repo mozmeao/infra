@@ -1,0 +1,15 @@
+{
+    "Version": "2012-10-17",
+    "Id": "AWSConsole-AccessLogs-Policy-1503002510675",
+    "Statement": [
+        {
+            "Sid": "AWSConsoleStmt-1503002510675",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::797873946194:root"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::mdn-elb-logs/*"
+        }
+    ]
+}

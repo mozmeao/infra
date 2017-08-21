@@ -44,6 +44,7 @@ export WEB_SERVICE_TYPE=LoadBalancer
 export WEB_SERVICE_PORT=443
 export WEB_SERVICE_TARGET_PORT=8000
 export WEB_SERVICE_PROTOCOL=TCP
+# This is the ARN for mdn-dev.moz.works
 export WEB_SERVICE_CERT_ARN=arn:aws:acm:us-west-2:236517346949:certificate/7cc49528-32a2-4433-8b38-506325aae062
 
 export API_SERVICE_NAME=api

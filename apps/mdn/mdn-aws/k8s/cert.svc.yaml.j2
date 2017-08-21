@@ -5,6 +5,7 @@ metadata:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
     service.beta.kubernetes.io/aws-load-balancer-ssl-cert: {{ SERVICE_CERT_ARN }}
+    service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: Stack=MDN-{{ TARGET_ENVIRONMENT }}
 spec:
   type: {{ SERVICE_TYPE }}
   selector:
@@ -13,3 +14,4 @@ spec:
     - port: {{ SERVICE_PORT }}
       targetPort: {{ SERVICE_TARGET_PORT }}
       protocol: {{ SERVICE_PROTOCOL }}
+
