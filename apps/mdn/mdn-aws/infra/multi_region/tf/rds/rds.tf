@@ -7,6 +7,8 @@ variable "mysql_password" {}
 
 variable "mysql_identifier" {}
 
+variable "mysql_env" {}
+
 variable "mysql_storage" {
   default     = "100"
   description = "Storage size in GB"
@@ -106,6 +108,9 @@ resource "aws_db_instance" "mdn_rds" {
   storage_encrypted           = "${var.mysql_storage_encrypted}"
   username                    = "${var.mysql_username}"
   vpc_security_group_ids      = ["${aws_security_group.mdn_rds_sg.id}"]
+  tags {
+    "Stack"                   = "MDN-${var.mysql_env}"
+  }
 }
 
 resource "aws_security_group" "mdn_rds_sg" {
