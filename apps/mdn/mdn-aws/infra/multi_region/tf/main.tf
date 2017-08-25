@@ -105,19 +105,19 @@ module "memcached-dev" {
 # MySQL
 #########################################
 
-#module "mysql-stage" {
-#    source = "rds"
-#    # DBName must begin with a letter and contain only alphanumeric characters
-#    mysql_db_name = "mdnstage"
-#    mysql_username = "mdn"
-#    mysql_password = "${var.mysql_stage_password}"
-#    mysql_identifier = "mdnstage"
-#    # stage instace class is much smaller than prod
-#    mysql_instance_class = "db.t2.medium"
-#    mysql_backup_retention_days = 0
-#    vpc_id = "${var.vpc_id}"
-#}
-#
+module "mysql-stage" {
+    source = "rds"
+    # DBName must begin with a letter and contain only alphanumeric characters
+    mysql_db_name = "mdnstage"
+    mysql_username = "mdn"
+    mysql_password = "${var.mysql_stage_password}"
+    mysql_identifier = "mdnstage"
+    # stage instace class is much smaller than prod
+    mysql_instance_class = "db.t2.medium"
+    mysql_backup_retention_days = 0
+    vpc_id = "${var.vpc_id}"
+}
+
 #module "mysql-prod" {
 #    source = "rds"
 #    # DBName must begin with a letter and contain only alphanumeric characters
