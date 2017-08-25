@@ -100,7 +100,7 @@ resource "aws_db_instance" "mdn_rds" {
   identifier                  = "${var.mysql_identifier}"
   instance_class              = "${var.mysql_instance_class}"
   maintenance_window          = "${var.mysql_maintenance_window}"
-  multi_az                    = true
+  multi_az                    = false
   name                        = "${var.mysql_db_name}"
   parameter_group_name        = "${aws_db_parameter_group.mdn-params.name}"
   password                    = "${var.mysql_password}"
