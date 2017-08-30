@@ -119,7 +119,7 @@ export KUMASCRIPT_MEMCHACHED_URL=${MEMCACHED_URL}
 export KUMA_IMAGE=quay.io/mozmar/kuma
 export KUMA_IMAGE_TAG=f44ba6e
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
-export KUMA_MEDIA_ROOT=/mdn/www/attachments
+export KUMA_MEDIA_ROOT=/mdn/www
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH=/mdn
 export KUMA_DEBUG="False"
