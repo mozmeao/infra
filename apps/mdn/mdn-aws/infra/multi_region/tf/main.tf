@@ -109,7 +109,7 @@ module "mysql-stage" {
     source = "rds"
     # DBName must begin with a letter and contain only alphanumeric characters
     mysql_env     = "stage"
-    mysql_db_name = "mdnstage"
+    mysql_db_name = "developer_allizom_org"
     mysql_username = "mdn"
     mysql_password = "${var.mysql_stage_password}"
     mysql_identifier = "mdnstage"
@@ -122,7 +122,7 @@ module "mysql-stage" {
 #module "mysql-prod" {
 #    source = "rds"
 #    # DBName must begin with a letter and contain only alphanumeric characters
-#    mysql_db_name = "mdnprod"
+#    mysql_db_name = "developer_mozilla_org"
 #    mysql_username = "mdn"
 #    mysql_password = "${var.mysql_prod_password}"
 #    mysql_identifier = "mdnprod"
