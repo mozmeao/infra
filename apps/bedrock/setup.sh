@@ -4,6 +4,10 @@ source ../bin/common.sh
 check_meao_env
 check_neres_env
 
+if [ -z "${KOPS_NAME}" ]; then
+  echo "Please set the $KOPS_NAME env var, which is typically located in a config.sh"
+  exit 1
+fi
 
 setup_monitors() {
     create_monitor_if_missing \
@@ -28,10 +32,10 @@ deis config:set ALLOWED_HOSTS=\* -a bedrock-stage
 deis config:set ALLOWED_HOSTS=\* -a bedrock-dev
 
 deis domains:add www.allizom.org -a bedrock-stage
-deis config:set DEIS_DOMAIN=frankfurt.moz.works -a bedrock-stage
+deis config:set DEIS_DOMAIN=${KOPS_NAME} -a bedrock-stage
 
 deis domains:add www.mozilla.org -a bedrock-prod
-deis config:set DEIS_DOMAIN=frankfurt.moz.works -a bedrock-prod
+deis config:set DEIS_DOMAIN=${KOPS_NAME} -a bedrock-prod
 
 kubectl -n bedrock-prod apply -f ./k8s/bedrock-prod-nodeport.yaml
 kubectl -n bedrock-stage apply -f ./k8s/bedrock-stage-nodeport.yaml
