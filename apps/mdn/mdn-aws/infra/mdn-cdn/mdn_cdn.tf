@@ -14,7 +14,7 @@ terraform {
 module "mdn-cloudfront-stage" {
     source = "./cloudfront"
 
-    acm_cert_arn = ""
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/f46733a9-d662-4cb4-b344-b09c8a5cb624"
     aliases = ["stage-cdn.mdn.mozilla.net", "stage-cdn.mdn.moz.works"]
     comment = "Stage CDN for AWS-hosted MDN"
     distribution_name = "MDNStageCDN"
@@ -25,7 +25,7 @@ module "mdn-cloudfront-stage" {
 module "mdn-cloudfront-prod" {
     source = "./cloudfront"
 
-    acm_cert_arn = ""
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/8f9e3e77-984b-4e1d-92c6-214e79435df3"
     aliases = ["cdn.mdn.mozilla.net", "cdn.mdn.moz.works"]
     comment = "Prod CDN for AWS-hosted MDN"
     distribution_name = "MDNProdCDN"
