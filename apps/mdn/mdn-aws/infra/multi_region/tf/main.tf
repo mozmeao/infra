@@ -22,13 +22,13 @@ module "efs-dev" {
     nodes_security_group = "${var.nodes_security_group}"
 }
 
-#module "efs-stage" {
-#    source = "efs"
-#    efs_name = "stage"
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-#
+module "efs-stage" {
+    source = "efs"
+    efs_name = "stage"
+    subnets = "${var.subnets}"
+    nodes_security_group = "${var.nodes_security_group}"
+}
+
 #module "efs-prod" {
 #    source = "efs"
 #    efs_name = "prod"
@@ -50,15 +50,15 @@ module "redis-dev" {
     nodes_security_group = "${var.nodes_security_group}"
 }
 
-#module "redis-stage" {
-#    source = "redis"
-#    redis_name = "stage"
-#    redis_node_size = "cache.t2.small"
-#    redis_num_nodes = 3
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-#
+module "redis-stage" {
+    source = "redis"
+    redis_name = "stage"
+    redis_node_size = "cache.t2.small"
+    redis_num_nodes = 3
+    subnets = "${var.subnets}"
+    nodes_security_group = "${var.nodes_security_group}"
+}
+
 #module "redis-prod" {
 #    source = "redis"
 #    redis_name = "prod"
@@ -82,15 +82,15 @@ module "memcached-dev" {
     nodes_security_group = "${var.nodes_security_group}"
 }
 
-#module "memcached-stage" {
-#    source = "memcached"
-#    memcached_name = "stage"
-#    memcached_node_size = "cache.t2.small"
-#    memcached_num_nodes = 3
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-#
+module "memcached-stage" {
+    source = "memcached"
+    memcached_name = "stage"
+    memcached_node_size = "cache.t2.small"
+    memcached_num_nodes = 3
+    subnets = "${var.subnets}"
+    nodes_security_group = "${var.nodes_security_group}"
+}
+
 #module "memcached-prod" {
 #    source = "memcached"
 #    memcached_name = "dev"
@@ -105,23 +105,24 @@ module "memcached-dev" {
 # MySQL
 #########################################
 
-#module "mysql-stage" {
-#    source = "rds"
-#    # DBName must begin with a letter and contain only alphanumeric characters
-#    mysql_db_name = "mdnstage"
-#    mysql_username = "mdn"
-#    mysql_password = "${var.mysql_stage_password}"
-#    mysql_identifier = "mdnstage"
-#    # stage instace class is much smaller than prod
-#    mysql_instance_class = "db.t2.medium"
-#    mysql_backup_retention_days = 0
-#    vpc_id = "${var.vpc_id}"
-#}
-#
+module "mysql-stage" {
+    source = "rds"
+    # DBName must begin with a letter and contain only alphanumeric characters
+    mysql_env     = "stage"
+    mysql_db_name = "developer_allizom_org"
+    mysql_username = "mdn"
+    mysql_password = "${var.mysql_stage_password}"
+    mysql_identifier = "mdnstage"
+    # stage instace class is much smaller than prod
+    mysql_instance_class = "db.t2.medium"
+    mysql_backup_retention_days = 0
+    vpc_id = "${var.vpc_id}"
+}
+
 #module "mysql-prod" {
 #    source = "rds"
 #    # DBName must begin with a letter and contain only alphanumeric characters
-#    mysql_db_name = "mdnprod"
+#    mysql_db_name = "developer_mozilla_org"
 #    mysql_username = "mdn"
 #    mysql_password = "${var.mysql_prod_password}"
 #    mysql_identifier = "mdnprod"

@@ -7,6 +7,8 @@ variable "mysql_password" {}
 
 variable "mysql_identifier" {}
 
+variable "mysql_env" {}
+
 variable "mysql_storage" {
   default     = "100"
   description = "Storage size in GB"
@@ -71,29 +73,44 @@ variable "cidr_blocks" {
   description = "CIDR for sg"
 }
 
+resource "aws_db_parameter_group" "mdn-params" {
+  name        = "${var.mysql_identifier}-params"
+  family      = "mysql5.6"
+  description = "Paramter group for ${var.mysql_identifier}"
+
+  # https://stackoverflow.com/questions/8744813/mysql-error-2006-hy000-at-line-406-mysql-server-has-gone-away#10709964
+  parameter {
+    name      = "max_allowed_packet"
+    value     = "26214400"
+  }
+}
 
 resource "aws_db_instance" "mdn_rds" {
-  depends_on                  = ["aws_security_group.mdn_rds_sg"]
-  identifier                  = "${var.mysql_identifier}"
   allocated_storage           = "${var.mysql_storage}"
-  engine                      = "${var.mysql_engine}"
-  engine_version              = "${lookup(var.mysql_engine_version, var.mysql_engine)}"
-  instance_class              = "${var.mysql_instance_class}"
-  name                        = "${var.mysql_db_name}"
-  username                    = "${var.mysql_username}"
-  password                    = "${var.mysql_password}"
-  vpc_security_group_ids      = ["${aws_security_group.mdn_rds_sg.id}"]
+  allow_major_version_upgrade = "${var.mysql_allow_major_version_upgrade}"
+  auto_minor_version_upgrade  = "${var.mysql_auto_minor_version_upgrade}"
+  backup_retention_period     = "${var.mysql_backup_retention_days}"
+  backup_window               = "${var.mysql_backup_window}"
   # note: this resource already existed at time of provisioning from
   # our k8s install automation
   db_subnet_group_name        = "main_subnet_group"
-  backup_retention_period     = "${var.mysql_backup_retention_days}"
-  multi_az                    = true
-  backup_window               = "${var.mysql_backup_window}"
+  depends_on                  = ["aws_security_group.mdn_rds_sg"]
+  engine                      = "${var.mysql_engine}"
+  engine_version              = "${lookup(var.mysql_engine_version, var.mysql_engine)}"
+  identifier                  = "${var.mysql_identifier}"
+  instance_class              = "${var.mysql_instance_class}"
   maintenance_window          = "${var.mysql_maintenance_window}"
+  multi_az                    = false
+  name                        = "${var.mysql_db_name}"
+  parameter_group_name        = "${aws_db_parameter_group.mdn-params.name}"
+  password                    = "${var.mysql_password}"
   publicly_accessible         = false
   storage_encrypted           = "${var.mysql_storage_encrypted}"
-  auto_minor_version_upgrade  = "${var.mysql_auto_minor_version_upgrade}"
-  allow_major_version_upgrade = "${var.mysql_allow_major_version_upgrade}"
+  username                    = "${var.mysql_username}"
+  vpc_security_group_ids      = ["${aws_security_group.mdn_rds_sg.id}"]
+  tags {
+    "Stack"                   = "MDN-${var.mysql_env}"
+  }
 }
 
 resource "aws_security_group" "mdn_rds_sg" {
