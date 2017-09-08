@@ -42,7 +42,7 @@ spec:
             - name: CSRF_COOKIE_SECURE
               value: "{{ KUMA_CSRF_COOKIE_SECURE }}"
             - name: DATABASE_URL
-              value: mysql://{{ MYSQL_USER }}:{{ MYSQL_PASSWORD }}@{{ MYSQL_NAME }}:3306/{{ MYSQL_DATABASE }}
+              value: {{ KUMA_DATABASE_URL }}
             - name: DEBUG
               value: "{{ KUMA_DEBUG }}"
             - name: DEBUG_TOOLBAR
@@ -50,7 +50,7 @@ spec:
             - name: DOMAIN
               value: {{ KUMA_DOMAIN }}
             - name: ES_URLS
-              value: {{ ELASTICSEARCH_URL }}
+              value: {{ KUMA_ELASTICSEARCH_URL }}
             - name: KUMASCRIPT_URL_TEMPLATE
               value: {{ KUMA_URL_TEMPLATE_FOR_KUMASCRIPT }}
             - name: LEGACY_ROOT
@@ -58,7 +58,7 @@ spec:
             - name: MEDIA_ROOT
               value: {{ KUMA_MEDIA_ROOT }}
             - name: MEMCACHE_SERVERS
-              value: {{ MEMCACHED_URL }}
+              value: {{ KUMA_MEMCACHED_URL }}
             - name: PROD_DETAILS_DIR
               value: /app/product_details_json
             - name: PROTOCOL

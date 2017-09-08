@@ -10,27 +10,12 @@ export SHARED_PV_NAME ?= mdn-shared-${TARGET_ENVIRONMENT}
 export SHARED_PV_SIZE ?= 1000Gi
 export SHARED_PV_RECLAIM_POLICY ?= Retain
 export SHARED_PV_MOUNT_PATH ?= /
-export SHARED_PV_ARN ?= fs-e89b4341.efs.us-west-2.amazonaws.com
 export SHARED_PV_STORAGE_CLASS_NAME ?= efs
 
 export SHARED_PVC_NAME ?= mdn-shared
 export SHARED_PVC_SIZE ?= 40Gi
 
 export MYSQL_NAME ?= mysql
-export MYSQL_SERVICE_TYPE ?= ClusterIP
-export MYSQL_SERVICE_PORT ?= 3306
-export MYSQL_SERVICE_TARGET_PORT ?= mysql
-export MYSQL_SERVICE_PROTOCOL ?= TCP
-export MYSQL_IMAGE ?= quay.io/mozmar/mdn-mysql
-export MYSQL_IMAGE_TAG ?= latest
-export MYSQL_IMAGE_PULL_POLICY ?= IfNotPresent
-MYSQL_STORAGE_SIZE_IN_GB ?= 40
-export MYSQL_STORAGE_NAME ?= ${MYSQL_NAME}-${TARGET_ENVIRONMENT}
-export MYSQL_STORAGE_SIZE ?= ${MYSQL_STORAGE_SIZE_IN_GB}Gi
-export MYSQL_STORAGE_RECLAIM_POLICY ?= Retain
-export MYSQL_STORAGE_EBS_ARN ?= vol-0306362068285e689
-export MYSQL_STORAGE_EBS_TYPE ?= gp2
-export MYSQL_STORAGE_EBS_AZ ?= us-west-2a
 export MYSQL_USER ?= kuma
 export MYSQL_PASSWORD ?= kuma
 export MYSQL_ROOT_PASSWORD ?= kuma
@@ -41,8 +26,6 @@ export WEB_SERVICE_TYPE ?= LoadBalancer
 export WEB_SERVICE_PORT ?= 443
 export WEB_SERVICE_TARGET_PORT ?= 8000
 export WEB_SERVICE_PROTOCOL ?= TCP
-# This is the ARN for mdn-dev.moz.works
-export WEB_SERVICE_CERT_ARN ?= arn:aws:acm:us-west-2:236517346949:certificate/7cc49528-32a2-4433-8b38-506325aae062
 
 export API_SERVICE_NAME ?= api
 export API_SERVICE_TYPE ?= ClusterIP
@@ -55,9 +38,6 @@ export KUMASCRIPT_SERVICE_TYPE ?= ClusterIP
 export KUMASCRIPT_SERVICE_PORT ?= 9080
 export KUMASCRIPT_SERVICE_TARGET_PORT ?= 9080
 export KUMASCRIPT_SERVICE_PROTOCOL ?= TCP
-
-export MEMCACHED_URL ?= mdn-memcached-dev.9zzabg.cfg.usw2.cache.amazonaws.com:11121
-export ELASTICSEARCH_URL ?= elasticsearch:9200
 
 export WEB_NAME ?= web
 export WEB_REPLICAS ?= 1
@@ -111,7 +91,6 @@ export KUMASCRIPT_CPU_REQUEST ?= 100m
 export KUMASCRIPT_MEMORY_LIMIT ?= 4Gi
 export KUMASCRIPT_MEMORY_REQUEST ?= 256Mi
 export KUMASCRIPT_DOCUMENT_URL_TEMPLATE ?= http://${API_NAME}/en-US/docs/{path}?raw=1
-export KUMASCRIPT_MEMCHACHED_URL ?= ${MEMCACHED_URL}
 
 export KUMA_IMAGE ?= quay.io/mozmar/kuma
 export KUMA_IMAGE_TAG ?= f44ba6e
@@ -132,7 +111,6 @@ export KUMA_MAINTENANCE_MODE ?= False
 export KUMA_CSRF_COOKIE_SECURE ?= True
 export KUMA_SERVE_LEGACY ?= True
 export KUMA_LEGACY_ROOT ?= /mdn/www
-export KUMA_CELERY_BROKER_URL ?= redis://mdn-redis-dev.9zzabg.ng.0001.usw2.cache.amazonaws.com:6379/0
 
 # Define derived variables here. These are always set, even if defined externally.
 export KUMA_SITE_URL="${KUMA_PROTOCOL}${KUMA_DOMAIN}"
@@ -175,24 +153,10 @@ export ELB_S3_LOGGING_BUCKET ?= mdn-elb-logs
 # ELB_S3_LOGGING_PREFIX can't end with a slash!
 export ELB_S3_LOGGING_PREFIX ?= ${TARGET_ENVIRONMENT}
 
-aws-create-mysql-vol:
-	aws ec2 create-volume \
-		--region ${AWS_REGION} \
-	    --size ${MYSQL_STORAGE_SIZE_IN_GB} \
-	    --volume-type ${MYSQL_STORAGE_EBS_TYPE} \
-		--availability-zone ${MYSQL_STORAGE_EBS_AZ} \
-		--tag-specifications 'ResourceType=volume,Tags=[{Key=name,Value=mdn-mysql},{Key=purpose,Value=${TARGET_ENVIRONMENT}},{Key=created-by,Value=${USER}},{Key=Stack,Value=${AWS_RESOURCE_STACK}}]'
-
-aws-describe-mysql-vols:
-	aws ec2 describe-volumes \
-		--region ${AWS_REGION} \
-	    --filters Name=tag:name,Values="mdn-mysql"
-
-k8s-services: k8s-ns k8s-shared-storage k8s-mysql-storage k8s-mysql-svc \
+k8s-services: k8s-ns k8s-shared-storage \
 			  k8s-web-svc k8s-api-svc k8s-kumascript-svc
 
 k8s-delete-services: k8s-delete-ns k8s-delete-shared-storage \
-					 k8s-delete-mysql-storage k8s-delete-mysql-svc \
 					 k8s-delete-web-svc k8s-delete-api-svc \
 					 k8s-delete-kumascript-svc
 
@@ -214,7 +178,6 @@ k8s-pvc-shared:
 k8s-delete-pvc-shared:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${SHARED_PVC_NAME}
 
-
 k8s-efs-setup-job:
 	j2 mdn-efs-setup-job.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
@@ -224,13 +187,6 @@ k8s-delete-efs-setup-job:
 k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job
 
 k8s-delete-shared-storage: k8s-delete-pvc-shared k8s-delete-pv-shared
-
-k8s-mysql-storage:
-	j2 mysql.pv.pvc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-mysql-storage:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${MYSQL_STORAGE_NAME}
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${MYSQL_STORAGE_NAME}
 
 k8s-web-svc:
 	env SERVICE_NAME=${WEB_SERVICE_NAME} \
@@ -271,17 +227,6 @@ k8s-delete-kumascript-svc:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${KUMASCRIPT_SERVICE_NAME}
 
-k8s-mysql-svc:
-	env SERVICE_NAME=${MYSQL_NAME} \
-		SERVICE_TYPE=${MYSQL_SERVICE_TYPE} \
-		SERVICE_PORT=${MYSQL_SERVICE_PORT} \
-		SERVICE_TARGET_PORT=${MYSQL_SERVICE_TARGET_PORT} \
-		SERVICE_PROTOCOL=${MYSQL_SERVICE_PROTOCOL} \
-		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-mysql-svc:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found svc ${MYSQL_NAME}
-
 ###############################
 ### administrative tasks
 # not referenced from parent targets
@@ -316,16 +261,10 @@ k8s-delete-admin-node:
 ### end administrative tasks
 ###############################
 
-k8s-deployments: k8s-mysql k8s-web k8s-api k8s-kumascript k8s-celery
+k8s-deployments: k8s-web k8s-api k8s-kumascript k8s-celery
 
-k8s-delete-deployments: k8s-delete-mysql k8s-delete-web k8s-delete-api \
+k8s-delete-deployments: k8s-delete-web k8s-delete-api \
 						k8s-delete-kumascript k8s-delete-celery
-
-k8s-mysql:
-	j2 mysql.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
-
-k8s-delete-mysql:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${MYSQL_NAME}
 
 k8s-web:
 	env KUMA_NAME=${WEB_NAME} \
@@ -409,15 +348,13 @@ k8s-delete-celery-cam:
 		deploy ${CELERY_CAM_NAME}
 
 # These tasks don't have file targets
-.PHONY: aws-create-mysql-vol aws-describe-mysql-vols k8s-services \
-		k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
+.PHONY: k8s-services k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
 		k8s-delete-pv-shared k8s-pvc-shared k8s-delete-pvc-shared \
-		k8s-shared-storage k8s-delete-shared-storage k8s-mysql-storage \
-		k8s-delete-mysql-storage k8s-web-svc k8s-delete-web-svc k8s-api-svc \
+		k8s-shared-storage k8s-delete-shared-storage \
+		k8s-web-svc k8s-delete-web-svc k8s-api-svc \
 		k8s-delete-api-svc k8s-kumascript-svc k8s-delete-kumascript-svc \
-		k8s-mysql-svc k8s-delete-mysql-svc k8s-deployments \
-		k8s-delete-deployments k8s-mysql k8s-delete-mysql k8s-web \
-		k8s-delete-web k8s-api k8s-delete-api k8s-kumascript \
+		k8s-deployments k8s-delete-deployments \
+		k8s-web k8s-delete-web k8s-api k8s-delete-api k8s-kumascript \
 		k8s-delete-kumascript k8s-celery k8s-delete-celery k8s-celery-workers \
 		k8s-delete-celery-workers k8s-celery-beat k8s-delete-celery-beat \
 		k8s-celery-cam k8s-delete-celery-cam
