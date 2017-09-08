@@ -20,12 +20,6 @@ export SHARED_PV_STORAGE_CLASS_NAME=efs
 export SHARED_PVC_NAME=mdn-shared
 export SHARED_PVC_SIZE=200Gi
 
-export MYSQL_NAME=mysql
-export MYSQL_USER=
-export MYSQL_PASSWORD=
-export MYSQL_ROOT_PASSWORD=
-export MYSQL_DATABASE=developer_mozilla_org
-
 export WEB_SERVICE_NAME=web
 export WEB_SERVICE_TYPE=LoadBalancer
 export WEB_SERVICE_PORT=443
