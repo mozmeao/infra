@@ -36,13 +36,19 @@ spec:
             - name: ATTACHMENT_HOST
               value: {{ KUMA_ATTACHMENT_HOST }}
             - name: BROKER_URL
-              value: {{ KUMA_CELERY_BROKER_URL }}
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: redis-url
             - name: CELERY_ALWAYS_EAGER
               value: "False"
             - name: CSRF_COOKIE_SECURE
               value: "{{ KUMA_CSRF_COOKIE_SECURE }}"
             - name: DATABASE_URL
-              value: {{ KUMA_DATABASE_URL }}
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: database-url
             - name: DEBUG
               value: "{{ KUMA_DEBUG }}"
             - name: DEBUG_TOOLBAR
@@ -50,7 +56,10 @@ spec:
             - name: DOMAIN
               value: {{ KUMA_DOMAIN }}
             - name: ES_URLS
-              value: {{ KUMA_ELASTICSEARCH_URL }}
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: elasticsearch-url
             - name: KUMASCRIPT_URL_TEMPLATE
               value: {{ KUMA_URL_TEMPLATE_FOR_KUMASCRIPT }}
             - name: LEGACY_ROOT
@@ -58,7 +67,10 @@ spec:
             - name: MEDIA_ROOT
               value: {{ KUMA_MEDIA_ROOT }}
             - name: MEMCACHE_SERVERS
-              value: {{ KUMA_MEMCACHED_URL }}
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: memcached-url
             - name: PROD_DETAILS_DIR
               value: /app/product_details_json
             - name: PROTOCOL

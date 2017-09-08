@@ -26,9 +26,11 @@ spec:
               value: macros
             - name: server__document_url_template
               value: {{ KUMASCRIPT_DOCUMENT_URL_TEMPLATE }}
-              value: http://api/en-US/docs/{path}?raw=1
             - name: server__memcache__server
-              value: {{ KUMASCRIPT_MEMCACHED_URL }}
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: memcached-url
             - name: server__template_class
               value: EJSTemplate
             - name: server__autorequire__mdn

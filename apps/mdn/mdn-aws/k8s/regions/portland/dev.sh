@@ -46,10 +46,6 @@ export KUMASCRIPT_SERVICE_PORT=9080
 export KUMASCRIPT_SERVICE_TARGET_PORT=9080
 export KUMASCRIPT_SERVICE_PROTOCOL=TCP
 
-export MEMCACHED_URL=mdn-memcached-dev.9zzabg.cfg.usw2.cache.amazonaws.com:11121
-
-export ELASTICSEARCH_URL=elasticsearch:9200
-
 export WEB_NAME=web
 export WEB_REPLICAS=1
 export WEB_GUNICORN_WORKERS=4
@@ -102,7 +98,6 @@ export KUMASCRIPT_CPU_REQUEST=100m
 export KUMASCRIPT_MEMORY_LIMIT=4Gi
 export KUMASCRIPT_MEMORY_REQUEST=256Mi
 export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=http://${API_NAME}/en-US/docs/{path}?raw=1
-export KUMASCRIPT_MEMCHACHED_URL=${MEMCACHED_URL}
 
 export KUMA_IMAGE=quay.io/mozmar/kuma
 export KUMA_IMAGE_TAG=f44ba6e
@@ -123,4 +118,3 @@ export KUMA_MAINTENANCE_MODE="False"
 export KUMA_CSRF_COOKIE_SECURE="False"
 export KUMA_SERVE_LEGACY="True"
 export KUMA_LEGACY_ROOT=/mdn/www
-export KUMA_CELERY_BROKER_URL=redis://mdn-redis-dev.9zzabg.ng.0001.usw2.cache.amazonaws.com:6379/0
