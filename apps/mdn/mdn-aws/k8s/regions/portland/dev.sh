@@ -48,6 +48,7 @@ export WEB_CPU_LIMIT=2
 export WEB_CPU_REQUEST=100m
 export WEB_MEMORY_LIMIT=4Gi
 export WEB_MEMORY_REQUEST=256Mi
+export WEB_ALLOWED_HOSTS="*"
 
 export API_NAME=api
 export API_REPLICAS=1
@@ -105,7 +106,6 @@ export KUMA_PROTOCOL="https://"
 export KUMA_DOMAIN=mdn-dev.moz.works
 export KUMA_ATTACHMENT_HOST=mdn-dev.moz.works
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
-export KUMA_ALLOWED_HOSTS="*"
 export KUMA_SESSION_COOKIE_SECURE="False"
 export KUMA_WEB_CONCURRENCY="2"
 export KUMA_MAINTENANCE_MODE="False"

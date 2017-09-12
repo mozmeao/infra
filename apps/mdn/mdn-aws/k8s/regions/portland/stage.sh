@@ -47,6 +47,7 @@ export WEB_CPU_LIMIT=2
 export WEB_CPU_REQUEST=500m
 export WEB_MEMORY_LIMIT=8Gi
 export WEB_MEMORY_REQUEST=1Gi
+export WEB_ALLOWED_HOSTS="mdn-stage.moz.works,developer.allizom.org,developer-local.allizom.org,developer-samples.allizom.org"
 
 export API_NAME=api
 export API_REPLICAS=1
@@ -93,7 +94,7 @@ export KUMASCRIPT_MEMORY_REQUEST=1Gi
 export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=http://${API_NAME}/en-US/docs/{path}?raw=1
 
 export KUMA_IMAGE=quay.io/mozmar/kuma
-export KUMA_IMAGE_TAG=f44ba6e
+export KUMA_IMAGE_TAG=e04e801
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
 export KUMA_MEDIA_ROOT=/mdn/www
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
@@ -104,7 +105,6 @@ export KUMA_PROTOCOL="https://"
 export KUMA_DOMAIN=developer.allizom.org
 export KUMA_ATTACHMENT_HOST=developer-samples.allizom.org
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
-export KUMA_ALLOWED_HOSTS="developer.allizom.org, developer-local.allizom.org, developer-samples.allizom.org"
 export KUMA_SESSION_COOKIE_SECURE="True"
 export KUMA_WEB_CONCURRENCY="4"
 export KUMA_MAINTENANCE_MODE="False"

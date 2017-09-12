@@ -41,6 +41,7 @@ export WEB_CPU_LIMIT ?= 2
 export WEB_CPU_REQUEST ?= 100m
 export WEB_MEMORY_LIMIT ?= 4Gi
 export WEB_MEMORY_REQUEST ?= 256Mi
+export WEB_ALLOWED_HOSTS ?= "*"
 
 export API_NAME ?= api
 export API_REPLICAS ?= 1
@@ -50,6 +51,7 @@ export API_CPU_LIMIT ?= 2
 export API_CPU_REQUEST ?= 100m
 export API_MEMORY_LIMIT ?= 4Gi
 export API_MEMORY_REQUEST ?= 256Mi
+export API_ALLOWED_HOSTS ?= ${API_SERVICE_NAME}
 
 export CELERY_WORKERS_NAME ?= celery-worker
 export CELERY_WORKERS_REPLICAS ?= 1
@@ -84,7 +86,7 @@ export KUMASCRIPT_CPU_LIMIT ?= 2
 export KUMASCRIPT_CPU_REQUEST ?= 100m
 export KUMASCRIPT_MEMORY_LIMIT ?= 4Gi
 export KUMASCRIPT_MEMORY_REQUEST ?= 256Mi
-export KUMASCRIPT_DOCUMENT_URL_TEMPLATE ?= http://${API_NAME}/en-US/docs/{path}?raw=1
+export KUMASCRIPT_DOCUMENT_URL_TEMPLATE ?= http://${API_SERVICE_NAME}/en-US/docs/{path}?raw=1
 
 export KUMA_IMAGE ?= quay.io/mozmar/kuma
 export KUMA_IMAGE_TAG ?= f44ba6e
@@ -98,7 +100,6 @@ export KUMA_PROTOCOL ?= "https://"
 export KUMA_DOMAIN ?= mdn-dev.moz.works
 export KUMA_ATTACHMENT_HOST ?= mdn-dev.moz.works
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
-export KUMA_ALLOWED_HOSTS ?= *
 export KUMA_SESSION_COOKIE_SECURE ?= True
 export KUMA_WEB_CONCURRENCY ?= 4
 export KUMA_MAINTENANCE_MODE ?= False
@@ -263,6 +264,7 @@ k8s-delete-deployments: k8s-delete-web k8s-delete-api \
 k8s-web:
 	env KUMA_NAME=${WEB_NAME} \
 		KUMA_REPLICAS=${WEB_REPLICAS} \
+		KUMA_APP_LABEL=${WEB_SERVICE_NAME} \
 		KUMA_CONTAINER_PORT=${WEB_SERVICE_TARGET_PORT} \
 		KUMA_GUNICORN_WORKERS=${WEB_GUNICORN_WORKERS} \
 		KUMA_GUNICORN_TIMEOUT=${WEB_GUNICORN_TIMEOUT} \
@@ -270,6 +272,7 @@ k8s-web:
 		KUMA_MEMORY_LIMIT=${WEB_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${WEB_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${WEB_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
 		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-web:
@@ -278,6 +281,7 @@ k8s-delete-web:
 k8s-api:
 	env KUMA_NAME=${API_NAME} \
 		KUMA_REPLICAS=${API_REPLICAS} \
+		KUMA_APP_LABEL=${API_SERVICE_NAME} \
 		KUMA_CONTAINER_PORT=${API_SERVICE_TARGET_PORT} \
 		KUMA_GUNICORN_WORKERS=${API_GUNICORN_WORKERS} \
 		KUMA_GUNICORN_TIMEOUT=${API_GUNICORN_TIMEOUT} \
@@ -285,13 +289,15 @@ k8s-api:
 		KUMA_MEMORY_LIMIT=${API_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${API_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${API_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS=${API_ALLOWED_HOSTS} \
 		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-api:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${API_NAME}
 
 k8s-kumascript:
-	j2 kumascript.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	env KUMASCRIPT_APP_LABEL=${KUMASCRIPT_SERVICE_NAME} \
+		j2 kumascript.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-kumascript:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
@@ -304,11 +310,13 @@ k8s-delete-celery: k8s-delete-celery-workers k8s-delete-celery-beat \
 
 k8s-celery-workers:
 	env KUMA_NAME=${CELERY_WORKERS_NAME} \
+		KUMA_APP_LABEL=${CELERY_WORKERS_NAME} \
 		KUMA_REPLICAS=${CELERY_WORKERS_REPLICAS} \
 		KUMA_CPU_LIMIT=${CELERY_WORKERS_CPU_LIMIT} \
 		KUMA_MEMORY_LIMIT=${CELERY_WORKERS_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${CELERY_WORKERS_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_WORKERS_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS="" \
 		j2 celery.workers.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-workers:
@@ -317,11 +325,13 @@ k8s-delete-celery-workers:
 
 k8s-celery-beat:
 	env KUMA_NAME=${CELERY_BEAT_NAME} \
+		KUMA_APP_LABEL=${CELERY_BEAT_NAME} \
 		KUMA_REPLICAS=${CELERY_BEAT_REPLICAS} \
 		KUMA_CPU_LIMIT=${CELERY_BEAT_CPU_LIMIT} \
 		KUMA_MEMORY_LIMIT=${CELERY_BEAT_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${CELERY_BEAT_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_BEAT_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS="" \
 		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-beat:
@@ -330,11 +340,13 @@ k8s-delete-celery-beat:
 
 k8s-celery-cam:
 	env KUMA_NAME=${CELERY_CAM_NAME} \
+		KUMA_APP_LABEL=${CELERY_CAM_NAME} \
 		KUMA_REPLICAS=${CELERY_CAM_REPLICAS} \
 		KUMA_CPU_LIMIT=${CELERY_CAM_CPU_LIMIT} \
 		KUMA_MEMORY_LIMIT=${CELERY_CAM_MEMORY_LIMIT} \
 		KUMA_CPU_REQUEST=${CELERY_CAM_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_CAM_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS="" \
 		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-cam:
