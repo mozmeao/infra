@@ -86,7 +86,6 @@ export KUMASCRIPT_CPU_LIMIT ?= 2
 export KUMASCRIPT_CPU_REQUEST ?= 100m
 export KUMASCRIPT_MEMORY_LIMIT ?= 4Gi
 export KUMASCRIPT_MEMORY_REQUEST ?= 256Mi
-export KUMASCRIPT_DOCUMENT_URL_TEMPLATE ?= http://${API_SERVICE_NAME}/en-US/docs/{path}?raw=1
 
 export KUMA_IMAGE ?= quay.io/mozmar/kuma
 export KUMA_IMAGE_TAG ?= f44ba6e
@@ -110,6 +109,7 @@ export KUMA_LEGACY_ROOT ?= /mdn/www
 # Define derived variables here. These are always set, even if defined externally.
 export KUMA_SITE_URL="${KUMA_PROTOCOL}${KUMA_DOMAIN}"
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMASCRIPT_SERVICE_PORT}/docs/{path}
+export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=http://${API_SERVICE_NAME}/en-US/docs/{path}?raw=1
 
 # MDN backup tool
 export BACKUP_SERVICE_NAME ?= mdn-backup-${TARGET_ENVIRONMENT}
