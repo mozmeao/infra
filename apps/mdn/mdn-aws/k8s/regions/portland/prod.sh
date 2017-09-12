@@ -47,6 +47,7 @@ export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=2
 export WEB_MEMORY_LIMIT=16Gi
 export WEB_MEMORY_REQUEST=8Gi
+export WEB_ALLOWED_HOSTS="mdn-prod.moz.works,developer.mozilla.org,developer.cdn.mozilla.net,mdn.mozillademos.org"
 
 export API_NAME=api
 export API_REPLICAS=1
@@ -104,7 +105,6 @@ export KUMA_PROTOCOL="https://"
 export KUMA_DOMAIN=developer.mozilla.org
 export KUMA_ATTACHMENT_HOST=mdn.mozillademos.org
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL="https"
-export KUMA_ALLOWED_HOSTS="developer.mozilla.org, developer.cdn.mozilla.net, mdn.mozillademos.org"
 export KUMA_SESSION_COOKIE_SECURE="True"
 export KUMA_WEB_CONCURRENCY="4"
 export KUMA_MAINTENANCE_MODE="False"
