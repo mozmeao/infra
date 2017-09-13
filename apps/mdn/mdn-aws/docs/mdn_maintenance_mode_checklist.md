@@ -1,8 +1,11 @@
 Here's some things to check when MDN is in maintenance mode.
 
-Note: Replace https://mdn-mm.moz.works with the base URL you are testing
+This checklist uses these URLs:
 
-Base URL: https://mdn-mm.moz.works
+* Base: https://mdn-mm.moz.works
+* CDN: https://mm-cdn.mdn.moz.works
+* Demo: https://mdn-mm-demos.moz.works
+* Interactive Examples: https://interactive-examples.mdn.moz.works
 
 # Preparing for Maintenance Mode
 
@@ -13,6 +16,8 @@ full steps are in *todo*, but here's the quick version:
 * [ ] Load a recent (anonymized) backup
 * [ ] Enable GitHub auth (see [Enable GitHub Auth](https://kuma.readthedocs.io/en/latest/installation.html#enable-github-auth-optional))
 * [ ] Render unrendered pages
+* [ ] Add https://mdn-mm-demos.moz.works to constance ``KUMA_WIKI_IFRAME_ALLOWED_HOSTS``
+* [ ] Generate sitemaps
 * [ ] Generate the search index
 * [ ] Restart web servers, etc. in Maintenance Mode
 
@@ -49,7 +54,7 @@ With a Kuma environment,
 using a command like:
 
 ```
-py.test --maintenance-mode tests/functional --base-url https://mdn-mm.moz.works --driver Chrome --driver-path /path/to/chromedriver
+py.test --maintenance-mode tests/functional tests/redirects --base-url https://mdn-mm.moz.works --driver Chrome --driver-path /path/to/chromedriver
 ```
 
 * [ ] Functional tests pass
@@ -59,7 +64,52 @@ other pages are OK. It duplicates the Manual Sanity Check.
 
 # Full Manual Tests
 
-*todo*
+*Note: Many of these are candidates for headless testing*
+
+* [ ] https://mdn-mm-demos.moz.works/en-US/docs/Learn/CSS/Styling_text/Fundamentals$samples/Color - 200, sample as a stand-alone page
+* [ ] https://mdn-mm-demos.moz.works/files/12984/web-font-example.png - 200, PNG of some "Hipster ipsum" text
+* [ ] https://mdn-mm.moz.works/@api/deki/files/3613/=hut.jpg - 200, image of a hat
+* [ ] https://mdn-mm.moz.works/admin/ - 404 in maintenance mode
+* [ ] https://mdn-mm.moz.works/contribute.json - 200, project info
+* [ ] https://mdn-mm.moz.works/en-US/dashboards/macros - 200, list of macros and page counts
+* [ ] https://mdn-mm.moz.works/en-US/dashboards/revisions - 200, list of recent changes
+* [ ] https://mdn-mm.moz.works/en-US/dashboards/spam - Redirects to Maintenance Mode page
+* [ ] https://mdn-mm.moz.works/en-US/docs/Learn/CSS/Styling_text/Fundamentals#Color - 200, with sample as iframe
+* [ ] https://mdn-mm.moz.works/en-US/docs/Learn/CSS/Styling_text/Fundamentals$toc - 200, HTML table of contents
+* [ ] https://mdn-mm.moz.works/en-US/docs/Web/HTML$children - 200, JSON list of child pages
+* [ ] https://mdn-mm.moz.works/en-US/docs/Web/HTML$compare?locale=en-US&to=1299417&from=1293895 - 200, compares revisions
+* [ ] https://mdn-mm.moz.works/en-US/docs/Web/HTML$history - 200, list of revisions
+* [ ] https://mdn-mm.moz.works/en-US/docs/Web/HTML$json - 200, JSON of page metadata
+* [ ] https://mdn-mm.moz.works/en-US/docs/Web/HTML$revision/1293895 - 200, historical revision
+* [ ] https://mdn-mm.moz.works/en-US/docs/Web/HTML$translate - Redirect to Maintenance Mode page
+* [ ] https://mdn-mm.moz.works/en-US/docs/all - 200, paginated list of docs
+* [ ] https://mdn-mm.moz.works/en-US/docs/ckeditor_config.js - 200, JavaScript
+* [ ] https://mdn-mm.moz.works/en-US/docs/feeds/atom/files/ - 200, Atom feed of changed files
+* [ ] https://mdn-mm.moz.works/en-US/docs/feeds/rss/all/ - 200, RSS feed of new pages
+* [ ] https://mdn-mm.moz.works/en-US/docs/feeds/rss/needs-review/ - 200, RSS feed of pages needing review
+* [ ] https://mdn-mm.moz.works/en-US/docs/feeds/rss/needs-review/technical - 200, RSS feed of pages needing technical review
+* [ ] https://mdn-mm.moz.works/en-US/docs/feeds/rss/revisions - 200, RSS feed of changes
+* [ ] https://mdn-mm.moz.works/en-US/docs/feeds/rss/tag/CSS - 200, RSS feed of pages with CSS tag
+* [ ] https://mdn-mm.moz.works/en-US/docs/needs-review/editorial - 200, paginated list of documents
+* [ ] https://mdn-mm.moz.works/en-US/docs/tag/ARIA - 200, list of documents
+* [ ] https://mdn-mm.moz.works/en-US/docs/tags - 200, paginated list of tags
+* [ ] https://mdn-mm.moz.works/en-US/docs/top-level - 200, paginated list of documents
+* [ ] https://mdn-mm.moz.works/en-US/docs/with-errors - 200, (empty?) paginated list of documents
+* [ ] https://mdn-mm.moz.works/en-US/docs/without-parent - 200, paginated list of documents
+* [ ] https://mdn-mm.moz.works/en-US/miel  - 500 Internal Server Error
+* [ ] https://mdn-mm.moz.works/en-US/profiles/sheppy - 200, Sheppy's profile
+* [ ] https://mdn-mm.moz.works/en-US/promote/ - 200, Promote MDN with 4 buttons
+* [ ] https://mdn-mm.moz.works/en-US/search - 200, Search results
+* [ ] https://mdn-mm.moz.works/fellowship/ - 200, 2015 MDN Fellowship Program
+* [ ] https://mdn-mm.moz.works/files/12984/web-font-example.png - Redirects to https://mdn-mm-demos.moz.works
+* [ ] https://mdn-mm.moz.works/fr/docs/feeds/rss/l10n-updates/ - 200, RSS feed of out-of-date pages
+* [ ] https://mdn-mm.moz.works/fr/docs/localization-tag/inprogress - 200, paginated list of documents
+* [ ] https://mdn-mm.moz.works/humans.txt - 200, list of GitHub usernames
+* [ ] https://mdn-mm.moz.works/media/kumascript-revision.txt - 200, git commit hash for kumascript
+* [ ] https://mdn-mm.moz.works/media/revision.txt - 200, git commit hash for kuma
+* [ ] https://mdn-mm.moz.works/robots.txt - 200, robots disallow list
+* [ ] https://mdn-mm.moz.works/sitemap.xml - 200, list of sitemaps
+* [ ] https://mdn-mm.moz.works/sitemaps/en-US/sitemap.xml - 200, list of en-US pages
 
 # Background
 
