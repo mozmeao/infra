@@ -7,6 +7,7 @@ export KUBECONFIG=~/.kube/portland.config
 export TARGET_ENVIRONMENT=prod
 export K8S_NAMESPACE=mdn-${TARGET_ENVIRONMENT}
 export AWS_REGION=us-west-2
+export NODES_ASG=nodes.portland.moz.works
 
 # Note PVs are available within ALL namespaces, so delimit them with
 # the name of the target environment.
