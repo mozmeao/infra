@@ -9,6 +9,8 @@ variable "mysql_identifier" {}
 
 variable "mysql_env" {}
 
+variable "mysql_security_group_name" {}
+
 variable "mysql_storage" {
   default     = "100"
   description = "Storage size in GB"
@@ -114,7 +116,7 @@ resource "aws_db_instance" "mdn_rds" {
 }
 
 resource "aws_security_group" "mdn_rds_sg" {
-  name        = "mdn_rds_sg"
+  name        = "${var.mysql_security_group_name}"
   description = "Allow all inbound traffic"
   vpc_id      = "${var.vpc_id}"
 

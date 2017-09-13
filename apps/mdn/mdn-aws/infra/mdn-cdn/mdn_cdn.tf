@@ -21,6 +21,15 @@ module "mdn-cloudfront-stage" {
     domain_name = "developer.allizom.org"
 }
 
+module "mdn-cloudfront-mm" {
+    source = "./cloudfront"
+
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/750fe7e9-0990-4d15-a6d4-df9606671e20"
+    aliases = ["mm-cdn.mdn.moz.works"]
+    comment = "Maintenance Mode CDN for AWS-hosted MDN"
+    distribution_name = "MDNMMCDN"
+    domain_name = "mdn-mm.moz.works"
+}
 
 module "mdn-cloudfront-prod" {
     source = "./cloudfront"
@@ -31,8 +40,5 @@ module "mdn-cloudfront-prod" {
     distribution_name = "MDNProdCDN"
     domain_name = "developer.mozilla.org"
 }
-
-
-
 
 
