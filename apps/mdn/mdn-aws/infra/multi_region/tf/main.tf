@@ -29,12 +29,12 @@ module "efs-stage" {
     nodes_security_group = "${var.nodes_security_group}"
 }
 
-#module "efs-prod" {
-#    source = "efs"
-#    efs_name = "prod"
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
+module "efs-prod" {
+    source = "efs"
+    efs_name = "prod"
+    subnets = "${var.subnets}"
+    nodes_security_group = "${var.nodes_security_group}"
+}
 
 
 #########################################
@@ -59,14 +59,14 @@ module "redis-stage" {
     nodes_security_group = "${var.nodes_security_group}"
 }
 
-#module "redis-prod" {
-#    source = "redis"
-#    redis_name = "prod"
-#    redis_node_size = "cache.m3.xlarge"
-#    redis_num_nodes = 3
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
+module "redis-prod" {
+    source = "redis"
+    redis_name = "prod"
+    redis_node_size = "cache.m3.xlarge"
+    redis_num_nodes = 3
+    subnets = "${var.subnets}"
+    nodes_security_group = "${var.nodes_security_group}"
+}
 
 
 #########################################
@@ -91,14 +91,14 @@ module "memcached-stage" {
     nodes_security_group = "${var.nodes_security_group}"
 }
 
-#module "memcached-prod" {
-#    source = "memcached"
-#    memcached_name = "dev"
-#    memcached_node_size = "cache.m3.xlarge"
-#    memcached_num_nodes = 3
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
+module "memcached-prod" {
+    source = "memcached"
+    memcached_name = "prod"
+    memcached_node_size = "cache.m3.xlarge"
+    memcached_num_nodes = 3
+    subnets = "${var.subnets}"
+    nodes_security_group = "${var.nodes_security_group}"
+}
 
 
 #########################################
@@ -110,24 +110,27 @@ module "mysql-stage" {
     # DBName must begin with a letter and contain only alphanumeric characters
     mysql_env     = "stage"
     mysql_db_name = "developer_allizom_org"
-    mysql_username = "mdn"
+    mysql_username = "root"
     mysql_password = "${var.mysql_stage_password}"
-    mysql_identifier = "mdnstage"
+    mysql_identifier = "mdn-stage"
     # stage instace class is much smaller than prod
-    mysql_instance_class = "db.t2.medium"
+    mysql_instance_class = "db.t2.large"
     mysql_backup_retention_days = 0
     vpc_id = "${var.vpc_id}"
+    mysql_security_group_name = "mdn_rds_sg"
 }
 
-#module "mysql-prod" {
-#    source = "rds"
-#    # DBName must begin with a letter and contain only alphanumeric characters
-#    mysql_db_name = "developer_mozilla_org"
-#    mysql_username = "mdn"
-#    mysql_password = "${var.mysql_prod_password}"
-#    mysql_identifier = "mdnprod"
-#    mysql_instance_class = "db.m4.xlarge"
-#    mysql_backup_retention_days = 7
-#    vpc_id = "${var.vpc_id}"
-#}
+module "mysql-prod" {
+    source = "rds"
+    # DBName must begin with a letter and contain only alphanumeric characters
+    mysql_env     = "prod"
+    mysql_db_name = "developer_mozilla_org"
+    mysql_username = "root"
+    mysql_password = "${var.mysql_prod_password}"
+    mysql_identifier = "mdn-prod"
+    mysql_instance_class = "db.m4.xlarge"
+    mysql_backup_retention_days = 7
+    vpc_id = "${var.vpc_id}"
+    mysql_security_group_name = "mdn_rds_sg_prod"
+}
 

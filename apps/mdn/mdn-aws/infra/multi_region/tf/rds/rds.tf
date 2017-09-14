@@ -9,6 +9,8 @@ variable "mysql_identifier" {}
 
 variable "mysql_env" {}
 
+variable "mysql_security_group_name" {}
+
 variable "mysql_storage" {
   default     = "100"
   description = "Storage size in GB"
@@ -100,7 +102,7 @@ resource "aws_db_instance" "mdn_rds" {
   identifier                  = "${var.mysql_identifier}"
   instance_class              = "${var.mysql_instance_class}"
   maintenance_window          = "${var.mysql_maintenance_window}"
-  multi_az                    = false
+  multi_az                    = true
   name                        = "${var.mysql_db_name}"
   parameter_group_name        = "${aws_db_parameter_group.mdn-params.name}"
   password                    = "${var.mysql_password}"
@@ -114,7 +116,7 @@ resource "aws_db_instance" "mdn_rds" {
 }
 
 resource "aws_security_group" "mdn_rds_sg" {
-  name        = "mdn_rds_sg"
+  name        = "${var.mysql_security_group_name}"
   description = "Allow all inbound traffic"
   vpc_id      = "${var.vpc_id}"
 
