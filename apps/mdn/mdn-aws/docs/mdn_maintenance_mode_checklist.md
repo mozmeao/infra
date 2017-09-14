@@ -71,6 +71,7 @@ other pages are OK. It duplicates the Manual Sanity Check.
 * [ ] https://mdn-mm.moz.works/@api/deki/files/3613/=hut.jpg - 200, image of a hat
 * [ ] https://mdn-mm.moz.works/admin/ - 404 in maintenance mode
 * [ ] https://mdn-mm.moz.works/contribute.json - 200, project info
+* [ ] https://mdn-mm.moz.works/diagrams/workflow/workflow.svg - 200, SVG with images
 * [ ] https://mdn-mm.moz.works/en-US/dashboards/macros - 200, list of macros and page counts
 * [ ] https://mdn-mm.moz.works/en-US/dashboards/revisions - 200, list of recent changes
 * [ ] https://mdn-mm.moz.works/en-US/dashboards/spam - Redirects to Maintenance Mode page
@@ -107,7 +108,9 @@ other pages are OK. It duplicates the Manual Sanity Check.
 * [ ] https://mdn-mm.moz.works/humans.txt - 200, list of GitHub usernames
 * [ ] https://mdn-mm.moz.works/media/kumascript-revision.txt - 200, git commit hash for kumascript
 * [ ] https://mdn-mm.moz.works/media/revision.txt - 200, git commit hash for kuma
+* [ ] https://mdn-mm.moz.works/presentations/microsummaries/index.html - 200, 2006 OSCON presentation
 * [ ] https://mdn-mm.moz.works/robots.txt - 200, robots disallow list
+* [ ] https://mdn-mm.moz.works/samples/webgl/sample3 - 200, Shows WebGL demo
 * [ ] https://mdn-mm.moz.works/sitemap.xml - 200, list of sitemaps
 * [ ] https://mdn-mm.moz.works/sitemaps/en-US/sitemap.xml - 200, list of en-US pages
 
