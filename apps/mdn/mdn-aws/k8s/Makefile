@@ -118,8 +118,6 @@ export KUMA_SERVER_EMAIL ?= server-error@developer.mozilla.org
 export KUMA_SESSION_COOKIE_SECURE ?= True
 export KUMA_STATIC_URL ?= /static/
 export KUMA_WEB_CONCURRENCY ?= 4
-# These depend on one or more above.
-export KUMA_DEFAULT_AVATAR ?= ${KUMA_STATIC_URL}img/avatar.png
 
 # Derived environment variables for both Kuma and Kumascript. These are always set.
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMASCRIPT_SERVICE_PORT}/docs/{path}
