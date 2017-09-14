@@ -90,24 +90,33 @@ export KUMASCRIPT_MEMORY_REQUEST ?= 256Mi
 export KUMA_IMAGE ?= quay.io/mozmar/kuma
 export KUMA_IMAGE_TAG ?= f44ba6e
 export KUMA_IMAGE_PULL_POLICY ?= IfNotPresent
-export KUMA_MEDIA_ROOT ?= /mdn/www
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH ?= /mdn
+
+# Defaults for the Kuma environment.
+export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
+export KUMA_ADMIN_NAMES ?= "MDN devs"
+export KUMA_ATTACHMENT_HOST ?= mdn-dev.moz.works
+export KUMA_CELERY_ALWAYS_EAGER ?= False
+export KUMA_CELERYD_MAX_TASKS_PER_CHILD ?= 0
+export KUMA_CSRF_COOKIE_SECURE ?= True
 export KUMA_DEBUG ?= False
 export KUMA_DEBUG_TOOLBAR ?= False
-export KUMA_PROTOCOL ?= "https://"
 export KUMA_DOMAIN ?= mdn-dev.moz.works
-export KUMA_ATTACHMENT_HOST ?= mdn-dev.moz.works
-export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL ?= "https"
-export KUMA_SESSION_COOKIE_SECURE ?= True
-export KUMA_WEB_CONCURRENCY ?= 4
-export KUMA_MAINTENANCE_MODE ?= False
-export KUMA_CSRF_COOKIE_SECURE ?= True
-export KUMA_SERVE_LEGACY ?= True
+export KUMA_EMAIL_BACKEND ?= django.core.mail.backends.smtp.EmailBackend
+export KUMA_ES_INDEX_PREFIX ?= mdn
+export KUMA_ES_LIVE_INDEX ?= False
 export KUMA_LEGACY_ROOT ?= /mdn/www
+export KUMA_MAINTENANCE_MODE ?= False
+export KUMA_MEDIA_ROOT ?= /mdn/www
+export KUMA_MEDIA_URL ?= /media/
+export KUMA_PROTOCOL ?= "https://"
+export KUMA_SERVE_LEGACY ?= True
+export KUMA_SESSION_COOKIE_SECURE ?= True
+export KUMA_STATIC_URL ?= /static/
+export KUMA_WEB_CONCURRENCY ?= 4
 
-# Define derived variables here. These are always set, even if defined externally.
-export KUMA_SITE_URL="${KUMA_PROTOCOL}${KUMA_DOMAIN}"
+# Derived environment variables for both Kuma and Kumascript. These are always set.
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMASCRIPT_SERVICE_PORT}/docs/{path}
 export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=http://${API_SERVICE_NAME}/en-US/docs/{path}?raw=1
 
@@ -148,18 +157,32 @@ export ELB_S3_LOGGING_BUCKET ?= mdn-elb-logs
 # ELB_S3_LOGGING_PREFIX can't end with a slash!
 export ELB_S3_LOGGING_PREFIX ?= ${TARGET_ENVIRONMENT}
 
-k8s-services: k8s-ns k8s-shared-storage \
-			  k8s-web-svc k8s-api-svc k8s-kumascript-svc
-
-k8s-delete-services: k8s-delete-ns k8s-delete-shared-storage \
-					 k8s-delete-web-svc k8s-delete-api-svc \
-					 k8s-delete-kumascript-svc
+###############################
+### core tasks
 
 k8s-ns:
 	kubectl create ns ${K8S_NAMESPACE} | true
 
 k8s-delete-ns:
 	kubectl delete --ignore-not-found ns ${K8S_NAMESPACE}
+
+k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job
+
+k8s-delete-shared-storage: k8s-delete-efs-setup-job k8s-delete-pvc-shared \
+						   k8s-delete-pv-shared
+
+k8s-services: k8s-web-svc k8s-api-svc k8s-kumascript-svc
+
+k8s-delete-services: k8s-delete-web-svc k8s-delete-api-svc \
+					 k8s-delete-kumascript-svc
+
+k8s-deployments: k8s-web k8s-api k8s-kumascript k8s-celery
+
+k8s-delete-deployments: k8s-delete-web k8s-delete-api \
+ 						k8s-delete-kumascript k8s-delete-celery
+
+### end core tasks
+###############################
 
 k8s-pv-shared:
 	j2 shared.pv.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
@@ -178,10 +201,6 @@ k8s-efs-setup-job:
 
 k8s-delete-efs-setup-job:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-efs-setup
-
-k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job
-
-k8s-delete-shared-storage: k8s-delete-pvc-shared k8s-delete-pv-shared
 
 k8s-web-svc:
 	env SERVICE_NAME=${WEB_SERVICE_NAME} \
@@ -252,14 +271,8 @@ k8s-admin-node:
 k8s-delete-admin-node:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${ADMIN_NODE_NAME}
 
-
 ### end administrative tasks
 ###############################
-
-k8s-deployments: k8s-web k8s-api k8s-kumascript k8s-celery
-
-k8s-delete-deployments: k8s-delete-web k8s-delete-api \
-						k8s-delete-kumascript k8s-delete-celery
 
 k8s-web:
 	env KUMA_NAME=${WEB_NAME} \

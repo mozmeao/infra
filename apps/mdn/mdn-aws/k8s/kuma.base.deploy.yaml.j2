@@ -31,6 +31,13 @@ spec:
             # Django settings overrides:
             - name: ACCOUNT_DEFAULT_HTTP_PROTOCOL
               value: {{ KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL }}
+            - name: ADMIN_NAMES
+              value: "{{ KUMA_ADMIN_NAMES }}"
+            - name: ADMIN_EMAILS
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: admin-emails
             - name: ALLOWED_HOSTS
               value: "{{ KUMA_ALLOWED_HOSTS }}"
             - name: ATTACHMENT_HOST
@@ -41,7 +48,9 @@ spec:
                   name: mdn-secrets
                   key: redis-url
             - name: CELERY_ALWAYS_EAGER
-              value: "False"
+              value: "{{ KUMA_CELERY_ALWAYS_EAGER }}"
+            - name: CELERYD_MAX_TASKS_PER_CHILD
+              value: "{{ KUMA_CELERYD_MAX_TASKS_PER_CHILD }}"
             - name: CSRF_COOKIE_SECURE
               value: "{{ KUMA_CSRF_COOKIE_SECURE }}"
             - name: DATABASE_URL
@@ -53,8 +62,34 @@ spec:
               value: "{{ KUMA_DEBUG }}"
             - name: DEBUG_TOOLBAR
               value: "{{ KUMA_DEBUG_TOOLBAR }}"
+            - name: DEFAULT_FROM_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: default-from-email
             - name: DOMAIN
               value: {{ KUMA_DOMAIN }}
+            - name: EMAIL_BACKEND
+              value: {{ KUMA_EMAIL_BACKEND }}
+            - name: EMAIL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: email-host
+            - name: EMAIL_HOST_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: email-host-password
+            - name: EMAIL_HOST_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: email-host-user
+            - name: ES_INDEX_PREFIX
+              value: {{ KUMA_ES_INDEX_PREFIX }}
+            - name: ES_LIVE_INDEX
+              value: "{{ KUMA_ES_LIVE_INDEX }}"
             - name: ES_URLS
               valueFrom:
                 secretKeyRef:
@@ -64,29 +99,39 @@ spec:
               value: {{ KUMA_URL_TEMPLATE_FOR_KUMASCRIPT }}
             - name: LEGACY_ROOT
               value: "{{ KUMA_LEGACY_ROOT }}"
+            - name: MAINTENANCE_MODE
+              value: "{{ KUMA_MAINTENANCE_MODE }}"
             - name: MEDIA_ROOT
               value: {{ KUMA_MEDIA_ROOT }}
+            - name: MEDIA_URL
+              value: {{ KUMA_MEDIA_URL }}
             - name: MEMCACHE_SERVERS
               valueFrom:
                 secretKeyRef:
                   name: mdn-secrets
                   key: memcached-url
-            - name: PROD_DETAILS_DIR
-              value: /app/product_details_json
             - name: PROTOCOL
               value: {{ KUMA_PROTOCOL }}
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: sentry-dsn
             - name: SERVE_LEGACY
               value: "{{ KUMA_SERVE_LEGACY }}"
+            - name: SERVER_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: server-email
             - name: SESSION_COOKIE_SECURE
               value: "{{ KUMA_SESSION_COOKIE_SECURE }}"
             - name: SITE_URL
-              value: {{ KUMA_SITE_URL }}
+              value: {{ KUMA_PROTOCOL }}{{ KUMA_DOMAIN }}
+            - name: STATIC_URL
+              value: {{ KUMA_STATIC_URL }}
             # Other environment overrides
-            - name: PYTHONDONTWRITEBYTECODE
-              value: "1"
             - name: PYTHONUNBUFFERED
               value: "True"
             - name: WEB_CONCURRENCY
               value: "{{ KUMA_WEB_CONCURRENCY }}"
-            - name: MAINTENANCE_MODE
-              value: "{{ KUMA_MAINTENANCE_MODE }}"
