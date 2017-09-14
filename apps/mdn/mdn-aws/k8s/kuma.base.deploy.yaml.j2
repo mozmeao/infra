@@ -57,7 +57,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: mdn-secrets
-                  key: database-url
+                  key: {% if KUMA_MAINTENANCE_MODE.lower() == "true" %}database-url-ro{% else %}database-url{% endif %}
             - name: DEBUG
               value: "{{ KUMA_DEBUG }}"
             - name: DEBUG_TOOLBAR
