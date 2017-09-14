@@ -34,7 +34,10 @@ spec:
             - name: ADMIN_NAMES
               value: "{{ KUMA_ADMIN_NAMES }}"
             - name: ADMIN_EMAILS
-              value: "{{ KUMA_ADMIN_EMAILS }}"
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: admin-emails
             - name: ALLOWED_HOSTS
               value: "{{ KUMA_ALLOWED_HOSTS }}"
             - name: ATTACHMENT_HOST
@@ -60,7 +63,10 @@ spec:
             - name: DEBUG_TOOLBAR
               value: "{{ KUMA_DEBUG_TOOLBAR }}"
             - name: DEFAULT_FROM_EMAIL
-              value: {{ KUMA_DEFAULT_FROM_EMAIL }}
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: default-from-email
             - name: DOMAIN
               value: {{ KUMA_DOMAIN }}
             - name: EMAIL_BACKEND
@@ -114,7 +120,10 @@ spec:
             - name: SERVE_LEGACY
               value: "{{ KUMA_SERVE_LEGACY }}"
             - name: SERVER_EMAIL
-              value: {{ KUMA_SERVER_EMAIL }}
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: server-email
             - name: SESSION_COOKIE_SECURE
               value: "{{ KUMA_SESSION_COOKIE_SECURE }}"
             - name: SITE_URL
