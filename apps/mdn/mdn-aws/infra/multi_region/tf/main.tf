@@ -108,16 +108,17 @@ module "memcached-prod" {
 module "mysql-stage" {
     source = "rds"
     # DBName must begin with a letter and contain only alphanumeric characters
+
     mysql_env     = "stage"
     mysql_db_name = "developer_allizom_org"
     mysql_username = "root"
     mysql_password = "${var.mysql_stage_password}"
     mysql_identifier = "mdn-stage"
-    # stage instace class is much smaller than prod
     mysql_instance_class = "db.t2.large"
     mysql_backup_retention_days = 0
-    vpc_id = "${var.vpc_id}"
     mysql_security_group_name = "mdn_rds_sg"
+    vpc_id = "${var.vpc_id}"
+    vpc_cidr = "${var.vpc_cidr}"
 }
 
 module "mysql-prod" {
@@ -130,7 +131,8 @@ module "mysql-prod" {
     mysql_identifier = "mdn-prod"
     mysql_instance_class = "db.m4.xlarge"
     mysql_backup_retention_days = 7
-    vpc_id = "${var.vpc_id}"
     mysql_security_group_name = "mdn_rds_sg_prod"
+    vpc_id = "${var.vpc_id}"
+    vpc_cidr = "${var.vpc_cidr}"
 }
 

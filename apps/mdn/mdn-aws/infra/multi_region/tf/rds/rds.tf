@@ -67,13 +67,9 @@ variable "mysql_allow_major_version_upgrade" {
   default = false
 }
 
-variable "vpc_id" {}
+variable "vpc_id" { }
 
-variable "cidr_blocks" {
-  # we're in the VPC, so let anyone *in the VPC* talk to RDS
-  default     = "0.0.0.0/0"
-  description = "CIDR for sg"
-}
+variable "vpc_cidr" { }
 
 resource "aws_db_parameter_group" "mdn-params" {
   name        = "${var.mysql_identifier}-params"
@@ -124,7 +120,7 @@ resource "aws_security_group" "mdn_rds_sg" {
     from_port   = "${var.mysql_port}"
     to_port     = "${var.mysql_port}"
     protocol    = "TCP"
-    cidr_blocks = ["${var.cidr_blocks}"]
+    cidr_blocks = ["${var.vpc_cidr}"]
   }
 
   egress {
