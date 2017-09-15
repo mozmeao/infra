@@ -38,6 +38,8 @@ spec:
                 secretKeyRef:
                   name: mdn-secrets
                   key: admin-emails
+            - name: ALLOW_ROBOTS
+              value: "{{ KUMA_ALLOW_ROBOTS }}"
             - name: ALLOWED_HOSTS
               value: "{{ KUMA_ALLOWED_HOSTS }}"
             - name: ATTACHMENT_HOST
