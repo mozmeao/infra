@@ -104,6 +104,8 @@ spec:
                   key: memcached-url
             - name: PROTOCOL
               value: {{ KUMA_PROTOCOL }}
+            - name: SECURE_HSTS_SECONDS
+              value: "{{ KUMA_SECURE_HSTS_SECONDS }}"
             - name: SENTRY_DSN
               valueFrom:
                 secretKeyRef:

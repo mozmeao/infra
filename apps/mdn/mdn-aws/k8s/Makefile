@@ -111,6 +111,7 @@ export KUMA_MAINTENANCE_MODE ?= False
 export KUMA_MEDIA_ROOT ?= /mdn/www
 export KUMA_MEDIA_URL ?= /media/
 export KUMA_PROTOCOL ?= "https://"
+export KUMA_SECURE_HSTS_SECONDS ?= 0
 export KUMA_SERVE_LEGACY ?= True
 export KUMA_SESSION_COOKIE_SECURE ?= True
 export KUMA_STATIC_URL ?= /static/
