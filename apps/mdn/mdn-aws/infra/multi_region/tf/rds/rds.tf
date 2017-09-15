@@ -11,7 +11,7 @@ variable "mysql_env" {}
 
 variable "mysql_security_group_name" {}
 
-variable "mysql_storage" {
+variable "mysql_storage_gb" {
   default     = "100"
   description = "Storage size in GB"
 }
@@ -84,7 +84,7 @@ resource "aws_db_parameter_group" "mdn-params" {
 }
 
 resource "aws_db_instance" "mdn_rds" {
-  allocated_storage           = "${var.mysql_storage}"
+  allocated_storage           = "${var.mysql_storage_gb}"
   allow_major_version_upgrade = "${var.mysql_allow_major_version_upgrade}"
   auto_minor_version_upgrade  = "${var.mysql_auto_minor_version_upgrade}"
   backup_retention_period     = "${var.mysql_backup_retention_days}"
@@ -104,6 +104,7 @@ resource "aws_db_instance" "mdn_rds" {
   password                    = "${var.mysql_password}"
   publicly_accessible         = false
   storage_encrypted           = "${var.mysql_storage_encrypted}"
+  storage_type                = "${var.mysql_storage_type}"
   username                    = "${var.mysql_username}"
   vpc_security_group_ids      = ["${aws_security_group.mdn_rds_sg.id}"]
   tags {
