@@ -14,7 +14,7 @@ export SHARED_PV_NAME=mdn-shared-${TARGET_ENVIRONMENT}
 export SHARED_PV_SIZE=1000Gi
 export SHARED_PV_RECLAIM_POLICY=Retain
 export SHARED_PV_MOUNT_PATH=/
-export SHARED_PV_ARN=
+export SHARED_PV_ARN=fs-d617b77f.efs.us-west-2.amazonaws.com
 export SHARED_PV_STORAGE_CLASS_NAME=efs
 
 export SHARED_PVC_NAME=mdn-shared
