@@ -93,13 +93,14 @@ export KUMASCRIPT_MEMORY_LIMIT=16Gi
 export KUMASCRIPT_MEMORY_REQUEST=8Gi
 
 export KUMA_IMAGE=quay.io/mozmar/kuma
-export KUMA_IMAGE_TAG=da552a8
+export KUMA_IMAGE_TAG=dcce68f
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH=/mdn
 
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL=https
 export KUMA_ADMIN_NAMES="MDN devs"
+export KUMA_ALLOW_ROBOTS=True
 export KUMA_ATTACHMENT_HOST=mdn.mozillademos.org
 export KUMA_CELERY_ALWAYS_EAGER=False
 export KUMA_CELERYD_MAX_TASKS_PER_CHILD=0
