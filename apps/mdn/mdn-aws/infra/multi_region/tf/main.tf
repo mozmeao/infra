@@ -117,6 +117,8 @@ module "mysql-stage" {
     mysql_instance_class = "db.t2.large"
     mysql_backup_retention_days = 0
     mysql_security_group_name = "mdn_rds_sg"
+    mysql_storage_gb = 100
+    mysql_storage_type = "gp2"
     vpc_id = "${var.vpc_id}"
     vpc_cidr = "${var.vpc_cidr}"
 }
@@ -132,6 +134,8 @@ module "mysql-prod" {
     mysql_instance_class = "db.m4.xlarge"
     mysql_backup_retention_days = 7
     mysql_security_group_name = "mdn_rds_sg_prod"
+    mysql_storage_gb = 200
+    mysql_storage_type = "gp2"
     vpc_id = "${var.vpc_id}"
     vpc_cidr = "${var.vpc_cidr}"
 }
