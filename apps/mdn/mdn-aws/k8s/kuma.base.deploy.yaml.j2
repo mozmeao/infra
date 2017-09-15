@@ -73,21 +73,11 @@ spec:
               value: {{ KUMA_DOMAIN }}
             - name: EMAIL_BACKEND
               value: {{ KUMA_EMAIL_BACKEND }}
-            - name: EMAIL_HOST
+            - name: EMAIL_URL
               valueFrom:
                 secretKeyRef:
                   name: mdn-secrets
-                  key: email-host
-            - name: EMAIL_HOST_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: email-host-password
-            - name: EMAIL_HOST_USER
-              valueFrom:
-                secretKeyRef:
-                  name: mdn-secrets
-                  key: email-host-user
+                  key: email-url
             - name: ES_INDEX_PREFIX
               value: {{ KUMA_ES_INDEX_PREFIX }}
             - name: ES_LIVE_INDEX
