@@ -182,6 +182,28 @@ k8s-deployments: k8s-web k8s-api k8s-kumascript k8s-celery
 k8s-delete-deployments: k8s-delete-web k8s-delete-api \
  						k8s-delete-kumascript k8s-delete-celery
 
+k8s-kuma-rollout:
+	kubectl -n ${K8S_NAMESPACE} set image deploy ${WEB_NAME} \
+		${WEB_NAME}=${KUMA_IMAGE}:${KUMA_IMAGE_TAG}
+	kubectl -n ${K8S_NAMESPACE} set image deploy ${API_NAME} \
+		${API_NAME}=${KUMA_IMAGE}:${KUMA_IMAGE_TAG}
+	kubectl -n ${K8S_NAMESPACE} set image deploy ${CELERY_WORKERS_NAME} \
+		${CELERY_WORKERS_NAME}=${KUMA_IMAGE}:${KUMA_IMAGE_TAG}
+	kubectl -n ${K8S_NAMESPACE} set image deploy ${CELERY_BEAT_NAME} \
+		${CELERY_BEAT_NAME}=${KUMA_IMAGE}:${KUMA_IMAGE_TAG}
+	kubectl -n ${K8S_NAMESPACE} set image deploy ${CELERY_CAM_NAME} \
+		${CELERY_CAM_NAME}=${KUMA_IMAGE}:${KUMA_IMAGE_TAG}
+	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${WEB_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${API_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_WORKERS_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_BEAT_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_CAM_NAME}
+
+k8s-kumascript-rollout:
+	kubectl -n ${K8S_NAMESPACE} set image deploy ${KUMASCRIPT_NAME} \
+		${KUMASCRIPT_NAME}=${KUMASCRIPT_IMAGE}:${KUMASCRIPT_IMAGE_TAG}
+	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${KUMASCRIPT_NAME}
+
 ### end core tasks
 ###############################
 
