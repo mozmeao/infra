@@ -47,7 +47,7 @@ export WEB_CPU_LIMIT=2
 export WEB_CPU_REQUEST=100m
 export WEB_MEMORY_LIMIT=4Gi
 export WEB_MEMORY_REQUEST=256Mi
-export WEB_ALLOWED_HOSTS="mdn-mm.moz.works,mm-cdn.mdn.moz.works,mdn-mm-demos.moz.works"
+export WEB_ALLOWED_HOSTS="mdn-mm.moz.works,mm-cdn.mdn.moz.works,mdn-mm-demos.moz.works,interactive-examples.mdn.moz.works"
 
 export API_NAME=api
 export API_REPLICAS=1
@@ -93,7 +93,7 @@ export KUMASCRIPT_MEMORY_LIMIT=4Gi
 export KUMASCRIPT_MEMORY_REQUEST=256Mi
 
 export KUMA_IMAGE=quay.io/mozmar/kuma
-export KUMA_IMAGE_TAG=dcce68f
+export KUMA_IMAGE_TAG=1ed8965
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH=/mdn
@@ -112,11 +112,11 @@ export KUMA_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 export KUMA_ES_INDEX_PREFIX=mdnstage
 export KUMA_ES_LIVE_INDEX=True
 export KUMA_LEGACY_ROOT=/mdn/www
-export KUMA_MAINTENANCE_MODE=False
+export KUMA_MAINTENANCE_MODE=True
 export KUMA_MEDIA_ROOT=/mdn/www
 export KUMA_MEDIA_URL=https://mm-cdn.mdn.moz.works/media/
 export KUMA_PROTOCOL=https://
-export KUMA_SECURE_HSTS_SECONDS=10
+export KUMA_SECURE_HSTS_SECONDS=30
 export KUMA_SERVE_LEGACY=True
 export KUMA_SESSION_COOKIE_SECURE=True
 export KUMA_STATIC_URL=https://mm-cdn.mdn.moz.works/static/
