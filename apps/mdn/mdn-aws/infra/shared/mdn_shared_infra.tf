@@ -16,7 +16,16 @@ resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
   bucket              = "mdn-db-storage-anonymized"
   region              = "${var.region}"
   acceleration_status = "Enabled"
-  acl                 = "private"
+  acl                 = "log-delivery-write"
+
+  logging {
+    target_bucket = "mdn-db-storage-anonymized"
+    target_prefix = "logs/"
+  }
+
+  versioning {
+    enabled = true
+  }
 
   tags {
      Stack = "MDN-prod"
@@ -30,6 +39,16 @@ resource "aws_s3_bucket" "mdn-db-storage-production" {
   region              = "${var.region}"
   acceleration_status = "Enabled"
   acl                 = "private"
+
+
+  logging {
+    target_bucket = "mdn-db-storage-production"
+    target_prefix = "logs/"
+  }
+
+  versioning {
+    enabled = true
+  }
 
   tags {
      Stack = "MDN-prod"
