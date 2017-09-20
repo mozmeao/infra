@@ -62,7 +62,7 @@ export CELERY_WORKERS_NAME=celery-worker
 export CELERY_WORKERS_REPLICAS=1
 export CELERY_WORKERS_CPU_LIMIT=2
 export CELERY_WORKERS_CPU_REQUEST=100m
-export CELERY_WORKERS_MEMORY_LIMIT=4Gi
+export CELERY_WORKERS_MEMORY_LIMIT=8Gi
 export CELERY_WORKERS_MEMORY_REQUEST=256Mi
 export CELERY_WORKERS_CONCURRENCY=4
 export CELERY_WORKERS_QUEUES=mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery
@@ -93,7 +93,7 @@ export KUMASCRIPT_MEMORY_LIMIT=4Gi
 export KUMASCRIPT_MEMORY_REQUEST=256Mi
 
 export KUMA_IMAGE=quay.io/mozmar/kuma
-export KUMA_IMAGE_TAG=1ed8965
+export KUMA_IMAGE_TAG=bf7935a
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH=/mdn

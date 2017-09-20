@@ -40,30 +40,30 @@ export KUMASCRIPT_SERVICE_TARGET_PORT=9080
 export KUMASCRIPT_SERVICE_PROTOCOL=TCP
 
 export WEB_NAME=web
-export WEB_REPLICAS=1
+export WEB_REPLICAS=6
 export WEB_GUNICORN_WORKERS=4
 export WEB_GUNICORN_TIMEOUT=120
 export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=2
-export WEB_MEMORY_LIMIT=16Gi
-export WEB_MEMORY_REQUEST=8Gi
-export WEB_ALLOWED_HOSTS="developer.mozilla.org,developer.cdn.mozilla.net,mdn.mozillademos.org"
+export WEB_MEMORY_LIMIT=8Gi
+export WEB_MEMORY_REQUEST=2Gi
+export WEB_ALLOWED_HOSTS="developer.mozilla.org,developer.cdn.mozilla.net,mdn.mozillademos.org,prod.mdn.moz.works,mdn-prod.moz.works"
 
 export API_NAME=api
-export API_REPLICAS=1
+export API_REPLICAS=2
 export API_GUNICORN_WORKERS=4
 export API_GUNICORN_TIMEOUT=120
 export API_CPU_LIMIT=4
 export API_CPU_REQUEST=2
-export API_MEMORY_LIMIT=16Gi
-export API_MEMORY_REQUEST=8Gi
+export API_MEMORY_LIMIT=8Gi
+export API_MEMORY_REQUEST=2Gi
 
 export CELERY_WORKERS_NAME=celery-worker
 export CELERY_WORKERS_REPLICAS=6
 export CELERY_WORKERS_CPU_LIMIT=4
 export CELERY_WORKERS_CPU_REQUEST=2
-export CELERY_WORKERS_MEMORY_LIMIT=16Gi
-export CELERY_WORKERS_MEMORY_REQUEST=8Gi
+export CELERY_WORKERS_MEMORY_LIMIT=8Gi
+export CELERY_WORKERS_MEMORY_REQUEST=2Gi
 export CELERY_WORKERS_CONCURRENCY=4
 export CELERY_WORKERS_QUEUES=mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery
 
@@ -82,18 +82,18 @@ export CELERY_CAM_MEMORY_LIMIT=4Gi
 export CELERY_CAM_MEMORY_REQUEST=1Gi
 
 export KUMASCRIPT_NAME=kumascript
-export KUMASCRIPT_REPLICAS=1
+export KUMASCRIPT_REPLICAS=6
 export KUMASCRIPT_CONTAINER_PORT=${KUMASCRIPT_SERVICE_TARGET_PORT}
 export KUMASCRIPT_IMAGE=quay.io/mozmar/kumascript
 export KUMASCRIPT_IMAGE_TAG=latest
 export KUMASCRIPT_IMAGE_PULL_POLICY=IfNotPresent
 export KUMASCRIPT_CPU_LIMIT=4
 export KUMASCRIPT_CPU_REQUEST=2
-export KUMASCRIPT_MEMORY_LIMIT=16Gi
-export KUMASCRIPT_MEMORY_REQUEST=8Gi
+export KUMASCRIPT_MEMORY_LIMIT=8Gi
+export KUMASCRIPT_MEMORY_REQUEST=2Gi
 
 export KUMA_IMAGE=quay.io/mozmar/kuma
-export KUMA_IMAGE_TAG=1ed8965
+export KUMA_IMAGE_TAG=bf7935a
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH=/mdn
