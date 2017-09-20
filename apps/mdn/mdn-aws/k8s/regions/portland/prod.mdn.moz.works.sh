@@ -47,7 +47,7 @@ export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=1
 export WEB_MEMORY_LIMIT=8Gi
 export WEB_MEMORY_REQUEST=2Gi
-export WEB_ALLOWED_HOSTS="developer.mozilla.org,developer.cdn.mozilla.net,mdn.mozillademos.org,prod.mdn.moz.works,mdn-prod.moz.works"
+export WEB_ALLOWED_HOSTS="developer.mozilla.org,developer.cdn.mozilla.net,mdn.mozillademos.org,prod.mdn.moz.works"
 
 export API_NAME=api
 export API_REPLICAS=2
@@ -107,7 +107,7 @@ export KUMA_CELERYD_MAX_TASKS_PER_CHILD=0
 export KUMA_CSRF_COOKIE_SECURE=True
 export KUMA_DEBUG=False
 export KUMA_DEBUG_TOOLBAR=False
-export KUMA_DOMAIN=developer.mozilla.org
+export KUMA_DOMAIN=prod.mdn.moz.works
 export KUMA_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 export KUMA_ES_INDEX_PREFIX=mdnprod
 export KUMA_ES_LIVE_INDEX=True
