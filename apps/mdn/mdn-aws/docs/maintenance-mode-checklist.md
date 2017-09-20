@@ -72,7 +72,7 @@ other pages are OK. It duplicates the Manual Sanity Check.
 * [ ] https://mdn-mm-demos.moz.works/en-US/docs/Learn/CSS/Styling_text/Fundamentals$samples/Color - 200, sample as a stand-alone page
 * [ ] https://mdn-mm-demos.moz.works/files/12984/web-font-example.png - 200, PNG of some "Hipster ipsum" text
 * [ ] https://mdn-mm.moz.works/@api/deki/files/3613/=hut.jpg - 200, image of a hat
-* [ ] https://mdn-mm.moz.works/admin/ - 404 in maintenance mode
+* [ ] https://mdn-mm.moz.works/admin/ - Redirects to maintenance mode page
 * [ ] https://mdn-mm.moz.works/contribute.json - 200, project info
 * [ ] https://mdn-mm.moz.works/diagrams/workflow/workflow.svg - 200, SVG with images
 * [ ] https://mdn-mm.moz.works/en-US/dashboards/macros - 200, list of macros and page counts
