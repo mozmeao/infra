@@ -125,10 +125,18 @@ export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=http://${API_SERVICE_NAME}/en-US/docs/{p
 export BACKUP_SERVICE_NAME ?= mdn-backup-${TARGET_ENVIRONMENT}
 export SYNC_FROM_S3_SERVICE_NAME ?= mdn-s3-sync-${TARGET_ENVIRONMENT}
 export BACKUP_SECRETS_NAME ?= mdn-backup-secrets
-export BACKUP_BUCKET ?= s3://mdn-shared-backup
+
 export BACKUP_MOUNT_DIR ?= "/mdn"
+
+export BACKUP_BUCKET ?= s3://mdn-shared-backup
 export BACKUP_LOCAL_DIR ?= "/mdn/www/"
-export BACKUP_REMOTE_DIR ?= "/backups/efs/"
+# note, this is different than the sync directory in S3
+export BACKUP_REMOTE_DIR ?= "/backups/mdn/"
+
+export SYNC_BUCKET ?= s3://mdn-shared-backup
+export SYNC_LOCAL_DIR ?= "/mdn/www/"
+export SYNC_REMOTE_DIR ?= "/backups/efs/"
+
 export BACKUP_CONTAINER_NAME ?= mdn-backup
 export SYNC_FROM_S3_CONTAINER_NAME ?= mdn-sync
 export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:latest
