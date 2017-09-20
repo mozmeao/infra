@@ -11,14 +11,17 @@ This checklist uses these URLs:
 
 If you want a public-facing site, you'll need to generate
 content before putting the site in Maintenance Mode. The
-full steps are in *todo*, but here's the quick version:
+full steps are in init-checklist.md, but here's the quick version:
 
 * [ ] Load a recent (anonymized) backup
-* [ ] Enable GitHub auth (see [Enable GitHub Auth](https://kuma.readthedocs.io/en/latest/installation.html#enable-github-auth-optional))
-* [ ] Render unrendered pages
-* [ ] Add https://mdn-mm-demos.moz.works to constance ``KUMA_WIKI_IFRAME_ALLOWED_HOSTS``
-* [ ] Generate sitemaps
+* [ ] Enable GitHub auth (optional, to use Django admin for config)
+* [ ] Configure the Site
+* [ ] Set required Constance values (``KUMASCRIPT_TIMEOUT``, ``KUMA_WIKI_IFRAME_ALLOWED_HOSTS``)
+* [ ] Set desired Waffle flags
 * [ ] Generate the search index
+* [ ] Render unrendered pages (optional)
+* [ ] Generate sitemaps
+* [ ] Generate humans.txt
 * [ ] Restart web servers, etc. in Maintenance Mode
 
 # Manual Sanity Check
