@@ -210,6 +210,30 @@ k8s-kuma-rollout-status:
 k8s-kumascript-rollout-status:
 	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${KUMASCRIPT_NAME}
 
+k8s-rollback: k8s-kuma-rollback k8s-kumascript-rollback
+
+k8s-kuma-rollback:
+	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${WEB_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${API_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_WORKERS_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_BEAT_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_CAM_NAME}
+
+k8s-kumascript-rollback:
+	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${KUMASCRIPT_NAME}
+
+k8s-history: k8s-kuma-history k8s-kumascript-history
+
+k8s-kuma-history:
+	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${WEB_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${API_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_WORKERS_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_BEAT_NAME}
+	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_CAM_NAME}
+
+k8s-kumascript-history:
+	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${KUMASCRIPT_NAME}
+
 ### end core tasks
 ###############################
 
