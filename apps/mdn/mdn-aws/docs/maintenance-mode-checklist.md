@@ -60,6 +60,10 @@ using a command like:
 py.test --maintenance-mode tests/functional tests/redirects --base-url https://mdn-mm.moz.works --driver Chrome --driver-path /path/to/chromedriver
 ```
 
+Some tests will fail the first time they are run against a server with cold
+caches. Some tests are flakey, and will intermittantly fail.  If a test
+passes once in three tries, we consider it a success.
+
 * [ ] Functional tests pass
 
 These check that disabled endpoints redirect to the maintenance page, and that
