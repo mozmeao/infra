@@ -8,6 +8,9 @@ export TARGET_ENVIRONMENT=stage
 export K8S_NAMESPACE=mdn-${TARGET_ENVIRONMENT}
 export AWS_REGION=us-west-2
 
+# Define an alias for kubectl for convenience.
+alias kc="kubectl -n ${K8S_NAMESPACE}"
+
 # Note PVs are available within ALL namespaces, so delimit them with
 # the name of the target environment.
 export SHARED_PV_NAME=mdn-shared-${TARGET_ENVIRONMENT}

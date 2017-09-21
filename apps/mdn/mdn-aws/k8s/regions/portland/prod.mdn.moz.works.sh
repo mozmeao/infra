@@ -8,6 +8,9 @@ export TARGET_ENVIRONMENT=prod
 export K8S_NAMESPACE=mdn-${TARGET_ENVIRONMENT}
 export AWS_REGION=us-west-2
 
+# Define an alias for kubectl for convenience.
+alias kc="kubectl -n ${K8S_NAMESPACE}"
+
 # Note PVs are available within ALL namespaces, so delimit them with
 # the name of the target environment.
 export SHARED_PV_NAME=mdn-shared-${TARGET_ENVIRONMENT}
@@ -68,14 +71,14 @@ export CELERY_WORKERS_CONCURRENCY=4
 export CELERY_WORKERS_QUEUES=mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery
 
 export CELERY_BEAT_NAME=celery-beat
-export CELERY_BEAT_REPLICAS=1
+export CELERY_BEAT_REPLICAS=0
 export CELERY_BEAT_CPU_LIMIT=1
 export CELERY_BEAT_CPU_REQUEST=250m
 export CELERY_BEAT_MEMORY_LIMIT=2Gi
 export CELERY_BEAT_MEMORY_REQUEST=256Mi
 
 export CELERY_CAM_NAME=celery-cam
-export CELERY_CAM_REPLICAS=1
+export CELERY_CAM_REPLICAS=0
 export CELERY_CAM_CPU_LIMIT=1
 export CELERY_CAM_CPU_REQUEST=250m
 export CELERY_CAM_MEMORY_LIMIT=4Gi
@@ -112,7 +115,7 @@ export KUMA_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 export KUMA_ES_INDEX_PREFIX=mdnprod
 export KUMA_ES_LIVE_INDEX=True
 export KUMA_LEGACY_ROOT=/mdn/www
-export KUMA_MAINTENANCE_MODE=False
+export KUMA_MAINTENANCE_MODE=True
 export KUMA_MEDIA_ROOT=/mdn/www
 export KUMA_MEDIA_URL=https://developer.cdn.mozilla.net/media/
 export KUMA_PROTOCOL="https://"
