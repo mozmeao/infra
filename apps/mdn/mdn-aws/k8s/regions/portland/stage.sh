@@ -8,6 +8,9 @@ export TARGET_ENVIRONMENT=stage
 export K8S_NAMESPACE=mdn-${TARGET_ENVIRONMENT}
 export AWS_REGION=us-west-2
 
+# Define an alias for kubectl for convenience.
+alias kc="kubectl -n ${K8S_NAMESPACE}"
+
 # Note PVs are available within ALL namespaces, so delimit them with
 # the name of the target environment.
 export SHARED_PV_NAME=mdn-shared-${TARGET_ENVIRONMENT}
@@ -25,7 +28,7 @@ export WEB_SERVICE_TYPE=LoadBalancer
 export WEB_SERVICE_PORT=443
 export WEB_SERVICE_TARGET_PORT=8000
 export WEB_SERVICE_PROTOCOL=TCP
-export WEB_SERVICE_CERT_ARN= arn:aws:acm:us-west-2:236517346949:certificate/536f299c-ebcb-457f-9ce2-6c98a5132c82
+export WEB_SERVICE_CERT_ARN=arn:aws:acm:us-west-2:236517346949:certificate/536f299c-ebcb-457f-9ce2-6c98a5132c82
 
 export API_SERVICE_NAME=api
 export API_SERVICE_TYPE=ClusterIP
