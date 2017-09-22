@@ -144,6 +144,10 @@ export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:latest
 export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
 export SYNC_FROM_S3_SCHEDULE ?= "@hourly"
 
+
+export FAILED_JOBS_HISTORY_LIMIT ?= 3
+export SUCCESSFUL_JOBS_HISTORY_LIMIT ?= 3
+
 # https://kubernetes.io/docs/concepts/configuration/secret/
 # the values below are NOT real access/secret keys
 export BACKUP_ACCESS_KEY ?= foo

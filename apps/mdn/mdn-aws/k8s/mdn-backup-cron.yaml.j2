@@ -5,6 +5,8 @@ metadata:
 spec:
   schedule: {{ BACKUP_SERVICE_SCHEDULE }}
   concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: {{ FAILED_JOBS_HISTORY_LIMIT }}
+  successfulJobsHistoryLimit: {{ SUCCESSFUL_JOBS_HISTORY_LIMIT }}
   jobTemplate:
     spec:
       template:
