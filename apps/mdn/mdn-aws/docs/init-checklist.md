@@ -67,7 +67,7 @@ deployment's ElasticSearch instance. Use the Django admin and the
 [development instructions](https://kuma.readthedocs.io/en/latest/elasticsearch.html#indexing-documents)
 to create a new index.
 
-* [ ] Create and populate index
+* [ ] Create, populate, and promote index
 
 # Pre-Render Pages (Optional)
 
@@ -78,14 +78,14 @@ changing settings like the sample domain, you may want to re-render already
 rendered documents.
 
 This Django shell script (``./manage.py shell_plus``) can be used to force
-asynchronous rendering of pages, using the celery workers:
+asynchronous rendering of unrendered pages, using the celery workers:
 
 ```
 from kuma.wiki.tasks import render_document
 import time
 all_pages = Document.objects.exclude(is_redirect=True)
 unrendered_pages = all_pages.filter(Q(rendered_html__isnull=True)|Q(rendered_html="")).exclude(is_redirect=True)
-to_render = unrendered_pages  # or all_pages
+to_render = unrendered_pages
 total = to_render.count()
 for doc_id in to_render.values_list('id', flat=True):
     render_document.delay(doc_id, cache_control='no-cache', base_url=None, force=True)
