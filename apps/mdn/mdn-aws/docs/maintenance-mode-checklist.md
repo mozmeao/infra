@@ -11,14 +11,17 @@ This checklist uses these URLs:
 
 If you want a public-facing site, you'll need to generate
 content before putting the site in Maintenance Mode. The
-full steps are in *todo*, but here's the quick version:
+full steps are in init-checklist.md, but here's the quick version:
 
 * [ ] Load a recent (anonymized) backup
-* [ ] Enable GitHub auth (see [Enable GitHub Auth](https://kuma.readthedocs.io/en/latest/installation.html#enable-github-auth-optional))
-* [ ] Render unrendered pages
-* [ ] Add https://mdn-mm-demos.moz.works to constance ``KUMA_WIKI_IFRAME_ALLOWED_HOSTS``
-* [ ] Generate sitemaps
+* [ ] Enable GitHub auth (optional, to use Django admin for config)
+* [ ] Configure the Site
+* [ ] Set required Constance values (``KUMASCRIPT_TIMEOUT``, ``KUMA_WIKI_IFRAME_ALLOWED_HOSTS``)
+* [ ] Set desired Waffle flags
 * [ ] Generate the search index
+* [ ] Render unrendered pages (optional)
+* [ ] Generate sitemaps
+* [ ] Generate humans.txt
 * [ ] Restart web servers, etc. in Maintenance Mode
 
 # Manual Sanity Check
@@ -57,6 +60,10 @@ using a command like:
 py.test --maintenance-mode tests/functional tests/redirects --base-url https://mdn-mm.moz.works --driver Chrome --driver-path /path/to/chromedriver
 ```
 
+Some tests will fail the first time they are run against a server with cold
+caches. Some tests are flakey, and will intermittantly fail.  If a test
+passes once in three tries, we consider it a success.
+
 * [ ] Functional tests pass
 
 These check that disabled endpoints redirect to the maintenance page, and that
@@ -69,7 +76,7 @@ other pages are OK. It duplicates the Manual Sanity Check.
 * [ ] https://mdn-mm-demos.moz.works/en-US/docs/Learn/CSS/Styling_text/Fundamentals$samples/Color - 200, sample as a stand-alone page
 * [ ] https://mdn-mm-demos.moz.works/files/12984/web-font-example.png - 200, PNG of some "Hipster ipsum" text
 * [ ] https://mdn-mm.moz.works/@api/deki/files/3613/=hut.jpg - 200, image of a hat
-* [ ] https://mdn-mm.moz.works/admin/ - 404 in maintenance mode
+* [ ] https://mdn-mm.moz.works/admin/ - Redirects to maintenance mode page
 * [ ] https://mdn-mm.moz.works/contribute.json - 200, project info
 * [ ] https://mdn-mm.moz.works/diagrams/workflow/workflow.svg - 200, SVG with images
 * [ ] https://mdn-mm.moz.works/en-US/dashboards/macros - 200, list of macros and page counts
