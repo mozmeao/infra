@@ -130,6 +130,7 @@ export BACKUP_MOUNT_DIR ?= "/mdn"
 
 export BACKUP_BUCKET ?= s3://mdn-shared-backup
 export AWS_BACKUP_REGION ?= us-west-2
+export AWS_BACKUP_PAGE_SIZE ?= 100
 
 export BACKUP_LOCAL_DIR ?= "/mdn/www/"
 # note, this is different than the sync directory in S3
@@ -137,6 +138,7 @@ export BACKUP_REMOTE_DIR ?= "/backups/mdn/"
 
 export SYNC_BUCKET ?= s3://mdn-shared-backup
 export AWS_SYNC_REGION ?= us-west-2
+export AWS_SYNC_PAGE_SIZE ?= 100
 export SYNC_LOCAL_DIR ?= "/mdn/www/"
 export SYNC_REMOTE_DIR ?= "/backups/efs/"
 

@@ -28,6 +28,8 @@ spec:
                   value: PUSH
                 - name: AWS_REGION
                   value: "{{ AWS_BACKUP_REGION }}"
+                - name: AWS_S3SYNC_PAGE_SIZE
+                  value: "{{ AWS_BACKUP_PAGE_SIZE }}"
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom:
                     secretKeyRef:
