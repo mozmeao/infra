@@ -29,7 +29,7 @@ spec:
                 - name: AWS_REGION
                   value: {{ AWS_SYNC_REGION }}
                 - name: AWS_S3SYNC_PAGE_SIZE
-                  value: {{ AWS_SYNC_PAGE_SIZE }}
+                  value: "{{ AWS_SYNC_PAGE_SIZE }}"
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom:
                     secretKeyRef:
