@@ -26,6 +26,8 @@ spec:
                   value: "{{ BACKUP_BUCKET }}"
                 - name: PUSH_OR_PULL
                   value: PUSH
+                - name: AWS_REGION
+                  value: us-west-2
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom:
                     secretKeyRef:

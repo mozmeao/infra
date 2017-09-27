@@ -5,7 +5,7 @@ set -e
 set -u
 
 check_requirements() {
-    if [[ -z $LOCAL_DIR || -z $REMOTE_DIR || -z $BUCKET || -z $PUSH_OR_PULL ]]; then
+    if [[ -z $LOCAL_DIR || -z $REMOTE_DIR || -z $BUCKET || -z $PUSH_OR_PULL || -z $AWS_REGION ]]; then
         echo "Not all environment variables are set"
         exit 1
     fi
@@ -39,7 +39,7 @@ push_to_s3() {
 
 pull_from_s3() {
     echo "Pulling from ${BUCKET}${REMOTE_DIR} to ${LOCAL_DIR}"
-    ${SYNC_COMMAND} "${BUCKET}${REMOTE_DIR}" "${LOCAL_DIR}"
+    ${SYNC_COMMAND} "${BUCKET}${REMOTE_DIR}" "${LOCAL_DIR}" --page-size 100 --region  "${AWS_REGION}"
     echo "Complete"
 }
 
