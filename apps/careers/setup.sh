@@ -14,6 +14,11 @@ setup_monitors() {
         "Careers Frankfurt" \
         "https://careers-prod.frankfurt.moz.works" \
         "AWS_EU_CENTRAL_1"
+
+    create_monitor_if_missing \
+        "Careers Portland" \
+        "https://careers-prod.portland.moz.works" \
+        "AWS_US_WEST_2"
 }
 
 wget https://raw.githubusercontent.com/mozmeao/lumbergh/master/Procfile
