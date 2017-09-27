@@ -55,5 +55,11 @@ else
     exit 1
 fi
 
-
+if [[ -z ${DEADMANSSNITCH_URL} ]]; then
+    echo "DEADMANSSNITCH_URL is not configured"
+else
+    echo "updating Deadmanssnitch: ${DEADMANSSNITCH_URL}"
+    curl "${DEADMANSSNITCH_URL}"
+    echo "Deadmanssnitch updated"
+fi
 

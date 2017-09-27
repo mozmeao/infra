@@ -11,7 +11,7 @@ ENV PUSH_OR_PULL PUSH
 
 WORKDIR /meaosync
 
-RUN apt update && apt -y upgrade && apt install -y python3-pip
+RUN apt update && apt -y upgrade && apt install -y python3-pip curl
 RUN pip3 install awscli --upgrade --user
 RUN pip3 install --upgrade pip
 
