@@ -1,8 +1,4 @@
-#!/bin/bash
-
-# shellcheck warns against using > 1 arg in the shebang
-set -e
-set -u
+#!/bin/bash -e
 
 check_requirements() {
     if [[ -z $LOCAL_DIR || -z $REMOTE_DIR || -z $BUCKET || -z $PUSH_OR_PULL || -z $AWS_REGION ]]; then
@@ -55,7 +51,7 @@ else
     exit 1
 fi
 
-if [[ -z ${DEADMANSSNITCH_URL} ]]; then
+if [[ -z "${DEADMANSSNITCH_URL}" ]]; then
     echo "DEADMANSSNITCH_URL is not configured"
 else
     echo "updating Deadmanssnitch: ${DEADMANSSNITCH_URL}"
