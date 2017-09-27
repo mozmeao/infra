@@ -129,11 +129,14 @@ export BACKUP_SECRETS_NAME ?= mdn-backup-secrets
 export BACKUP_MOUNT_DIR ?= "/mdn"
 
 export BACKUP_BUCKET ?= s3://mdn-shared-backup
+export AWS_BACKUP_REGION ?= us-west-2
+
 export BACKUP_LOCAL_DIR ?= "/mdn/www/"
 # note, this is different than the sync directory in S3
 export BACKUP_REMOTE_DIR ?= "/backups/mdn/"
 
 export SYNC_BUCKET ?= s3://mdn-shared-backup
+export AWS_SYNC_REGION ?= us-west-2
 export SYNC_LOCAL_DIR ?= "/mdn/www/"
 export SYNC_REMOTE_DIR ?= "/backups/efs/"
 
@@ -143,6 +146,7 @@ export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:latest
 # cronjob syntax here: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
 export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
 export SYNC_FROM_S3_SCHEDULE ?= "@hourly"
+
 
 
 export FAILED_JOBS_HISTORY_LIMIT ?= 3

@@ -27,7 +27,7 @@ spec:
                 - name: PUSH_OR_PULL
                   value: PULL
                 - name: AWS_REGION
-                  value: us-west-2
+                  value: {{ AWS_SYNC_REGION }}
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom:
                     secretKeyRef:
