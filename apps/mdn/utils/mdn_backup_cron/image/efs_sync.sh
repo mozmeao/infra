@@ -29,7 +29,7 @@ EOF
 
 push_to_s3() {
     echo "Pushing from ${LOCAL_DIR} to ${BUCKET}${REMOTE_DIR}"
-    ${SYNC_COMMAND} "${LOCAL_DIR}" "${BUCKET}${REMOTE_DIR}"
+    ${SYNC_COMMAND} "${LOCAL_DIR}" "${BUCKET}${REMOTE_DIR}" --page-size 100 --region "${AWS_REGION}"
     echo "Complete"
 }
 
