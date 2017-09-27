@@ -36,6 +36,11 @@ spec:
                     secretKeyRef:
                       name: {{ BACKUP_SECRETS_NAME }}
                       key: secret_key
+                - name: DEADMANSSNITCH_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ BACKUP_SECRETS_NAME }}
+                      key: DEADMANSSNITCH_URL
           volumes:
             - name: {{ SHARED_PVC_NAME }}
               persistentVolumeClaim:

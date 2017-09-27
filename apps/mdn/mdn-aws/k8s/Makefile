@@ -154,6 +154,8 @@ export BACKUP_ACCESS_KEY ?= foo
 export BACKUP_SECRET_KEY ?= bar
 export BACKUP_ACCESS_KEY_BASE64 ?= $(shell echo -n "${BACKUP_ACCESS_KEY}" | base64)
 export BACKUP_SECRET_KEY_BASE64 ?= $(shell echo -n "${BACKUP_SECRET_KEY}" | base64)
+export BACKUP_DEADMANSSNITCH_URL ?= baz
+export BACKUP_DEADMANSSNITCH_URL_BASE64 ?= $(shell echo -n "${BACKUP_DEADMANSSNITCH_URL}" | base64)
 
 export ADMIN_NODE_NAME ?= mdn-admin
 
