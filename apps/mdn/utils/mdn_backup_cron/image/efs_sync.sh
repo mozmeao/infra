@@ -8,6 +8,7 @@ check_requirements() {
 }
 
 SYNC_COMMAND="${AWS_SYNC_COMMAND:-aws s3 sync}"
+PAGE_SIZE="${AWS_S3SYNC_PAGE_SIZE:-100}"
 
 fix_creds() {
     # use a ~/.aws/credentials file INSTEAD of k8s set environment vars.
@@ -29,13 +30,13 @@ EOF
 
 push_to_s3() {
     echo "Pushing from ${LOCAL_DIR} to ${BUCKET}${REMOTE_DIR}"
-    ${SYNC_COMMAND} "${LOCAL_DIR}" "${BUCKET}${REMOTE_DIR}" --page-size 100 --region "${AWS_REGION}"
+    ${SYNC_COMMAND} "${LOCAL_DIR}" "${BUCKET}${REMOTE_DIR}" --page-size ${PAGE_SIZE} --region "${AWS_REGION}"
     echo "Complete"
 }
 
 pull_from_s3() {
     echo "Pulling from ${BUCKET}${REMOTE_DIR} to ${LOCAL_DIR}"
-    ${SYNC_COMMAND} "${BUCKET}${REMOTE_DIR}" "${LOCAL_DIR}" --page-size 100 --region  "${AWS_REGION}"
+    ${SYNC_COMMAND} "${BUCKET}${REMOTE_DIR}" "${LOCAL_DIR}" --page-size ${PAGE_SIZE} --region  "${AWS_REGION}"
     echo "Complete"
 }
 
