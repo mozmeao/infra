@@ -18,8 +18,8 @@ fix_creds() {
     #
     # example error:
     # fatal error: Invalid header value b'AWS AKIAXXXX\n:ri81t84+26rX0qzRAASDDDXXXy2B70='
-    mkdir /root/.aws
-    cat << EOF > /root/.aws/credentials
+    mkdir "${HOME}"/.aws
+    cat << EOF > "${HOME}"/.aws/credentials
 [default]
 aws_access_key_id=${AWS_ACCESS_KEY_ID}
 aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}

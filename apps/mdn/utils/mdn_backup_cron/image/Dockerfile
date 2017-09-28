@@ -9,14 +9,18 @@ ENV BUCKET s3://mdn-shared-backup
 # set to either PUSH or PULL
 ENV PUSH_OR_PULL PUSH
 
-WORKDIR /meaosync
-
+# install packages
 RUN apt update && apt -y upgrade && apt install -y python3-pip curl
+
+RUN groupadd --gid 1000 kuma
+RUN useradd -ms /bin/bash --uid 1000 --gid 1000 kuma
+USER kuma:kuma
+
+WORKDIR /mdnsync
 RUN pip3 install awscli --upgrade --user
-RUN pip3 install --upgrade pip
+#RUN pip3 install --upgrade pip
 
-# add awscli to the path
-ENV PATH="/root/.local/bin/:${PATH}"
 
-ADD efs_sync.sh /meaosync/efs_sync.sh
-CMD ["/meaosync/efs_sync.sh"]
+ENV PATH="/home/kuma/.local/bin/:${PATH}"
+ADD mdn_sync.sh /mdnsync/mdn_sync.sh
+CMD ["/mdnsync/mdn_sync.sh"]
