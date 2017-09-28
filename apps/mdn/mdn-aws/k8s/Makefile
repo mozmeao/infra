@@ -327,6 +327,12 @@ k8s-delete-kumascript-svc:
 ### administrative tasks
 # not referenced from parent targets
 
+k8s-newrelic-secrets:
+	j2 mdn-newrelic-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-newrelic-secrets:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${NEW_RELIC_SECRETS_NAME}
+
 k8s-backup-secrets:
 	j2 mdn-backup-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
@@ -369,8 +375,6 @@ k8s-web:
 		KUMA_MEMORY_REQUEST=${WEB_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
-		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
-		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-web:
@@ -389,8 +393,6 @@ k8s-api:
 		KUMA_MEMORY_REQUEST=${API_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS=${API_ALLOWED_HOSTS} \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_API_NAME} \
-		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
-		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-api:
@@ -420,8 +422,6 @@ k8s-celery-workers:
 		KUMA_MEMORY_REQUEST=${CELERY_WORKERS_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERY_NAME} \
-		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
-		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 celery.workers.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-workers:
@@ -438,8 +438,6 @@ k8s-celery-beat:
 		KUMA_MEMORY_REQUEST=${CELERY_BEAT_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERYBEAT_NAME} \
-		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
-		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-beat:
@@ -456,8 +454,6 @@ k8s-celery-cam:
 		KUMA_MEMORY_REQUEST=${CELERY_CAM_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERYCAM_NAME} \
-		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
-		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-cam:

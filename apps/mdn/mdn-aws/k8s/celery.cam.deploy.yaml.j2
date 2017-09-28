@@ -1,7 +1,9 @@
 {% include 'kuma.base.deploy.yaml.j2' %}
           command:
-            - ./manage.py
+            - newrelic-admin
           args:
+            - run-program
+            - ./manage.py
             - celerycam
             - "--freq=2.0"
             - "--loglevel=INFO"
