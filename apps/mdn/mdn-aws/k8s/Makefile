@@ -182,6 +182,8 @@ export ELB_S3_LOGGING_PREFIX ?= ${TARGET_ENVIRONMENT}
 export NEW_RELIC_SECRETS_NAME ?= newrelic-secrets
 export NEW_RELIC_LICENSE_KEY ?= foo
 export NEW_RELIC_LICENSE_KEY_BASE64 ?= $(shell echo -n "${NEW_RELIC_LICENSE_KEY}" | base64)
+export NEW_RELIC_CONFIG_FILE ?= /app/etc/newrelic.ini
+export NEW_RELIC_MONITOR_MODE ?= 1
 
 # New Relic app names
 export NEW_RELIC_MONITOR_SUFFIX ?= ${TARGET_ENVIRONMENT}-${K8S_CLUSTER_SHORT_NAME}
@@ -368,6 +370,7 @@ k8s-web:
 		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
 		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
+		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-web:
@@ -387,6 +390,7 @@ k8s-api:
 		KUMA_ALLOWED_HOSTS=${API_ALLOWED_HOSTS} \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_API_NAME} \
 		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
+		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-api:
@@ -417,6 +421,7 @@ k8s-celery-workers:
 		KUMA_ALLOWED_HOSTS="" \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERY_NAME} \
 		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
+		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 celery.workers.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-workers:
@@ -434,6 +439,7 @@ k8s-celery-beat:
 		KUMA_ALLOWED_HOSTS="" \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERYBEAT_NAME} \
 		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
+		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-beat:
@@ -451,6 +457,7 @@ k8s-celery-cam:
 		KUMA_ALLOWED_HOSTS="" \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERYCAM_NAME} \
 		NEW_RELIC_MONITOR_MODE=${NEW_RELIC_MONITOR_MODE} \
+		NEW_RELIC_CONFIG_FILE=${NEW_RELIC_CONFIG_FILE} \
 		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-cam:

@@ -14,8 +14,10 @@ spec:
           image: "{{ KUMASCRIPT_IMAGE }}:{{ KUMASCRIPT_IMAGE_TAG }}"
           imagePullPolicy: {{ KUMASCRIPT_IMAGE_PULL_POLICY }}
           command:
-            - node
+            - newrelic_admin
           args:
+            - run-program
+            - node
             - run.js
           ports:
             - containerPort: {{ KUMASCRIPT_CONTAINER_PORT }}
@@ -47,6 +49,8 @@ spec:
               value: DekiScript:Wiki
             - name: NEW_RELIC_APP_NAME
               value: {{ NEW_RELIC_APP_NAME }}
+            - name: NEW_RELIC_CONFIG_FILE
+              value: {{ NEW_RELIC_CONFIG_FILE }}
             - name: NEW_RELIC_MONITOR_MODE
               value: "{{ NEW_RELIC_MONITOR_MODE }}"
             - name: NEW_RELIC_LICENSE_KEY
