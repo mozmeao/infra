@@ -185,13 +185,13 @@ export NEW_RELIC_LICENSE_KEY_BASE64 ?= $(shell echo -n "${NEW_RELIC_LICENSE_KEY}
 
 # New Relic app names
 export NEW_RELIC_ROLLUP_NAME ?= kuma-prod-portland
-export NEW_RELIC_WEB_NAME ?= kuma-web-prod-portland
-# kuma.deploy.yaml.j2
-export NEW_RELIC_API_NAME ?= kuma-api-prod-portland
-export NEW_RELIC_KUMASCRIPT_NAME ?= kuma-kumascript-prod-portland
-export NEW_RELIC_CELERY_NAME ?= kuma-celery-prod-portland
-export NEW_RELIC_CELERYCAM_NAME ?= kuma-celerycam-prod-portland
-export NEW_RELIC_CELERYBEAT_NAME ?= kuma-celerybeaet-prod-portland
+
+export NEW_RELIC_WEB_NAME ?= "kuma-web-prod-portland;${NEW_RELIC_ROLLUP_NAME}"
+export NEW_RELIC_API_NAME ?= "kuma-api-prod-portland;${NEW_RELIC_ROLLUP_NAME}"
+export NEW_RELIC_KUMASCRIPT_NAME ?= "kuma-kumascript-prod-portland;${NEW_RELIC_ROLLUP_NAME}"
+export NEW_RELIC_CELERY_NAME ?= "kuma-celery-prod-portland;${NEW_RELIC_ROLLUP_NAME}"
+export NEW_RELIC_CELERYCAM_NAME ?= "kuma-celerycam-prod-portland;${NEW_RELIC_ROLLUP_NAME}"
+export NEW_RELIC_CELERYBEAT_NAME ?= "kuma-celerybeat-prod-portland;${NEW_RELIC_ROLLUP_NAME}"
 
 ###############################
 ### core tasks
