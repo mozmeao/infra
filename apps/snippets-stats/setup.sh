@@ -14,13 +14,17 @@ setup_monitors() {
         "Snippets Stats Frankfurt" \
         "https://snippets-stats.frankfurt.moz.works" \
         "AWS_EU_CENTRAL_1"
+
+    create_monitor_if_missing \
+        "Snippets Stats Portland" \
+        "https://snippets-stats.portland.moz.works" \
+        "AWS_US_WEST_2"
 }
 
 deis create snippets-stats --no-remote
 deis perms:create jenkins -a snippets-stats
 deis domains:add snippets-stats.moz.works -a snippets-stats
 
-deis config:set ALLOWED_HOSTS=\* -a snippets-stats
 kubectl -n snippets-stats apply -f ./k8s/snippets-stats-nodeport.yaml
 deis pull mozmeao/snippets-stats:37727e -a snippets-stats
 
