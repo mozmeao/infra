@@ -26,6 +26,10 @@ spec:
                   value: "{{ BACKUP_BUCKET }}"
                 - name: PUSH_OR_PULL
                   value: PUSH
+                - name: AWS_REGION
+                  value: "{{ AWS_BACKUP_REGION }}"
+                - name: AWS_S3SYNC_PAGE_SIZE
+                  value: "{{ AWS_BACKUP_PAGE_SIZE }}"
                 - name: AWS_ACCESS_KEY_ID
                   valueFrom:
                     secretKeyRef:
@@ -36,6 +40,11 @@ spec:
                     secretKeyRef:
                       name: {{ BACKUP_SECRETS_NAME }}
                       key: secret_key
+                - name: DEADMANSSNITCH_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ BACKUP_SECRETS_NAME }}
+                      key: DEADMANSSNITCH_URL
           volumes:
             - name: {{ SHARED_PVC_NAME }}
               persistentVolumeClaim:
