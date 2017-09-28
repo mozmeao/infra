@@ -14,10 +14,8 @@ spec:
           image: "{{ KUMASCRIPT_IMAGE }}:{{ KUMASCRIPT_IMAGE_TAG }}"
           imagePullPolicy: {{ KUMASCRIPT_IMAGE_PULL_POLICY }}
           command:
-            - newrelic_admin
-          args:
-            - run-program
             - node
+          args:
             - run.js
           ports:
             - containerPort: {{ KUMASCRIPT_CONTAINER_PORT }}
