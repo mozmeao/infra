@@ -178,6 +178,21 @@ export ELB_S3_LOGGING_BUCKET ?= mdn-elb-logs
 # ELB_S3_LOGGING_PREFIX can't end with a slash!
 export ELB_S3_LOGGING_PREFIX ?= ${TARGET_ENVIRONMENT}
 
+### New Relic configuration
+export NEW_RELIC_SECRETS_NAME ?= newrelic-secrets
+export NEW_RELIC_LICENSE_KEY ?= foo
+export NEW_RELIC_LICENSE_KEY_BASE64 ?= $(shell echo -n "${NEW_RELIC_LICENSE_KEY}" | base64)
+
+# New Relic app names
+export NEW_RELIC_ROLLUP_NAME ?= kuma-prod-portland
+export NEW_RELIC_WEB_NAME ?= kuma-web-prod-portland
+# kuma.deploy.yaml.j2
+export NEW_RELIC_API_NAME ?= kuma-api-prod-portland
+export NEW_RELIC_KUMASCRIPT_NAME ?= kuma-kumascript-prod-portland
+export NEW_RELIC_CELERY_NAME ?= kuma-celery-prod-portland
+export NEW_RELIC_CELERYCAM_NAME ?= kuma-celerycam-prod-portland
+export NEW_RELIC_CELERYBEAT_NAME ?= kuma-celerybeaet-prod-portland
+
 ###############################
 ### core tasks
 
@@ -351,6 +366,7 @@ k8s-web:
 		KUMA_CPU_REQUEST=${WEB_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${WEB_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
 		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-web:
@@ -368,6 +384,7 @@ k8s-api:
 		KUMA_CPU_REQUEST=${API_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${API_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS=${API_ALLOWED_HOSTS} \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_API_NAME} \
 		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-api:
@@ -375,6 +392,7 @@ k8s-delete-api:
 
 k8s-kumascript:
 	env KUMASCRIPT_APP_LABEL=${KUMASCRIPT_SERVICE_NAME} \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_KUMASCRIPT_NAME} \
 		j2 kumascript.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-kumascript:
@@ -395,6 +413,7 @@ k8s-celery-workers:
 		KUMA_CPU_REQUEST=${CELERY_WORKERS_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_WORKERS_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERY_NAME} \
 		j2 celery.workers.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-workers:
@@ -410,6 +429,7 @@ k8s-celery-beat:
 		KUMA_CPU_REQUEST=${CELERY_BEAT_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_BEAT_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERYBEAT_NAME} \
 		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-beat:
@@ -425,6 +445,7 @@ k8s-celery-cam:
 		KUMA_CPU_REQUEST=${CELERY_CAM_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_CAM_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERYCAM_NAME} \
 		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-cam:

@@ -45,6 +45,13 @@ spec:
               value: DekiScript:Web
             - name: server__autorequire__Wiki
               value: DekiScript:Wiki
+            - name: NEW_RELIC_APP_NAME
+              value: {{ NEW_RELIC_APP_NAME }}
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: newrelic-secrets
+                  key: NEW_RELIC_LICENSE_KEY
           resources:
             requests:
               cpu: {{ KUMASCRIPT_CPU_REQUEST }}
