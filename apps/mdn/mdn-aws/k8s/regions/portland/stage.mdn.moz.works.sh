@@ -7,6 +7,8 @@ export KUBECONFIG=~/.kube/portland.config
 export TARGET_ENVIRONMENT=stage
 export K8S_NAMESPACE=mdn-${TARGET_ENVIRONMENT}
 export AWS_REGION=us-west-2
+export K8S_CLUSTER_SIMPLE_NAME=portland
+
 
 # Define an alias for kubectl for convenience.
 alias kc="kubectl -n ${K8S_NAMESPACE}"
