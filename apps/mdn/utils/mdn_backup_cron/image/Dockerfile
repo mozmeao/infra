@@ -18,7 +18,6 @@ USER kuma:kuma
 
 WORKDIR /mdnsync
 RUN pip3 install awscli --upgrade --user
-#RUN pip3 install --upgrade pip
 
 
 ENV PATH="/home/kuma/.local/bin/:${PATH}"
