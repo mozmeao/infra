@@ -97,7 +97,7 @@ export KUMASCRIPT_MEMORY_LIMIT=8Gi
 export KUMASCRIPT_MEMORY_REQUEST=2Gi
 
 export KUMA_IMAGE=quay.io/mozmar/kuma
-export KUMA_IMAGE_TAG=c7b8ea9
+export KUMA_IMAGE_TAG=de455a8
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH=/mdn
@@ -116,7 +116,7 @@ export KUMA_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 export KUMA_ES_INDEX_PREFIX=mdnprod
 export KUMA_ES_LIVE_INDEX=True
 export KUMA_LEGACY_ROOT=/mdn/www
-export KUMA_MAINTENANCE_MODE=True
+export KUMA_MAINTENANCE_MODE=False
 export KUMA_MEDIA_ROOT=/mdn/www
 export KUMA_MEDIA_URL=https://cdn.mdn.mozilla.net/media/
 export KUMA_PROTOCOL="https://"
