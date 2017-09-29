@@ -194,8 +194,6 @@ export NEW_RELIC_WEB_NAME ?= "kuma-web-${NEW_RELIC_MONITOR_SUFFIX};${NEW_RELIC_R
 export NEW_RELIC_API_NAME ?= "kuma-api-${NEW_RELIC_MONITOR_SUFFIX};${NEW_RELIC_ROLLUP_NAME}"
 export NEW_RELIC_KUMASCRIPT_NAME ?= "kumascript-${NEW_RELIC_MONITOR_SUFFIX}"
 export NEW_RELIC_CELERY_NAME ?= "kuma-celery-${NEW_RELIC_MONITOR_SUFFIX};${NEW_RELIC_ROLLUP_NAME}"
-export NEW_RELIC_CELERYCAM_NAME ?= "kuma-celerycam-${NEW_RELIC_MONITOR_SUFFIX};${NEW_RELIC_ROLLUP_NAME}"
-export NEW_RELIC_CELERYBEAT_NAME ?= "kuma-celerybeat-${NEW_RELIC_MONITOR_SUFFIX};${NEW_RELIC_ROLLUP_NAME}"
 
 ###############################
 ### core tasks
@@ -439,7 +437,6 @@ k8s-celery-beat:
 		KUMA_CPU_REQUEST=${CELERY_BEAT_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_BEAT_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
-		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERYBEAT_NAME} \
 		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-beat:
@@ -455,7 +452,6 @@ k8s-celery-cam:
 		KUMA_CPU_REQUEST=${CELERY_CAM_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_CAM_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
-		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERYCAM_NAME} \
 		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-cam:
