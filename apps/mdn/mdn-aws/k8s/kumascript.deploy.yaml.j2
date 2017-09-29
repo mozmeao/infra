@@ -45,6 +45,20 @@ spec:
               value: DekiScript:Web
             - name: server__autorequire__Wiki
               value: DekiScript:Wiki
+            - name: NEW_RELIC_APP_NAME
+              value: {{ NEW_RELIC_APP_NAME }}
+              # for Kumascript only, we rename NEW_RELIC_MONITOR_MODE to NEW_RELIC_ENABLED
+            - name: NEW_RELIC_ENABLED
+              value: "{{ NEW_RELIC_MONITOR_MODE }}"
+            - name: NEW_RELIC_LOG
+              value: "{{ NEW_RELIC_LOG }}"
+            - name: NEW_RELIC_BROWSER_MONITOR_ENABLE
+              value: "{{ NEW_RELIC_BROWSER_MONITOR_ENABLE }}"
+            - name: NEW_RELIC_LICENSE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: newrelic-secrets
+                  key: NEW_RELIC_LICENSE_KEY
           resources:
             requests:
               cpu: {{ KUMASCRIPT_CPU_REQUEST }}
