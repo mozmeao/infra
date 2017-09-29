@@ -51,7 +51,7 @@ export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=500m
 export WEB_MEMORY_LIMIT=8Gi
 export WEB_MEMORY_REQUEST=2Gi
-export WEB_ALLOWED_HOSTS="developer.mozilla.org,developer.cdn.mozilla.net,mdn.mozillademos.org,prod.mdn.moz.works"
+export WEB_ALLOWED_HOSTS="prod.mdn.moz.works,cdn.mdn.mozilla.net,prod-files.mdn.moz.works"
 
 export API_NAME=api
 export API_REPLICAS=2
@@ -72,14 +72,14 @@ export CELERY_WORKERS_CONCURRENCY=4
 export CELERY_WORKERS_QUEUES=mdn_purgeable,mdn_search,mdn_emails,mdn_wiki,celery
 
 export CELERY_BEAT_NAME=celery-beat
-export CELERY_BEAT_REPLICAS=0
+export CELERY_BEAT_REPLICAS=1
 export CELERY_BEAT_CPU_LIMIT=1
 export CELERY_BEAT_CPU_REQUEST=250m
 export CELERY_BEAT_MEMORY_LIMIT=2Gi
 export CELERY_BEAT_MEMORY_REQUEST=256Mi
 
 export CELERY_CAM_NAME=celery-cam
-export CELERY_CAM_REPLICAS=0
+export CELERY_CAM_REPLICAS=1
 export CELERY_CAM_CPU_LIMIT=1
 export CELERY_CAM_CPU_REQUEST=250m
 export CELERY_CAM_MEMORY_LIMIT=4Gi
@@ -97,7 +97,7 @@ export KUMASCRIPT_MEMORY_LIMIT=8Gi
 export KUMASCRIPT_MEMORY_REQUEST=2Gi
 
 export KUMA_IMAGE=quay.io/mozmar/kuma
-export KUMA_IMAGE_TAG=bf7935a
+export KUMA_IMAGE_TAG=c7b8ea9
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH=/mdn
@@ -105,7 +105,7 @@ export KUMA_MOUNT_PATH=/mdn
 export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL=https
 export KUMA_ADMIN_NAMES="MDN devs"
 export KUMA_ALLOW_ROBOTS=False
-export KUMA_ATTACHMENT_HOST=mdn.mozillademos.org
+export KUMA_ATTACHMENT_HOST=prod-files.mdn.moz.works
 export KUMA_CELERY_ALWAYS_EAGER=False
 export KUMA_CELERYD_MAX_TASKS_PER_CHILD=0
 export KUMA_CSRF_COOKIE_SECURE=True
@@ -118,10 +118,10 @@ export KUMA_ES_LIVE_INDEX=True
 export KUMA_LEGACY_ROOT=/mdn/www
 export KUMA_MAINTENANCE_MODE=True
 export KUMA_MEDIA_ROOT=/mdn/www
-export KUMA_MEDIA_URL=https://developer.cdn.mozilla.net/media/
+export KUMA_MEDIA_URL=https://cdn.mdn.mozilla.net/media/
 export KUMA_PROTOCOL="https://"
 export KUMA_SECURE_HSTS_SECONDS=63072000
 export KUMA_SERVE_LEGACY=True
 export KUMA_SESSION_COOKIE_SECURE=True
-export KUMA_STATIC_URL=https://developer.cdn.mozilla.net/static/
+export KUMA_STATIC_URL=https://cdn.mdn.mozilla.net/static/
 export KUMA_WEB_CONCURRENCY=4
