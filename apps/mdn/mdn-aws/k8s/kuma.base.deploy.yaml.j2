@@ -104,6 +104,8 @@ spec:
                   key: memcached-url
             - name: NEW_RELIC_APP_NAME
               value: {{ NEW_RELIC_APP_NAME }}
+            - name: NEW_RELIC_BROWSER_MONITOR_ENABLE
+              value: "{{ NEW_RELIC_BROWSER_MONITOR_ENABLE }}"
             - name: NEW_RELIC_CONFIG_FILE
               value: {{ NEW_RELIC_CONFIG_FILE }}
             - name: NEW_RELIC_MONITOR_MODE
@@ -113,6 +115,8 @@ spec:
                 secretKeyRef:
                   name: newrelic-secrets
                   key: NEW_RELIC_LICENSE_KEY
+            - name: NEW_RELIC_LOG
+              value: "{{ NEW_RELIC_LOG }}"
             - name: PROTOCOL
               value: {{ KUMA_PROTOCOL }}
             - name: SECURE_HSTS_SECONDS

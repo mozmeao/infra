@@ -184,6 +184,8 @@ export NEW_RELIC_LICENSE_KEY ?= foo
 export NEW_RELIC_LICENSE_KEY_BASE64 ?= $(shell echo -n "${NEW_RELIC_LICENSE_KEY}" | base64)
 export NEW_RELIC_CONFIG_FILE ?= /app/etc/newrelic.ini
 export NEW_RELIC_MONITOR_MODE ?= 1
+export NEW_RELIC_LOG ?= stderr
+export NEW_RELIC_BROWSER_MONITOR_ENABLE ?= false
 
 # New Relic app names
 export NEW_RELIC_MONITOR_SUFFIX ?= ${TARGET_ENVIRONMENT}-${K8S_CLUSTER_SHORT_NAME}

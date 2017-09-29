@@ -2,7 +2,7 @@
           ports:
             - containerPort: {{ KUMA_CONTAINER_PORT }}
           command:
-            - newrelic_admin
+            - newrelic-admin
           args:
             - "run-program"
             - "gunicorn"
