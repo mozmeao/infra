@@ -54,7 +54,7 @@ spec:
               value: "{{ NEW_RELIC_LOG }}"
             - name: NEW_RELIC_BROWSER_MONITOR_ENABLE
               value: "{{ NEW_RELIC_BROWSER_MONITOR_ENABLE }}"
-            - name: new_relic__license_key
+            - name: newrelic__license_key
               valueFrom:
                 secretKeyRef:
                   name: newrelic-secrets
