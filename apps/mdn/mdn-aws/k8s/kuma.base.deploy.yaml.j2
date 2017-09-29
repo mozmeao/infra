@@ -110,6 +110,8 @@ spec:
               value: {{ NEW_RELIC_CONFIG_FILE }}
             - name: NEW_RELIC_MONITOR_MODE
               value: "{{ NEW_RELIC_MONITOR_MODE }}"
+            - name: NEW_RELIC_LABELS
+              value: "{{ NEW_RELIC_LABELS }}"
             - name: NEW_RELIC_LICENSE_KEY
               valueFrom:
                 secretKeyRef:

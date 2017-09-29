@@ -186,6 +186,7 @@ export NEW_RELIC_CONFIG_FILE ?= /app/etc/newrelic.ini
 export NEW_RELIC_MONITOR_MODE ?= 1
 export NEW_RELIC_LOG ?= stderr
 export NEW_RELIC_BROWSER_MONITOR_ENABLE ?= false
+export NEW_RELIC_LABELS = "Project:MDN;Cluster:${K8S_CLUSTER_SHORT_NAME}"
 
 # New Relic app names
 export NEW_RELIC_MONITOR_SUFFIX ?= ${TARGET_ENVIRONMENT}-${K8S_CLUSTER_SHORT_NAME}
