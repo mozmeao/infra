@@ -1,8 +1,6 @@
 {% include 'kuma.base.deploy.yaml.j2' %}
           command:
-            - /usr/local/bin/newrelic-admin
-          args:
-            - run-program
             - ./manage.py
+          args:
             - celerybeat
             - "--loglevel=INFO"
