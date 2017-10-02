@@ -186,7 +186,7 @@ export NEW_RELIC_CONFIG_FILE ?= /app/etc/newrelic.ini
 export NEW_RELIC_MONITOR_MODE ?= 1
 export NEW_RELIC_LOG ?= stderr
 export NEW_RELIC_BROWSER_MONITOR_ENABLE ?= false
-export NEW_RELIC_LABELS = "Project:MDN;Cluster:${K8S_CLUSTER_SHORT_NAME}"
+export NEW_RELIC_LABELS ?= Project:MDN;Cluster:${K8S_CLUSTER_SHORT_NAME};Namespace:${K8S_NAMESPACE}
 
 # New Relic app names
 export NEW_RELIC_MONITOR_SUFFIX ?= ${TARGET_ENVIRONMENT}-${K8S_CLUSTER_SHORT_NAME}
@@ -438,6 +438,7 @@ k8s-celery-beat:
 		KUMA_CPU_REQUEST=${CELERY_BEAT_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_BEAT_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
+		NEW_RELIC_APP_NAME="" \
 		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-beat:
@@ -453,6 +454,7 @@ k8s-celery-cam:
 		KUMA_CPU_REQUEST=${CELERY_CAM_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${CELERY_CAM_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS="" \
+		NEW_RELIC_APP_NAME="" \
 		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-cam:
