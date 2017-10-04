@@ -196,6 +196,19 @@ export NEW_RELIC_API_NAME ?= "kuma-backend-${NEW_RELIC_MONITOR_SUFFIX};${NEW_REL
 export NEW_RELIC_KUMASCRIPT_NAME ?= "kumascript-${NEW_RELIC_MONITOR_SUFFIX}"
 export NEW_RELIC_CELERY_NAME ?= "kuma-backend-${NEW_RELIC_MONITOR_SUFFIX};${NEW_RELIC_ROLLUP_NAME}"
 
+export DATADOG_REDIS_DEPLOYMENT_NAME ?= mdn-dd-redis
+export DATADOG_SECRETS_NAME ?= datadog-secrets
+
+export DATADOG_API_KEY ?= foo
+export DATADOG_API_KEY_BASE64 ?= $(shell echo -n "${DATADOG_API_KEY}" | base64)
+
+# cat redisdb.yaml | base64 -w0
+export DATADOG_REDIS_CONFIG ?= foo
+# note the base64 -w0, this prevents base64 from splitting the string w/ newlines
+# see https://kubernetes.io/docs/concepts/configuration/secret/
+export DATADOG_REDIS_CONFIG_BASE64 ?= $(shell echo -n "${DATADOG_REDIS_CONFIG}" | base64 -w0)
+
+
 ###############################
 ### core tasks
 
@@ -359,6 +372,18 @@ k8s-admin-node:
 
 k8s-delete-admin-node:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${ADMIN_NODE_NAME}
+
+k8s-datadog-secrets:
+	j2 datadog-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-datadog-secrets:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${DATADOG_SECRETS_NAME}
+
+k8s-redis-dd:
+	j2 mdn-dd-redis.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-redis-dd:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${DATADOG_REDIS_DEPLOYMENT_NAME}
 
 ### end administrative tasks
 ###############################
