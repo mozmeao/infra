@@ -1,3 +1,11 @@
+
+# Datadog Redis collector for MDN queues
+
+MDN uses Redis as the message transport for Celery, to store tasks that are run
+in the background. Each Celery queue is stored as a list in Redis. By tracking
+the length of these lists in Datadog, we can identify trends over time, and
+alert staff when queued tasks are overwhelming the processing capacity.
+
 ### How does this work?
 
 #### Secrets
@@ -82,9 +90,6 @@ cat /conf.d/redisdb.yaml
 
 
 ### Datadog Dashboard setup
-
-
-tagged by `mdn_redis_prod_us_west_2`
 
 The [MDN Prod Redis](https://app.datadoghq.com/dash/373636/mdn-prod-redis?live=true&page=0&is_auto=false&from_ts=1507135007940&to_ts=1507138607940&tile_size=m) dashboard was created with the following values:
 

@@ -202,7 +202,6 @@ export DATADOG_SECRETS_NAME ?= datadog-secrets
 export DATADOG_API_KEY ?= foo
 export DATADOG_API_KEY_BASE64 ?= $(shell echo -n "${DATADOG_API_KEY}" | base64)
 
-# cat redisdb.yaml | base64 -w0
 export DATADOG_REDIS_CONFIG ?= foo
 # note the base64 -w0, this prevents base64 from splitting the string w/ newlines
 # see https://kubernetes.io/docs/concepts/configuration/secret/
