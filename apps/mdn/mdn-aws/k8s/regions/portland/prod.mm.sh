@@ -97,7 +97,7 @@ export KUMASCRIPT_MEMORY_LIMIT=8Gi
 export KUMASCRIPT_MEMORY_REQUEST=2Gi
 
 export KUMA_IMAGE=quay.io/mozmar/kuma
-export KUMA_IMAGE_TAG=5e3da90
+export KUMA_IMAGE_TAG=87984cd
 export KUMA_IMAGE_PULL_POLICY=IfNotPresent
 # "KUMA_MOUNT_PATH" sets the mount path for the claim of the shared volume.
 export KUMA_MOUNT_PATH=/mdn
