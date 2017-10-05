@@ -18,7 +18,7 @@ module "mdn-cloudfront-stage" {
     aliases = ["stage-cdn.mdn.mozilla.net", "stage-cdn.mdn.moz.works"]
     comment = "Stage CDN for AWS-hosted MDN"
     distribution_name = "MDNStageCDN"
-    domain_name = "developer.allizom.org"
+    domain_name = "stage.mdn.moz.works"
 }
 
 module "mdn-cloudfront-prod" {
