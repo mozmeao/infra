@@ -7,4 +7,4 @@ deis apps:destroy -a snippets-stats --confirm snippets-stats
 
 neres delete-monitor $(get_newrelic_monitor_id "Snippets Stats Tokyo")
 neres delete-monitor $(get_newrelic_monitor_id "Snippets Stats Frankfurt")
-
+neres delete-monitor $(get_newrelic_monitor_id "Snippets Stats Portland")
