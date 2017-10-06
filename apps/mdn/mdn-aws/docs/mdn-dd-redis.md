@@ -21,7 +21,11 @@ echo -n "some_api_key_value" | base64
 `REDIS_CONFIG_FILE` is the base64 encoded contents of the [Datadog Redis configuration](https://docs.datadoghq.com/integrations/redisdb/):
 
 ```
+# Linux
 cat our_mdn_k8s_secret_repo/k8s/secrets/redisdb.prod.yaml | base64 -w0
+#    or
+# MacOS:
+cat our_mdn_k8s_secret_repo/k8s/secrets/redisdb.prod.yaml | base64
 # we must specify -w0 to base64 to prevent newlines splitting the value/
 ```
 
