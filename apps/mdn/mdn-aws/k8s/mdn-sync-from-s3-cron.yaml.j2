@@ -14,6 +14,7 @@ spec:
           containers:
             - name: {{ SYNC_FROM_S3_CONTAINER_NAME }}
               image: {{ BACKUP_IMAGE }}
+              imagePullPolicy: IfNotPresent
               volumeMounts:
                 - mountPath: {{ BACKUP_MOUNT_DIR }}
                   name: {{ SHARED_PVC_NAME }}
