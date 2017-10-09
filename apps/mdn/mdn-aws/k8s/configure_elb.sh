@@ -58,6 +58,14 @@ add_logging() {
         --region ${AWS_REGION}
 }
 
+configure_elb_timeout() {
+    echo "Setting ELB idle timeout"
+    aws elb modify-load-balancer-attributes \
+        --load-balancer-name ${ELB_NAME} \
+        --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":${WEB_GUNICORN_TIMEOUT}}}" \
+        --region ${AWS_REGION}
+}
+
 # wait until the ELB is ready to be configured
 wait_for_elb
 export ELB_NAME=$(get_elb_name)
@@ -67,3 +75,5 @@ create_redirector_listener
 add_elb_access_security_group
 # add S3 bucket logging
 add_logging
+# set a longer ELB idle timeout
+configure_elb_timeout
