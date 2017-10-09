@@ -36,6 +36,8 @@ export KUMASCRIPT_SERVICE_PROTOCOL ?= TCP
 export WEB_NAME ?= web
 export WEB_REPLICAS ?= 1
 export WEB_GUNICORN_WORKERS ?= 4
+# NOTE: changing WEB_GUNICORN_TIMEOUT requires updating ELB timeouts
+#       See the function configure_elb_timeout() in configure_elb.sh
 export WEB_GUNICORN_TIMEOUT ?= 120
 export WEB_CPU_LIMIT ?= 2
 export WEB_CPU_REQUEST ?= 100m
