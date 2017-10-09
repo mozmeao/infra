@@ -62,7 +62,7 @@ configure_elb_timeout() {
     echo "Setting ELB idle timeout"
     aws elb modify-load-balancer-attributes \
         --load-balancer-name ${ELB_NAME} \
-        --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":120}}" \
+        --load-balancer-attributes "{\"ConnectionSettings\":{\"IdleTimeout\":${WEB_GUNICORN_TIMEOUT}}}" \
         --region ${AWS_REGION}
 }
 
