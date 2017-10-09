@@ -95,7 +95,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     prefix          = "cflogs"
   }
 
-  aliases = ["surveillance.mozilla.org"]
+  aliases = ["surveillance.mozilla.org", "surveillance.moz.works"]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
