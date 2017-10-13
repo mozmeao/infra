@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 export TERRAFORM_ENV="frankfurt"
-export MDN_PROVISIONING_REGION="us-west-2"
+export MDN_PROVISIONING_REGION="eu-central-1"
 export TF_VAR_region="${MDN_PROVISIONING_REGION}"
 export TF_VAR_subnets="subnet-10685f78,subnet-10685f78"
 # nodes.frankfurt.moz.works
