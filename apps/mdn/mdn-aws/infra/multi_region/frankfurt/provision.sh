@@ -3,7 +3,7 @@
 export TERRAFORM_ENV="frankfurt"
 export MDN_PROVISIONING_REGION="eu-central-1"
 export TF_VAR_region="${MDN_PROVISIONING_REGION}"
-export TF_VAR_subnets="subnet-10685f78,subnet-10685f78"
+export TF_VAR_subnets="subnet-10685f78,subnet-57ef9f2d"
 # nodes.frankfurt.moz.works
 export TF_VAR_nodes_security_group="sg-e73a4e8c"
 export TF_VAR_vpc_id="vpc-4d036a25"
