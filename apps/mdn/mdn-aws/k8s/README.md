@@ -35,9 +35,8 @@ configuring the AWS ELB's that will be created as part of the
 `make k8s-services` command.
 
 ```sh
-cd path/to/the/root/of/your/infra/repo
-cd apps/mdn/mdn-aws/k8s
-source regions/portland/prod.mdn.moz.works.sh
+cd infra/apps/mdn/mdn-aws/k8s
+source regions/portland/prod.sh
 make k8s-ns
 make k8s-shared-storage
 make k8s-services
@@ -48,9 +47,8 @@ make k8s-services
 - Deploying
 
 ```sh
-cd path/to/the/root/of/your/infra/repo
-cd apps/mdn/mdn-aws/k8s
-source regions/portland/prod.mdn.moz.works.sh
+cd infra/apps/mdn/mdn-aws/k8s
+source regions/portland/prod.sh
 export KUMA_IMAGE_TAG=<tag-of-the-kuma-image-you-want-to-deploy>
 export KUMASCRIPT_IMAGE_TAG=<tag-of-the-kumascript-image-you-want-to-deploy>
 make k8s-deployments
@@ -61,9 +59,8 @@ make k8s-deployments
 - Rolling-out an update only to the Kuma-based deployments
 
 ```sh
-cd path/to/the/root/of/your/infra/repo
-cd apps/mdn/mdn-aws/k8s
-source regions/portland/prod.mdn.moz.works.sh
+cd infra/apps/mdn/mdn-aws/k8s
+source regions/portland/prod.sh
 export KUMA_IMAGE_TAG=<tag-of-the-kuma-image-you-want-to-deploy>
 make k8s-kuma-deployments
 ```
@@ -79,9 +76,8 @@ make k8s-kuma-rollback
 - Rolling-out an update only to the Kumascript-based deployments
 
 ```sh
-cd path/to/the/root/of/your/infra/repo
-cd apps/mdn/mdn-aws/k8s
-source regions/portland/prod.mdn.moz.works.sh
+cd infra/apps/mdn/mdn-aws/k8s
+source regions/portland/prod.sh
 export KUMASCRIPT_IMAGE_TAG=<tag-of-the-kumascript-image-you-want-to-deploy>
 make k8s-kumascript-deployments
 ```
@@ -97,9 +93,8 @@ make k8s-kumascript-rollback
 - Rolling-out an update to the Kuma and Kumascript-based deployments
 
 ```sh
-cd path/to/the/root/of/your/infra/repo
-cd apps/mdn/mdn-aws/k8s
-source regions/portland/prod.mdn.moz.works.sh
+cd infra/apps/mdn/mdn-aws/k8s
+source regions/portland/prod.sh
 export KUMA_IMAGE_TAG=<tag-of-the-kuma-image-you-want-to-deploy>
 export KUMASCRIPT_IMAGE_TAG=<tag-of-the-kumascript-image-you-want-to-deploy>
 make k8s-deployments
