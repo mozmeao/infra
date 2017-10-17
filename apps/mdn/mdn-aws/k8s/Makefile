@@ -125,6 +125,7 @@ export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=http://${API_SERVICE_NAME}/en-US/docs/{p
 
 # MDN backup tool
 export BACKUP_SERVICE_NAME ?= mdn-backup-${TARGET_ENVIRONMENT}
+export RESTORE_SERVICE_NAME ?= mdn-restore-${TARGET_ENVIRONMENT}
 export SYNC_FROM_S3_SERVICE_NAME ?= mdn-s3-sync-${TARGET_ENVIRONMENT}
 export BACKUP_SECRETS_NAME ?= mdn-backup-secrets
 
@@ -149,6 +150,7 @@ export SYNC_FROM_S3_CONTAINER_NAME ?= mdn-sync
 export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:758c79a0fde3
 # cronjob syntax here: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
 export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
+export RESTORE_SERVICE_SCHEDULE ?= "@hourly"
 export SYNC_FROM_S3_SCHEDULE ?= "@hourly"
 
 
@@ -360,6 +362,13 @@ k8s-backup-cron:
 
 k8s-delete-backup-cron:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${BACKUP_SERVICE_NAME}
+
+# restore data from S3 to EFS
+k8s-restore-cron:
+	j2 mdn-restore-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-restore-cron:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${RESTORE_SERVICE_NAME}
 
 # pull files from S3 (SCL3), for dev/stage
 k8s-sync-from-s3-cron:
