@@ -280,6 +280,19 @@ k8s-kuma-history:
 k8s-kumascript-history:
 	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${KUMASCRIPT_NAME}
 
+k8s-db-migration-job:
+	env KUMA_NAME=mdn-db-migration \
+		KUMA_CPU_LIMIT=${WEB_CPU_LIMIT} \
+		KUMA_MEMORY_LIMIT=${WEB_MEMORY_LIMIT} \
+		KUMA_CPU_REQUEST=${WEB_CPU_REQUEST} \
+		KUMA_MEMORY_REQUEST=${WEB_MEMORY_REQUEST} \
+		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
+		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
+	j2 mdn-db-migration-job.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-db-migration-job:
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-db-migration
+
 ### end core tasks
 ###############################
 
