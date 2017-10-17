@@ -54,7 +54,7 @@ export WEB_MEMORY_REQUEST=2Gi
 export WEB_ALLOWED_HOSTS="developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,prod.mdn.moz.works"
 
 export API_NAME=api
-export API_REPLICAS=4
+export API_REPLICAS=2
 export API_GUNICORN_WORKERS=4
 export API_GUNICORN_TIMEOUT=120
 export API_CPU_LIMIT=4
