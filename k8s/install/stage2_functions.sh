@@ -90,7 +90,7 @@ install_newrelic() {
 
 install_k8s_dashboard() {
     echo "Installing k8s dashboard"
-    kubectl create -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
+    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
 }
 
 install_heapster() {

@@ -12,20 +12,6 @@ terraform {
 
 ##### Buckets
 
-module "bucket-stage" {
-  source       = "../tf/storage"
-  environment  = "stage"
-  region       = "${var.region}"
-  region_short = "${var.region_short}"
-}
-
-module "bucket-prod" {
-  source       = "../tf/storage"
-  environment  = "prod"
-  region       = "${var.region}"
-  region_short = "${var.region_short}"
-}
-
 module "prod-alerts" {
   source = "../tf/alerting"
   region = "${var.region}"
