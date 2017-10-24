@@ -1,6 +1,6 @@
 # MDN AWS
 
-- [Support documentation]()
+- [Support documentation](https://github.com/mozmeao/infra/blob/master/apps/mdn/mdn-aws/docs/mdn-support.md)
 - [Deployment documentation](https://github.com/mozmeao/infra/blob/master/apps/mdn/mdn-aws/k8s/README.md)
 
 ## MDN AWS provisioning

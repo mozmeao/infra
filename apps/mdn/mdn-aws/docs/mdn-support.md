@@ -148,9 +148,13 @@ Example schedules:
 - `@hourly` - run every hour
 - `*/1 * * * *` - run every minute
 
-#### Datadog/Redis crontask
 
-- Docs for the `mdn-backup` crontask are located [here](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron).
+#### MDN backup cronjob
+
+- Docs for the `mdn-backup` cronjob are located [here](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron).
+
+#### Datadog/Redis cronjob
+
 - Docs for the Datadog/Redis cron tasks are located [here](https://github.com/mozmeao/infra/blob/master/apps/mdn/mdn-aws/docs/mdn-dd-redis.md).
 
 ### Persistent Volumes
@@ -281,3 +285,49 @@ watch 'kubectl get nodes | tail -n +2 | grep -v master | wc -l'
 
 There are limits that apply to using VPC ACLs documented [here](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Appendix_Limits.html#vpc-limits-nacls).
 
+### Manual Cluster failover
+
+- **verify the Frankfurt read replica**
+    - `eu-central-1` (Frankfurt) has a read-replica of the MDN production database
+    - the replica is currently a `db.t2.medium`, while the prod DB is `db.m4.xlarge`
+        - this may be ok in maintenance mode, but if you are going to enable write traffic, the instance type must be scaled up. This will most likely cause significant down time (1+ hours) while the instance is in backup/restore state.
+    - although we have alerting in place to notify the SRE team in the event of a replication error, it's a good idea to check the replication status on the RDS details page for the `mdn-prod` MySQL instance.
+        - specifically, check the `DB Instance Status`, `Read Replica Source`, `Replication State`, and `Replication Error` values.
+    - decide if [promoting the read-replica](http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html#USER_ReadRepl.Promote) to a master is appropriate.
+        - if data is written to a promoted instance, and failover back to the Portland cluster is desirable, a full DB backup and restore in Portland is required.
+        - the replica is automatically rebooted before being promoted to a full instance.
+- **ensure image versions are up to date**
+    - [This document](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/k8s) describes how to set and deploy new images.
+    - Most MySQL changes should already be replicated to the read-replica, however, if you're reading this, chances are things are broken. Ensure that the DB schema is correct for the iamges you're deploying.
+- **manually copy S3 files to EFS**
+    - [This script](https://github.com/mozmeao/infra/blob/master/apps/mdn/utils/mdn_backup_cron/image/mdn_sync.sh) can be used to pull files from S3 to EFS.
+        - the script must be run from a pod that has the MDN EFS mount
+        - the script depends on the AWS cli being installed
+        - the `mdn-admin` deployment is a good place to run this script
+- **scale cluster and pods**
+    - the [prod deployment](https://github.com/mozmeao/infra/tree/master/apps/mdn/mdn-aws/k8s) yaml contains the correct number of replicas for each pod, but just in case:
+
+        ```
+        kubectl -n mdn-prod scale --replicas=20 deployment/web
+        kubectl -n mdn-prod scale --replicas=4 deployment/api
+        etc
+        ```
+- **DNS**
+    - Overview
+        - `developer.mozilla.org` -> `mdn-prod.moz.works` CNAME -> `prod.mdn.moz.works` (Traffic policy, CNAME) -> ELB CNAME 
+            - The `mdn-prod.moz.works` CNAME can eventually be removed
+        - `mdn.mozillademos.org` -> CNAME `mdn-demos.moz.works` -> ELB CNAME
+        - CloudFront
+            - origin: `prod.mdn.moz.works`:
+            - CNAMEs: `cdn.mdn.mozilla.net`, `cdn.mdn.moz.works`
+            - `cdn.mdn.moz.works` points at our Cloudfront distribution
+    - point the `prod.mdn.moz.works` traffic policy at the Frankfurt ELB
+    - point `mdn-demos.moz.works` at the Frankfurt ELB
+    - Cloudfront shouldn't need any changes, as it's origin is `prod.mdn.moz.works`. 
+- **Cluster backup**
+    - If the cluster is running in maintanence mode, the backup cronjob does not need to be enabled.
+    - In write mode, the [backup cron job](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron) will need to be manually run as the Frankfurt cluster does not have K8s cronjobs enabled.
+        - [This script](https://github.com/mozmeao/infra/blob/master/apps/mdn/utils/mdn_backup_cron/image/mdn_sync.sh) can be used to backup to S3.
+            - the script must be run from a pod that has the MDN EFS mount
+            - the script depends on the AWS cli being installed
+            - the `mdn-admin` deployment is a good place to run this script
