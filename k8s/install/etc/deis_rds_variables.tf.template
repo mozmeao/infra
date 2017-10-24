@@ -44,7 +44,7 @@ variable "engine_version" {
 }
 
 variable "instance_class" {
-  default     = "db.m3.xlarge"
+  default     = "db.t2.small"
   description = "Instance class"
 }
 
