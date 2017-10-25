@@ -28,7 +28,7 @@ module "mdn-cloudfront-prod" {
     aliases = ["cdn.mdn.mozilla.net", "cdn.mdn.moz.works"]
     comment = "Prod CDN for AWS-hosted MDN"
     distribution_name = "MDNProdCDN"
-    domain_name = "prod.mdn.moz.works"
+    domain_name = "developer.mozilla.org"
 }
 
 
