@@ -11,6 +11,7 @@ terraform {
 }
 
 
+# Primary CDN
 module "mdn-cloudfront-stage" {
     source = "./cloudfront"
 
@@ -31,4 +32,16 @@ module "mdn-cloudfront-prod" {
     domain_name = "developer.mozilla.org"
 }
 
+
+# Attachments origin
+
+module "mdn-cloudfront-attachments-prod" {
+    source = "./cloudfront_attachments"
+
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/4322464c-b6d9-44d9-914d-3554461bcbb3"
+    aliases = ["mdn-demos.moz.works"]
+    comment = "Prod CDN for AWS-hosted MDN Attachments"
+    distribution_name = "MDNProdAttachmentsCDN"
+    domain_name = "mdn.mozillademos.org"
+}
 
