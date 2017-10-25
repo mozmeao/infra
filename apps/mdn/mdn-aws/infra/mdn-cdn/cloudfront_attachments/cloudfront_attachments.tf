@@ -18,7 +18,6 @@ resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
   custom_error_response {
     error_caching_min_ttl = 300
     error_code            = 404
-    response_page_path    = "/404.html"
   }
 
   default_cache_behavior {
