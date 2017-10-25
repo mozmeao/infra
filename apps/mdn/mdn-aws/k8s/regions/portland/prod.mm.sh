@@ -106,6 +106,7 @@ export KUMA_ACCOUNT_DEFAULT_HTTP_PROTOCOL=https
 export KUMA_ADMIN_NAMES="MDN devs"
 export KUMA_ALLOW_ROBOTS=True
 export KUMA_ATTACHMENT_HOST=mdn.mozillademos.org
+export KUMA_ATTACHMENT_ORIGIN=mdn-demos-origin.moz.works
 export KUMA_CELERY_ALWAYS_EAGER=False
 export KUMA_CELERYD_MAX_TASKS_PER_CHILD=0
 export KUMA_CSRF_COOKIE_SECURE=True
