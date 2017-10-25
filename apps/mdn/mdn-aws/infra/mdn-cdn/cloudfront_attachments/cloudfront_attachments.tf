@@ -26,7 +26,7 @@ resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
     compress        = true
 
     default_ttl     = 86400
-    max_ttl         = 31536000
+    max_ttl         = 432000
     min_ttl         = 0
 
     smooth_streaming       = false
