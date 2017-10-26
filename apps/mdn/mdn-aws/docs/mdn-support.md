@@ -305,7 +305,7 @@ There are limits that apply to using VPC ACLs documented [here](http://docs.aws.
 ┌────────────▼────────────┐        ┌────────────▼────────────┐           ┌────────────▼────────────┐   
 │                         │        │                         │           │                         │   
 │ Cloudfront distribution ├────────▶ prod.mdn.moz.works      ◀────┐      │ Cloudfront distribution │   
-│                         │        │ CNAME                   │    │      │                         │   
+│                         │        │ CNAME  Traffic policy   │    │      │                         │   
 └─────────────────────────┘        └────────────┬────────────┘    │      └────────────┬────────────┘   
                                                 │                 │                   │                
                                                 │                 │                   │                
