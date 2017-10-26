@@ -51,7 +51,7 @@ export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=500m
 export WEB_MEMORY_LIMIT=8Gi
 export WEB_MEMORY_REQUEST=2Gi
-export WEB_ALLOWED_HOSTS="developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,prod.mdn.moz.works"
+export WEB_ALLOWED_HOSTS="developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,mdn-demos-origin.moz.works,prod.mdn.moz.works"
 
 export API_NAME=api
 export API_REPLICAS=2
