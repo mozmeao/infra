@@ -72,3 +72,4 @@ resource "aws_cloudfront_distribution" "sumo-cf-dist" {
     minimum_protocol_version = "TLSv1"
   }
 }
+
