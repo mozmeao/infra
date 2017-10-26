@@ -285,6 +285,45 @@ watch 'kubectl get nodes | tail -n +2 | grep -v master | wc -l'
 
 There are limits that apply to using VPC ACLs documented [here](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Appendix_Limits.html#vpc-limits-nacls).
 
+### <a name="mdndns"></a>MDN DNS 
+
+```
+┌─────────────────────────┐        ┌─────────────────────────┐           ┌─────────────────────────┐   
+│                         │        │                         │           │                         │   
+│ cdn.mdn.mozilla.net     │        │  developer.mozilla.org  │           │ mdn.mozillademos.org    │   
+│                         │        │                         │           │                         │   
+└────────────┬────────────┘        └────────────┬────────────┘           └───────────┬─────────────┘   
+             │                                  │                                    │                 
+             │                                  │                                    │                 
+┌────────────▼────────────┐        ┌────────────▼────────────┐           ┌───────────▼─────────────┐   
+│                         │        │                         │           │                         │   
+│ cdn.mdn.moz.works       │        │ mdn-prod.moz.works      │           │ mdn-demos.moz.works     │   
+│ CNAME                   │        │ CNAME                   │           │ CNAME                   │   
+└────────────┬────────────┘        └────────────┬────────────┘           └───────────┬─────────────┘   
+             │                                  │                                    │                 
+             │                                  │                                    │                 
+┌────────────▼────────────┐        ┌────────────▼────────────┐           ┌───────────▼─────────────┐   
+│                         │        │                         │           │                         │   
+│ Cloudfront distribution ├────────▶ prod.mdn.moz.works      ◀────┐      │ prod.mdn.moz.works      │   
+│                         │        │ CNAME                   │    │      │ CNAME                   │   
+└─────────────────────────┘        └────────────┬────────────┘    │      └───────────┬─────────────┘   
+                                                │                 │                  │                 
+                                                │                 │                  │                 
+                                   ┌────────────▼────────────┐    │      ┌───────────▼─────────────┐   
+                                   │                         │    │      │                         │   
+                                   │ us-west-2 ELB           │    │      │ Cloudfront distribution │   
+                                   │                         │    │      │                         │   
+                                   └─────────────────────────┘    │      └───────────┬─────────────┘   
+                                                                  │                  │                 
+                                                                  │                  │                 
+                                                                  │      ┌───────────▼────────────────┐
+                                                                  │      │                            │
+                                                                  └──────│ mdn-demos-origin.moz.works │
+                                                                         │ CNAME                      │
+                                                                         └────────────────────────────┘
+```
+
+
 ### Manual Cluster failover
 
 - **verify the Frankfurt read replica**
@@ -313,14 +352,7 @@ There are limits that apply to using VPC ACLs documented [here](http://docs.aws.
         etc
         ```
 - **DNS**
-    - Overview
-        - `developer.mozilla.org` -> `mdn-prod.moz.works` CNAME -> `prod.mdn.moz.works` (Traffic policy, CNAME) -> ELB CNAME 
-            - The `mdn-prod.moz.works` CNAME can eventually be removed
-        - `mdn.mozillademos.org` -> CNAME `mdn-demos.moz.works` -> ELB CNAME
-        - CloudFront
-            - origin: `prod.mdn.moz.works`:
-            - CNAMEs: `cdn.mdn.mozilla.net`, `cdn.mdn.moz.works`
-            - `cdn.mdn.moz.works` points at our Cloudfront distribution
+    - see the [MDN DNS](#mdndns) section for additional details
     - point the `prod.mdn.moz.works` traffic policy at the Frankfurt ELB
     - point `mdn-demos.moz.works` at the Frankfurt ELB
     - Cloudfront shouldn't need any changes, as it's origin is `prod.mdn.moz.works`. 
