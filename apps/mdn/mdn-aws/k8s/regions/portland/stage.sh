@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo '--> Setting environment to STAGE in PORTLAND'
 
-export KUBECONFIG=~/.kube/portland.config
+export KUBECONFIG=${HOME}/.kube/portland.config
 
 # Define defaults for environment variables that personalize the commands.
 export TARGET_ENVIRONMENT=stage
