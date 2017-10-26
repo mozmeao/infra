@@ -34,7 +34,7 @@
             - name: ATTACHMENT_HOST
               value: {{ KUMA_ATTACHMENT_HOST }}
             - name: ATTACHMENT_ORIGIN
-              value: {{ KUMA_ATTACHMENT_ORIGIN | default(KUMA_ATTACHMENT_HOST) }}
+              value: {{ KUMA_ATTACHMENT_ORIGIN | default(KUMA_ATTACHMENT_HOST, True) }}
             - name: BROKER_URL
               valueFrom:
                 secretKeyRef:
