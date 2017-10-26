@@ -27,7 +27,7 @@ module "sumo-user-media-stage-bucket" {
 }
 
 module "sumo-user-media-prod-bucket" {
-    bucket_name = "sumo-user-media-[rpd]"
+    bucket_name = "sumo-user-media-prod"
     iam_policy_name = "SUMOUserMediaProd"
     logging_bucket_id = "${aws_s3_bucket.logs.id}"
     logging_prefix = "prod-logs/"
@@ -54,3 +54,4 @@ module "sumo-user-media-prod-cf" {
     distribution_name = "SUMOMediaProdCDN"
     domain_name = "sumo-user-media-prod.s3-website-us-west-2.amazonaws.com"
 }
+
