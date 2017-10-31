@@ -209,7 +209,7 @@ export DATADOG_API_KEY_BASE64 ?= $(shell echo -n "${DATADOG_API_KEY}" | base64)
 export DATADOG_REDIS_CONFIG ?= foo
 # note the base64 -w0, this prevents base64 from splitting the string w/ newlines
 # see https://kubernetes.io/docs/concepts/configuration/secret/
-export DATADOG_REDIS_CONFIG_BASE64 ?= $(shell echo -n "${DATADOG_REDIS_CONFIG}" | base64 -w0)
+export DATADOG_REDIS_CONFIG_BASE64 ?= $(shell echo -n "${DATADOG_REDIS_CONFIG}" | base64)
 
 
 ###############################
@@ -280,7 +280,7 @@ k8s-kuma-history:
 k8s-kumascript-history:
 	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${KUMASCRIPT_NAME}
 
-k8s-db-migration-job:
+k8s-db-migration-job: k8s-delete-db-migration-job
 	env KUMA_NAME=mdn-db-migration \
 		KUMA_CPU_LIMIT=${WEB_CPU_LIMIT} \
 		KUMA_MEMORY_LIMIT=${WEB_MEMORY_LIMIT} \
@@ -289,6 +289,7 @@ k8s-db-migration-job:
 		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
 	j2 mdn-db-migration-job.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	env JOB_NAME=mdn-db-migration ./wait_for_job.sh
 
 k8s-delete-db-migration-job:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-db-migration
