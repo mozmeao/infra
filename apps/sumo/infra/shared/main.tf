@@ -17,6 +17,16 @@ resource "aws_s3_bucket" "logs" {
   acl    = "log-delivery-write"
 }
 
+
+module "sumo-user-media-dev-bucket" {
+    bucket_name = "sumo-user-media-dev"
+    iam_policy_name = "SUMOUserMediaDev"
+    logging_bucket_id = "${aws_s3_bucket.logs.id}"
+    logging_prefix = "dev-logs/"
+    region = "${var.region}"
+    source = "./s3"
+}
+
 module "sumo-user-media-stage-bucket" {
     bucket_name = "sumo-user-media-stage"
     iam_policy_name = "SUMOUserMediaStage"
@@ -33,6 +43,16 @@ module "sumo-user-media-prod-bucket" {
     logging_prefix = "prod-logs/"
     region = "${var.region}"
     source = "./s3"
+}
+
+module "sumo-user-media-dev-cf" {
+    source = "./cloudfront"
+
+    acm_cert_arn = "TODO"
+    aliases = ["dev-cdn.sumo.mozilla.net", "dev-cdn.sumo.moz.works"]
+    comment = "Dev CDN for SUMO user media"
+    distribution_name = "SUMOMediaDevCDN"
+    domain_name = "sumo-user-media-dev.s3-website-us-west-2.amazonaws.com"
 }
 
 module "sumo-user-media-stage-cf" {
