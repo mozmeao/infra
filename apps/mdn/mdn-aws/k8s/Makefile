@@ -207,7 +207,7 @@ export DATADOG_API_KEY ?= foo
 export DATADOG_API_KEY_BASE64 ?= $(shell echo -n "${DATADOG_API_KEY}" | base64)
 
 export DATADOG_REDIS_CONFIG ?= foo
-# note the base64 -w0, this prevents base64 from splitting the string w/ newlines
+# Note that the string should never be split w/newlines.
 # see https://kubernetes.io/docs/concepts/configuration/secret/
 export DATADOG_REDIS_CONFIG_BASE64 ?= $(shell echo -n "${DATADOG_REDIS_CONFIG}" | base64)
 
