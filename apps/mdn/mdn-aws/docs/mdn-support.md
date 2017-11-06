@@ -322,10 +322,12 @@ There are limits that apply to using VPC ACLs documented [here](http://docs.aws.
 - **verify the Frankfurt read replica**
     - `eu-central-1` (Frankfurt) has a read-replica of the MDN production database
     - the replica is currently a `db.t2.medium`, while the prod DB is `db.m4.xlarge`
-        - this may be ok in maintenance mode, but if you are going to enable write traffic, the instance type must be scaled up. This will most likely cause significant down time (1+ hours) while the instance is in backup/restore state.
+        - this may be ok in maintenance mode, but if you are going to enable write traffic, the instance type must be scaled up. 
+            - SRE's performed a manual instance type change on the Frankfurt read-replica, and it took ~10 minutes to change from a `db.t2.medium` to a `db.m4.xlarge`. 
     - although we have alerting in place to notify the SRE team in the event of a replication error, it's a good idea to check the replication status on the RDS details page for the `mdn-prod` MySQL instance.
         - specifically, check the `DB Instance Status`, `Read Replica Source`, `Replication State`, and `Replication Error` values.
     - decide if [promoting the read-replica](http://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html#USER_ReadRepl.Promote) to a master is appropriate.
+        - it's preferrable to have a multi-AZ RDS instance, as we can take snapshots against the failover instance (RDS does this by default in a multi-AZ setup).
         - if data is written to a promoted instance, and failover back to the Portland cluster is desirable, a full DB backup and restore in Portland is required.
         - the replica is automatically rebooted before being promoted to a full instance.
 - **ensure image versions are up to date**
