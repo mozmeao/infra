@@ -48,6 +48,17 @@ check_state_store() {
     set -e
 }
 
+banner() {
+    echo "   _____ _    _ __  __  ____    _____        __           ";
+    echo "  / ____| |  | |  \/  |/ __ \  |_   _|      / _|          ";
+    echo " | (___ | |  | | \  / | |  | |   | |  _ __ | |_ _ __ __ _ ";
+    echo "  \___ \| |  | | |\/| | |  | |   | | | '_ \|  _| '__/ _\` |";
+    echo "  ____) | |__| | |  | | |__| |  _| |_| | | | | | | | (_| |";
+    echo " |_____/ \____/|_|  |_|\____/  |_____|_| |_|_| |_|  \__,_|";
+    echo "                                                          ";
+    echo "                                                          ";
+}
+
 tf_main() {
     # it's safe to always init the s3 backend
     terraform init
@@ -72,6 +83,7 @@ tf_main() {
     rm $PLAN
 }
 
+banner
 check_prereqs
 check_state_store
 tf_main
