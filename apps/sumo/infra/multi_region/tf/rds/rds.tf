@@ -49,11 +49,11 @@ variable "mysql_backup_retention_days" {
 }
 
 variable "mysql_backup_window" {
-  default = "00:00-00:30"
+  default = "12:00-12:30"
 }
 
 variable "mysql_maintenance_window" {
-  default = "Sun:00:31-Sun:01:01"
+  default = "Sun:11:30-Sun:11:59"
 }
 
 variable "mysql_storage_encrypted" {
