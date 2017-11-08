@@ -29,7 +29,7 @@ export WEB_SERVICE_TYPE=LoadBalancer
 export WEB_SERVICE_PORT=443
 export WEB_SERVICE_TARGET_PORT=8000
 export WEB_SERVICE_PROTOCOL=TCP
-export WEB_SERVICE_CERT_ARN=arn:aws:acm:us-west-2:236517346949:certificate/2920f6bd-820a-4225-9dca-d0620c25da7c
+export WEB_SERVICE_CERT_ARN=arn:aws:acm:us-west-2:236517346949:certificate/068df2ec-5165-4728-a084-149dc7658ffa
 
 export API_SERVICE_NAME=api
 export API_SERVICE_TYPE=ClusterIP
@@ -51,7 +51,7 @@ export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=500m
 export WEB_MEMORY_LIMIT=8Gi
 export WEB_MEMORY_REQUEST=2Gi
-export WEB_ALLOWED_HOSTS="developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,mdn-demos-origin.moz.works,prod.mdn.moz.works"
+export WEB_ALLOWED_HOSTS="developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,mdn-demos-origin.moz.works,prod.mdn.moz.works,developer.mozilla.com,devmo.developer.mozilla.org,mdn.mozilla.org,developer-new.mozilla.org,developers.mozilla.org"
 
 export API_NAME=api
 export API_REPLICAS=2
