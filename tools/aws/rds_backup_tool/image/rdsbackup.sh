@@ -11,7 +11,6 @@
 # BACKUP_BUCKET: where to write backup file, includes s3:// prefix
 # BACKUP_DIR: directory in the container mapped to EBS volume
 # BACKUP_PASSWORD: symmetric encryption password
-# KEEP_N_DAYS: delete files older than KEEP_N_DAYS for a particular DBNAME
 # AWS_ACCESS_KEY_ID
 # AWS_SECRET_ACCESS_KEY
 
@@ -49,15 +48,6 @@ aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
 EOF
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
-}
-
-# remove files for the current DBNAME older than KEEP_N_DAYS
-cleanup_old() {
-    echo "Cleaning up old files in ${BACKUP_OUTPUT_DIR}"
-    echo "Removing the following old local backups:"
-    find ${BACKUP_OUTPUT_DIR} -mtime +${KEEP_N_DAYS} -type f || true
-    find ${BACKUP_OUTPUT_DIR} -mtime +${KEEP_N_DAYS} -type f -delete || true
-    echo "Finished file cleanup"
 }
 
 push_to_s3() {
@@ -149,7 +139,6 @@ fi
 echo "${DBNAME} backup started at $(date)"
 check_requirements
 fix_creds
-cleanup_old
 perform_backup
 encrypt_backup
 push_to_s3
