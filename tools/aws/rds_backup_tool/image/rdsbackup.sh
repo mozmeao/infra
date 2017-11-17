@@ -123,8 +123,6 @@ notify_deadmanssnitch() {
 export MYSQL_BACKUP_OPTIONS="${BACKUP_CMD_PARAMS:- --dump-date --compress --single-transaction}"
 export PGSQL_BACKUP_OPTIONS="${BACKUP_CMD_PARAMS:- }"
 
-export KEEP_N_DAYS="${KEEP_N_DAYS:-10}"
-
 export BACKUP_OUTPUT_DIR="${BACKUP_DIR}/${DBNAME}"
 export BASE_FILENAME="${DBNAME}.$( date +%F ).sql.gz"
 export BACKUP_FILENAME="${BACKUP_OUTPUT_DIR}/${BASE_FILENAME}"
