@@ -67,7 +67,7 @@ data:
 
 ### 1. Create the secret in Kubernetes
 
-Next, create the secret in Kubernets with the following command:
+Next, create the secret in Kubernetes with the following command:
 
 ```
 kubectl -n rds-backups create -f rds-backup-<dbname>-secrets-<region>.yaml

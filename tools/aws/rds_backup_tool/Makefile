@@ -33,4 +33,3 @@ backup-frankfurt:
 		BACKUP_POD_NAME=frankfurt \
 	${RENDER_POD_CMD}
 
-.PHONY: mdn-backup frankfurt
