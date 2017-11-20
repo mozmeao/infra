@@ -3,4 +3,4 @@ fluentd:
   syslog_port:
   limits:
     cpu: 100m
-    memory: 1024Mi
+    memory: 768Mi
