@@ -26,7 +26,7 @@ data:
 
 - `AWS_ACCESS_KEY_ID` - access key ID for the user created above with access to the backup bucket
 - `AWS_SECRET_ACCESS_KEY` - secret key ID for the user created above with access to the backup bucket
-- `BACKUP_PASSWORD` - a password used for GPG symmetric encryption. It's up to the engineer installing this service to decide if each region uses a unique or shared password.
+- `BACKUP_PASSWORD` - a password used for OpenSSL AES 256 symmetric encryption. It's up to the engineer installing this service to decide if each region uses a unique or shared password.
 
 ```
 kubectl create namespace rds-backups
@@ -135,8 +135,16 @@ kubectl -n rds-backups get pods -a
 You can download the backup from either the AWS web console, or the AWS cli. 
 
 ```
-aws s3 cp s3://meao-rds-backups/backups/developer_mozilla_org/developer_mozilla_org.2017-11-17.sql.gz.gpg ./some_local_dir
-gpg decrypt developer_mozilla_org.2017-11-17.sql.gz.gpg | zcat | mysql ...
+aws s3 cp s3://meao-rds-backups/backups/developer_mozilla_org/developer_mozilla_org.2017-11-17.sql.gz.aes ./some_local_dir
+
+# stream directly to dbms
+openssl aes-256-cbc -in developer_mozilla_org.2017-11-17.sql.gz.aes -d -pass pass:foobar123 | zcat | mysql ...
+# decrypt to a file
+openssl aes-256-cbc -in developer_mozilla_org.2017-11-17.sql.gz.aes -d -pass pass:foobar123 -out developer_mozilla_org.2017-11-17.sql.gz
+
+
+
+
 ```
 
 ## Initial setup

@@ -57,20 +57,6 @@ push_to_s3() {
     echo "Finished pushing to S3"
 }
 
-encrypt_backup() {
-    echo "Encrypting ${BACKUP_FILENAME}"
-    echo -n "${BACKUP_PASSWORD}" | \
-        gpg --batch \
-            --passphrase-fd 0 \
-            --symmetric \
-            --cipher-algo aes256 \
-            ${BACKUP_FILENAME}
-    echo "Finished encrypting ${BACKUP_FILENAME}"
-    echo "Removing original: ${BACKUP_FILENAME}"
-    rm ${BACKUP_FILENAME}
-    echo "Finished encrypting"
-}
-
 postgres_backup() {
     echo "Starting Postgresql backup on $(date)"
     export PGUSER="${DBUSER}"
@@ -78,7 +64,11 @@ postgres_backup() {
     export PGHOST="${DBHOST}"
     export PGPORT="${DBPORT}"
     export PGDATABASE="${DBNAME}"
-    pg_dump "${DBNAME}" | gzip > ${BACKUP_FILENAME}
+    pg_dump "${DBNAME}" \
+        | gzip \
+        | openssl aes-256-cbc -e -salt \
+            -out ${ENCRYPTED_BACKUP_FILENAME} \
+            -pass "env:BACKUP_PASSWORD"
     echo "Finished Postgresql backup on $(date)"
 }
 
@@ -88,7 +78,11 @@ mysql_backup() {
     mysqldump -u${DBUSER} \
               -h${DBHOST} \
               -P${DBPORT} \
-              ${MYSQL_BACKUP_OPTIONS} "${DBNAME}" | gzip > ${BACKUP_FILENAME}
+              ${MYSQL_BACKUP_OPTIONS} "${DBNAME}" \
+        | gzip  \
+        | openssl aes-256-cbc -e -salt \
+            -out ${ENCRYPTED_BACKUP_FILENAME} \
+            -pass "env:BACKUP_PASSWORD"
     echo "Finished MySQL backup on $(date)"
 }
 
@@ -97,7 +91,6 @@ perform_backup() {
     mkdir -p ${DBNAME}
     cd ${DBNAME}
 
-    echo "Backup output file: ${BACKUP_FILENAME}"
     echo "Encrypted backup output file: ${ENCRYPTED_BACKUP_FILENAME}"
 
     if [[ "${DBTYPE}" == "PGSQL" ]]; then
@@ -126,7 +119,7 @@ export PGSQL_BACKUP_OPTIONS="${BACKUP_CMD_PARAMS:- }"
 export BACKUP_OUTPUT_DIR="${BACKUP_DIR}/${DBNAME}"
 export BASE_FILENAME="${DBNAME}.$( date +%F ).sql.gz"
 export BACKUP_FILENAME="${BACKUP_OUTPUT_DIR}/${BASE_FILENAME}"
-export ENCRYPTED_BACKUP_FILENAME="${BACKUP_FILENAME}.gpg"
+export ENCRYPTED_BACKUP_FILENAME="${BACKUP_FILENAME}.aes"
 
 if [ -e ${ENCRYPTED_BACKUP_FILENAME} ]
 then
@@ -138,7 +131,6 @@ echo "${DBNAME} backup started at $(date)"
 check_requirements
 fix_creds
 perform_backup
-encrypt_backup
 push_to_s3
 notify_deadmanssnitch
 echo "${DBNAME} backup finished at $(date)"
