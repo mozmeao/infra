@@ -20,6 +20,7 @@ module "mdn-cloudfront-stage" {
     comment = "Stage CDN for AWS-hosted MDN"
     distribution_name = "MDNStageCDN"
     domain_name = "stage.mdn.moz.works"
+    http_version = "1.1"
 }
 
 module "mdn-cloudfront-prod" {
