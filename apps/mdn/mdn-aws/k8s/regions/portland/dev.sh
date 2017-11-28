@@ -113,6 +113,7 @@ export KUMA_DEBUG=True
 export KUMA_DEBUG_TOOLBAR=False
 export KUMA_DOMAIN=mdn-dev.moz.works
 export KUMA_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+export KUMA_ENABLE_CANDIDATE_LANGUAGES=True
 export KUMA_ES_INDEX_PREFIX=mdn
 export KUMA_ES_LIVE_INDEX=True
 export KUMA_LEGACY_ROOT=/mdn/www
