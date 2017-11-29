@@ -117,6 +117,7 @@ export KUMA_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
 export KUMA_ENABLE_CANDIDATE_LANGUAGES=True
 export KUMA_ES_INDEX_PREFIX=mdnstage
 export KUMA_ES_LIVE_INDEX=True
+export KUMA_FOUNDATION_CALLOUT=True
 export KUMA_LEGACY_ROOT=/mdn/www
 export KUMA_MAINTENANCE_MODE=False
 export KUMA_MEDIA_ROOT=/mdn/www
