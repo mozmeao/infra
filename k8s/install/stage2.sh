@@ -23,7 +23,6 @@ install_cluster_autoscaler
 install_redirector_service
 
 # k8s specific
-if [ "${INSTALL_DASHBOARD}" -eq 1 ]; then install_k8s_dashboard; fi
 if [ "${INSTALL_HEAPSTER}" -eq 1 ]; then install_heapster; fi
 
 # MozMEAO monitoring
