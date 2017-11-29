@@ -78,6 +78,8 @@
                 secretKeyRef:
                   name: mdn-secrets
                   key: elasticsearch-url
+            - name: FOUNDATION_CALLOUT
+              value: "{{ KUMA_FOUNDATION_CALLOUT }}"
             - name: KUMASCRIPT_URL_TEMPLATE
               value: {{ KUMA_URL_TEMPLATE_FOR_KUMASCRIPT }}
             - name: LEGACY_ROOT
