@@ -88,11 +88,6 @@ install_newrelic() {
     cat ${STAGE2_ETC_PATH}/newrelic-daemonset.yaml.template | sed "s/mycluster/${KOPS_SHORT_NAME}/" | kubectl create -f -
 }
 
-install_k8s_dashboard() {
-    echo "Installing k8s dashboard"
-    kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
-}
-
 install_heapster() {
     echo "Installing heapster"
     kubectl create -f https://raw.githubusercontent.com/kubernetes/kops/master/addons/monitoring-standalone/v1.2.0.yaml
