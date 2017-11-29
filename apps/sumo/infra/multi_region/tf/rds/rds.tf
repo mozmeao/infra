@@ -53,7 +53,7 @@ variable "mysql_backup_window" {
 }
 
 variable "mysql_maintenance_window" {
-  default = "Sun:11:30-Sun:11:59"
+  default = "Sun:11:29-Sun:11:59"
 }
 
 variable "mysql_storage_encrypted" {
@@ -121,6 +121,6 @@ resource "aws_security_group" "sumo_rds_sg" {
   }
 
   tags {
-    Name = "sumo_rds_sg"
+    Name = "${var.mysql_security_group_name}"
   }
 }
