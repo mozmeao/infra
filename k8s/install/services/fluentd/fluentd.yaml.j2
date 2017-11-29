@@ -29,7 +29,7 @@ spec:
       hostNetwork: true
       containers:
       - name: mozfluentd
-        image: quay.io/mozmar/fluentd:latest
+        image: {{ FLUENTD_IMAGE }}
         resources:
           limits:
             cpu: {{ FLUENTD_CPU_LIMIT }}
