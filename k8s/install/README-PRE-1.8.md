@@ -2,63 +2,18 @@
 
 ### Prereqs
 
-- `kops`, latest version 
-- `terraform` >= 0.9.8
-- `awscli`, latest version
+- kops
+- terraform
+- awscli
 - request an AWS ACM certificate for:
     - ${KOPS_NAME}
     - *.${KOPS_NAME}
 - create a new Papertrail group and log destination to use in `config.sh`
 
-## K8s <= 1.7 installation
-
-- see [README-PRE-1.8.md](README-PRE-1.8.md) for more information.
-
-## K8s 1.8+ installation
-
-### Create a config.sh
-
-```
-cd infra/k8s/install
-export KOPS_INSTALLER=$(pwd)
-mkdir my_cluster
-cd my_cluster
-```
-
-Create a `config.sh` file located in our private repo
-
-```
-export KOPS_SHORT_NAME=
-export KOPS_DOMAIN=moz.works
-export KOPS_NAME="${KOPS_SHORT_NAME}.${KOPS_DOMAIN}"
-export KOPS_REGION=us-west-2
-export KOPS_NODE_COUNT=2
-export KOPS_NODE_SIZE=m4.xlarge
-export KOPS_MASTER_SIZE=m4.large
-export KOPS_PUBLIC_KEY=/full/path/to/key
-export KOPS_ZONES="us-west-2b"
-export KOPS_MASTER_ZONES="us-west-2b"
-export KOPS_K8S_VERSION="1.8.4"
-export KOPS_MASTER_VOLUME_SIZE_GB=250
-export KOPS_NODE_VOLUME_SIZE_GB=250
-export KOPS_VPC_ID=
-# used to allow ssh access into the cluster
-export KOPS_SSH_IP=
-
-# s3 buckets
-export KOPS_STATE_BUCKET="${KOPS_SHORT_NAME}-kops-state"
-export KOPS_STATE_STORE="s3://${KOPS_STATE_BUCKET}"
-
-#populate these if installing FluentD->PaperTrail DaemonSet
-export SYSLOG_HOST=""
-export SYSLOG_PORT=""
-export STAGE2_ETC_PATH=/path/to/private/repo/k8s/install/etc
-```
+The easiest way to run our K8s install is via a [dev node](https://github.com/mozmeao/infra/blob/master/k8s/dev_node/README.md).
 
 
-### Create an install.sh
-
-Create an `install.sh` script using the following template. Now is your chance to specify kops configuration values before the cluster is created.
+## K8s 1.8+
 
 ```
 #!/bin/bash
@@ -83,11 +38,70 @@ kops create cluster ${KOPS_NAME} \
     --zones=${KOPS_ZONES}
 ```
 
-### Create the cluster
+```
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-metadata
+spec:
+  podSelector:
+    matchExpressions:
+      - {key: k8s-app, operator: DoesNotExist}
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 169.254.0.0/16
+```
+
+## K8s <= 1.7
+
+### Building a new kops cluster (stage 1)
 
 ```
-source /path/to/config.sh
-./install.sh
+cd infra/k8s/install
+export KOPS_INSTALLER=$(pwd)
+
+mkdir my_cluster
+cd my_cluster
+cp $KOPS_INSTALLER/etc/config.sh.template config.sh
+# modify config.sh to your liking
+```
+
+**At this point, you MUST customize config.sh.**
+
+When you're ready, run the installer:
+```
+source config.sh
+$KOPS_INSTALLER/stage1.sh
+```
+
+Two different sets of results of `stage1.sh` are stored in:
+ - a) `./out/terraform` (terraform only)
+ - b) general kops config stored in an S3 bucket: `$KOPS_STATE_BUCKET`.
+
+#### Node disk sizing
+
+kops doesn't have an easy way to set the node disk size up front, so we'll need to do a few manual things first.
+
+Run the following command:
+
+```
+kops edit ig nodes
+```
+
+A yaml file will appear in your $EDITOR, you'll need to add the following block to the `spec` section:
+
+```
+  rootVolumeSize: 250
+  rootVolumeType: gp2
+```
+
+followed by:
+
+```
+kops update cluster tokyo.moz.works --target terraform
 ```
 
 #### Single AZ installations
@@ -127,9 +141,9 @@ Wait ~10-20 minutes.
 Check your cluster with:
 
 ```
-# ensure you're pointing at the correct kops cluster first!
-# take a look at ~/.kube/config and ensure it's
-# not pointing at more than 1 cluster
+ # ensure you're pointing at the correct kops cluster first!
+ # take a look at ~/.kube/config and ensure it's
+ # not pointing at more than 1 cluster
 
 cp ~/.kube/config ./${KOPS_SHORT_NAME}.kubeconfig
 export KUBECONFIG=$(pwd)/${KOPS_SHORT_NAME}.kubeconfig
@@ -137,47 +151,34 @@ kubectl config current-context
 kubectl get nodes
 ```
 
-### Upgrade Calico
 
-The version of Calico installed by kops for Kubernetes 1.8.4 needs to be manually upgraded. See [this issue](https://github.com/kubernetes/kops/issues/3910#issuecomment-347009475) for more information. 
+### Enabling K8s cron
 
-#### Update the Calico Policy Controller
-
-```
-# manually change v0.7.0 -> v1.0.0-rc4
-kubectl edit deployment calico-policy-controller -n kube-system
-```
-
-#### Update the calico-node DaemonSet
+- See https://github.com/kubernetes/kops/issues/618
 
 ```
-# manually change v2.4.1 -> v2.6.2
-kubectl edit daemonset calico-node -n kube-system
-# kill each running pod in the daemonset
+kops edit cluster ${KOPS_NAME}
 ```
 
-#### Install Calico RBAC
+Add the following under the `spec` section:
 
 ```
-# Install RBAC as per their docs
-kubectl apply -f https://docs.projectcalico.org/v2.6/getting-started/kubernetes/installation/rbac.yaml
+  kubeAPIServer:
+    runtimeConfig:
+      "batch/v2alpha1": "true"
 ```
 
-#### Block access to AWS Metadata API
+> Note: the value `true` MUST appear in double quotes.
+
+Now apply the changes to the cluster:
 
 ```
-kubectl create -f etc/networkpolicies/block-metadata.yaml
+kops rolling-update cluster ${KOPS_NAME} --force --yes
 ```
 
-### Verify cluster
-
-- Verify cluster with [Heptio Sonobuoy](https://scanner.heptio.com/)
-  - include RBAC in generated Sonobuoy config
-  - this process takes ~1 hour to complete.
+It's easiest to run this before the cluster has any pods/services installed and running.
 
 ### Disable public SSH
-
-While ssh access is limited via `kops create cluster`, you can disable ssh access to the cluster altogether with the following command:
 
 ```
 cd k8s/tools
@@ -194,7 +195,7 @@ You'll need to:
 0. clone and **unlock** the `ee-infra-private` repo
 1. modify `config.sh` and set `STAGE2_ETC_PATH` to point to the `ee-infra-private/k8s/install/etc` directory.
 2. cd to the directory containing config.sh
-3. run: `$KOPS_INSTALLER/stage2.sh` ***or*** source and then run each desired function in `$KOPS_INSTALLER/stage2_functions.sh`
+3. run: `$KOPS_INSTALLER/stage2.sh`
 
 Note: each DaemonSet is installed into it's own namespace: `mig`, `datadog`, `newrelic`, and `deis`.
 
@@ -234,4 +235,17 @@ kubectl proxy
 
 Open a web browser to [http://localhost:8001/ui](http://localhost:8001/ui)
 
+
+# Upgrading Deis Workflow
+
+More info on upgrading Deis Workflow is available here:
+https://deis.com/docs/workflow/managing-workflow/upgrading-workflow/
+
+Please keep in mind that we have several customizations that ***MUST*** be
+applied during install AND upgrades, so the "out-of-the-box" Deis upgrade
+***WILL NOT*** work!
+
+```
+./upgrade_workflow.sh
+```
 

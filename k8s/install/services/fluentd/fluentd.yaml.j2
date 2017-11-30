@@ -1,3 +1,4 @@
+
 kind: Namespace
 apiVersion: v1
 metadata:
@@ -28,16 +29,16 @@ spec:
       hostNetwork: true
       containers:
       - name: mozfluentd
-        image: quay.io/mozmar/fluentd:latest
+        image: {{ FLUENTD_IMAGE }}
         resources:
           limits:
-            cpu: 100m
-            memory: 768Mi
+            cpu: {{ FLUENTD_CPU_LIMIT }}
+            memory: {{ FLUENTD_MEMORY_LIMIT }}
         env:
           - name: "SYSLOG_HOST"
-            value: "{{ .Values.fluentd.syslog_host }}"
+            value: "{{ FLUENTD_SYSLOG_HOST }}"
           - name: "SYSLOG_PORT"
-            value: "{{ .Values.fluentd.syslog_port }}"
+            value: "{{ FLUENTD_SYSLOG_PORT }}"
         volumeMounts:
         - name: varlog
           mountPath: /var/log
