@@ -14,7 +14,7 @@ import pytest
 @pytest.fixture(scope="module")
 def k8s():
     """A Kubernetes client"""
-    config.load_kube_config(os.environ['KUBECONFIG'])
+    config.load_kube_config(os.environ.get('KUBECONFIG'))
     return client.CoreV1Api()
 
 
@@ -90,10 +90,10 @@ def aws_web_service_elb():
 
 class TestELB(object):
     def test_k8s_connection(self):
-        assert k8s_web_service_elb_hostname() is not None
+        assert k8s_web_service_elb_hostname()
 
     def test_aws_connection(self):
-        assert aws_elb_security_group() is not None
+        assert aws_elb_security_group()
 
     def test_elb_listeners(self):
         elb = aws_web_service_elb()
@@ -104,7 +104,7 @@ class TestELB(object):
         # get the listner using port 80
         http = [l for l in listeners
                 if l['Listener']['LoadBalancerPort'] == 80][0]
-        assert http is not None
+        assert http
         # check configured protocol
         assert http['Listener']['Protocol'] == 'TCP'
         # check that elb port 80 is pointing at the internal redirector service
@@ -113,7 +113,7 @@ class TestELB(object):
 
         https = [l for l in listeners
                  if l['Listener']['LoadBalancerPort'] == 443][0]
-        assert https is not None
+        assert https
         # check configured protocol
         assert https['Listener']['Protocol'] == 'HTTPS'
         # check that elb port 443 is pointing at the internal mdn web service
