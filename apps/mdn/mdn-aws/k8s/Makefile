@@ -215,10 +215,10 @@ export DATADOG_REDIS_CONFIG_BASE64 ?= $(shell echo -n "${DATADOG_REDIS_CONFIG}" 
 ###############################
 ### core tasks
 
-k8s-ns:
+k8s-ns: check-service-env
 	kubectl create ns ${K8S_NAMESPACE} | true
 
-k8s-delete-ns:
+k8s-delete-ns: check-service-env
 	kubectl delete --ignore-not-found ns ${K8S_NAMESPACE}
 
 k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job
@@ -297,25 +297,25 @@ k8s-delete-db-migration-job:
 ### end core tasks
 ###############################
 
-k8s-pv-shared:
+k8s-pv-shared: check-service-env
 	j2 shared.pv.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-pv-shared:
+k8s-delete-pv-shared: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${SHARED_PV_NAME}
 
-k8s-pvc-shared:
+k8s-pvc-shared: check-service-env
 	j2 shared.pvc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-pvc-shared:
+k8s-delete-pvc-shared: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${SHARED_PVC_NAME}
 
-k8s-efs-setup-job:
+k8s-efs-setup-job: check-service-env
 	j2 mdn-efs-setup-job.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-efs-setup-job:
+k8s-delete-efs-setup-job: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-efs-setup
 
-k8s-web-svc:
+k8s-web-svc: check-service-env
 	env SERVICE_NAME=${WEB_SERVICE_NAME} \
 		SERVICE_TYPE=${WEB_SERVICE_TYPE} \
 		SERVICE_PORT=${WEB_SERVICE_PORT} \
@@ -326,11 +326,11 @@ k8s-web-svc:
 		j2 cert.svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 	./configure_elb.sh
 
-k8s-delete-web-svc:
+k8s-delete-web-svc: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${WEB_SERVICE_NAME}
 
-k8s-api-svc:
+k8s-api-svc: check-service-env
 	env SERVICE_NAME=${API_SERVICE_NAME} \
 		SERVICE_TYPE=${API_SERVICE_TYPE} \
 		SERVICE_PORT=${API_SERVICE_PORT} \
@@ -338,11 +338,11 @@ k8s-api-svc:
 		SERVICE_PROTOCOL=${API_SERVICE_PROTOCOL} \
 		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-api-svc:
+k8s-delete-api-svc: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${API_SERVICE_NAME}
 
-k8s-kumascript-svc:
+k8s-kumascript-svc: check-service-env
 	env SERVICE_NAME=${KUMASCRIPT_SERVICE_NAME} \
 		SERVICE_TYPE=${KUMASCRIPT_SERVICE_TYPE} \
 		SERVICE_PORT=${KUMASCRIPT_SERVICE_PORT} \
@@ -350,7 +350,7 @@ k8s-kumascript-svc:
 		SERVICE_PROTOCOL=${KUMASCRIPT_SERVICE_PROTOCOL} \
 		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-kumascript-svc:
+k8s-delete-kumascript-svc: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${KUMASCRIPT_SERVICE_NAME}
 
@@ -358,55 +358,55 @@ k8s-delete-kumascript-svc:
 ### administrative tasks
 # not referenced from parent targets
 
-k8s-newrelic-secrets:
+k8s-newrelic-secrets: check-service-env
 	j2 mdn-newrelic-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-newrelic-secrets:
+k8s-delete-newrelic-secrets: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${NEW_RELIC_SECRETS_NAME}
 
-k8s-backup-secrets:
+k8s-backup-secrets: check-service-env
 	j2 mdn-backup-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-backup-secrets:
+k8s-delete-backup-secrets: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${BACKUP_SECRETS_NAME}
 
 # backup EFS to S3, for production
-k8s-backup-cron:
+k8s-backup-cron: check-service-env
 	j2 mdn-backup-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-backup-cron:
+k8s-delete-backup-cron: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${BACKUP_SERVICE_NAME}
 
 # restore data from S3 to EFS
-k8s-restore-cron:
+k8s-restore-cron: check-service-env
 	j2 mdn-restore-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-restore-cron:
+k8s-delete-restore-cron: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${RESTORE_SERVICE_NAME}
 
 # pull files from S3 (SCL3), for dev/stage
-k8s-sync-from-s3-cron:
+k8s-sync-from-s3-cron: check-service-env
 	j2 mdn-sync-from-s3-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-sync-from-s3-cron:
+k8s-delete-sync-from-s3-cron: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${SYNC_FROM_S3_SERVICE_NAME}
 
-k8s-admin-node:
+k8s-admin-node: check-service-env
 	j2 mdn-admin-node.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-admin-node:
+k8s-delete-admin-node: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${ADMIN_NODE_NAME}
 
-k8s-datadog-secrets:
+k8s-datadog-secrets: check-service-env
 	j2 datadog-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-datadog-secrets:
+k8s-delete-datadog-secrets: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${DATADOG_SECRETS_NAME}
 
-k8s-redis-dd:
+k8s-redis-dd: check-service-env
 	j2 mdn-dd-redis.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 
-k8s-delete-redis-dd:
+k8s-delete-redis-dd: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${DATADOG_REDIS_DEPLOYMENT_NAME}
 
 ### end administrative tasks
@@ -510,6 +510,14 @@ k8s-delete-celery-cam:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_CAM_NAME}
 
+
+# Note that ifndef and endif are not indented to process env vars
+# before the rest of the script
+check-service-env:
+ifndef CHANGE_MDN_INFRA
+    $(error CHANGE_MDN_INFRA is undefined, set it to any value to allow infra changes)
+endif
+
 # These tasks don't have file targets
 .PHONY: k8s-services k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
 		k8s-delete-pv-shared k8s-pvc-shared k8s-delete-pvc-shared \
@@ -523,4 +531,5 @@ k8s-delete-celery-cam:
 		k8s-celery-cam k8s-delete-celery-cam k8s-kuma-deployments \
 		k8s-delete-kuma-deployments k8s-kumascript-deployments \
 		k8s-delete-kumascript-deployments k8s-rollout-status \
-		k8s-kuma-rollout-status k8s-kumascript-rollout-status
+		k8s-kuma-rollout-status k8s-kumascript-rollout-status \
+		check-service-env
