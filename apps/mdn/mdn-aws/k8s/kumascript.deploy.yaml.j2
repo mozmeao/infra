@@ -72,11 +72,15 @@ spec:
             httpGet:
               path: /healthz
               port: {{ KUMASCRIPT_CONTAINER_PORT }}
-            initialDelaySeconds: 10
-            periodSeconds: 3
+            initialDelaySeconds: 20
+            periodSeconds: 12
+            timeoutSeconds: 10
+            failureThreshold: 6
           readinessProbe:
             httpGet:
               path: /readiness
               port: {{ KUMASCRIPT_CONTAINER_PORT }}
             initialDelaySeconds: 10
-            periodSeconds: 3
+            periodSeconds: 6
+            timeoutSeconds: 5
+            failureThreshold: 3

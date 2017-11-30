@@ -20,7 +20,9 @@
                 - name: Host
                   value: {{ KUMA_ALLOWED_HOSTS.split(',')[0].strip() }}
             initialDelaySeconds: 20
-            periodSeconds: 3
+            periodSeconds: 12
+            timeoutSeconds: 10
+            failureThreshold: 6
           readinessProbe:
             httpGet:
               path: /readiness
@@ -28,5 +30,7 @@
               httpHeaders:
                 - name: Host
                   value: {{ KUMA_ALLOWED_HOSTS.split(',')[0].strip() }}
-            initialDelaySeconds: 20
-            periodSeconds: 3
+            initialDelaySeconds: 10
+            periodSeconds: 6
+            timeoutSeconds: 5
+            failureThreshold: 3
