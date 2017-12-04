@@ -1,7 +1,7 @@
 export FLUENTD_CPU_LIMIT ?= 100m
-export FLUENTD_MEMORY_LIMIT ?= 768Mi
-export RENDER_POD_CMD ?= j2 fluentd.yaml.j2 | kubectl create -f -
-export FLUENTD_IMAGE ?= quay.io/mozmar/fluentd:60835bc5d814d1901207d375c5ad9c9b0a1b66a3
+export FLUENTD_MEMORY_LIMIT ?= 256Mi
+export RENDER_POD_CMD ?= j2 fluentd.yaml.j2 | kubectl apply -f -
+export FLUENTD_IMAGE ?= quay.io/mozmar/fluentd:6aad24da11225a258bf010583c675bb7a8e8e7da
 
 install-fluentd: check-env
 	${RENDER_POD_CMD}
