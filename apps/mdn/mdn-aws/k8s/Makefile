@@ -288,6 +288,7 @@ k8s-db-migration-job: k8s-delete-db-migration-job
 		KUMA_CPU_REQUEST=${WEB_CPU_REQUEST} \
 		KUMA_MEMORY_REQUEST=${WEB_MEMORY_REQUEST} \
 		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
+		KUMA_RATELIMIT_ENABLE=False \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
 	j2 mdn-db-migration-job.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
 	env JOB_NAME=mdn-db-migration ./wait_for_job.sh
