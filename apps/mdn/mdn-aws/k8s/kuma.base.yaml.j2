@@ -118,6 +118,8 @@
               value: "{{ NEW_RELIC_LOG }}"
             - name: PROTOCOL
               value: {{ KUMA_PROTOCOL }}
+            - name: RATELIMIT_ENABLE
+              value: "{{ KUMA_RATELIMIT_ENABLE }}"
             - name: SECURE_HSTS_SECONDS
               value: "{{ KUMA_SECURE_HSTS_SECONDS }}"
             - name: SENTRY_DSN
