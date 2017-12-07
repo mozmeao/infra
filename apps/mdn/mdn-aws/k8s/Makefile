@@ -517,13 +517,8 @@ k8s-delete-celery-cam:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_CAM_NAME}
 
-
-# Note that ifndef and endif are not indented to process env vars
-# before the rest of the script
 check-service-env:
-ifndef CHANGE_MDN_INFRA
-    $(error CHANGE_MDN_INFRA is undefined, set it to any value to allow infra changes)
-endif
+	./check_infra_lock.sh
 
 # These tasks don't have file targets
 .PHONY: k8s-services k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
