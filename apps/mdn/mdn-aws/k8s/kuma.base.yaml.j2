@@ -42,6 +42,11 @@
                   key: redis-url
             - name: CELERY_ALWAYS_EAGER
               value: "{{ KUMA_CELERY_ALWAYS_EAGER }}"
+            - name: CELERY_RESULT_BACKEND
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: redis-url-1
             - name: CELERYD_MAX_TASKS_PER_CHILD
               value: "{{ KUMA_CELERYD_MAX_TASKS_PER_CHILD }}"
             - name: CSRF_COOKIE_SECURE
