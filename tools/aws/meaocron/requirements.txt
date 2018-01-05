@@ -1,3 +1,6 @@
 apscheduler
+boto3
+click
 python-decouple
 requests
+slacker

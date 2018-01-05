@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import datetime
 import os
 import sys
@@ -8,15 +6,9 @@ from subprocess import check_call
 import requests
 from apscheduler.schedulers.blocking import BlockingScheduler
 from decouple import config
-#from pathlib2 import Path
 
 schedule = BlockingScheduler()
 DEAD_MANS_SNITCH_URL = config('DEAD_MANS_SNITCH_URL', default='')
-
-# ROOT path of the project. A pathlib.Path object.
-#ROOT_PATH = Path(__file__).resolve().parents[1]
-#ROOT = str(ROOT_PATH)
-#MANAGE = str(ROOT_PATH / 'manage.py')
 
 def call_command(command):
     check_call('/bin/bash -c {0}'.format(command), shell=True)
@@ -70,21 +62,20 @@ def schedule_backup_jobs():
     def show_the_date():
         call_command('date')
 
-    # @scheduled_job('interval', minutes=15)
-    # @ping_dms
-    # def update_product_details():
-    #     call_command('update_product_details_files --database bedrock')
-
-
+# TODO:
+# 0. Kickoff DB backups scheduled_job
+#   I need to think about how this is going to work
+#   it's in the same repo, but generated using a Makefile + j2 on the CLI
+#   consider rendering the yaml template from Python instead of make
+# 1. asgcheck scheduled_job
+#   needs a region, slack api token, slack channel name as params (env?)
+# 2. snapshot cleanup scheduled_job
+#   needs region, volumes(s), days_to_keep, slack info 
 
 if __name__ == '__main__':
-    args = sys.argv[1:]
-    has_jobs = False
-    if 'backups' in args:
-        schedule_backup_jobs()
-        has_jobs = True
-    if has_jobs:
-        try:
-            schedule.start()
-        except (KeyboardInterrupt, SystemExit):
-            pass
+    #args = sys.argv[1:]
+    schedule_backup_jobs()
+    try:
+        schedule.start()
+    except (KeyboardInterrupt, SystemExit):
+        pass
