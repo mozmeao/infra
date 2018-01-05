@@ -1,6 +1,10 @@
 import click
 import boto3
 
+"""
+Delete snapshots for given EBS volume ID(s) that are older than a given number of days
+"""
+
 def process_volume_snapshots(client, volid, days_to_keep, yes):
     snapshots = client.describe_snapshots(
         Filters=[{'Name': "volume-id",'Values': [volid]},])
