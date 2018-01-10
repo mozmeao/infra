@@ -56,11 +56,13 @@ Notify the following IRC channels:
 Example:
 
 ```
-metadave>  there is an MDN outage, we are working on #mdndev       12:05 PM
-metadave>  I'll post an update here in the next 30 minutes         12:05 PM
+metadave>  there is an MDN outage, we are working in #mdndev       12:05 PM
+metadave>  I'll post an update here within the next 30 minutes     12:05 PM
 ```
 
 - Notify team lead for the product impacted.
+
+> don't post phone numbers in IRC!
 
 ### Frequency of updates
 
