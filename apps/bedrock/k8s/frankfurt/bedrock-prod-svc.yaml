@@ -1,0 +1,67 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"bedrock-prod"},"name":"bedrock-nodeport","namespace":"bedrock-prod"},"spec":{"ports":[{"name":"https","port":443,"targetPort":8000}],"selector":{"app":"bedrock-prod","type":"web"},"type":"NodePort"}}
+    creationTimestamp: 2017-06-16T16:48:43Z
+    labels:
+      app: bedrock-prod
+    name: bedrock-nodeport
+    namespace: bedrock-prod
+    resourceVersion: "690478"
+    selfLink: /api/v1/namespaces/bedrock-prod/services/bedrock-nodeport
+    uid: a8381c22-52b3-11e7-8dc9-02859405480d
+  spec:
+    clusterIP: 100.67.37.244
+    ports:
+    - name: https
+      nodePort: 30588
+      port: 443
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: bedrock-prod
+      type: web
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      router.deis.io/domains: bedrock-prod,www.mozilla.org
+      router.deis.io/maintenance: "False"
+      router.deis.io/ssl.enforce: "False"
+    creationTimestamp: 2017-06-16T16:48:40Z
+    labels:
+      app: bedrock-prod
+      heritage: deis
+      router.deis.io/routable: "true"
+    name: bedrock-prod
+    namespace: bedrock-prod
+    resourceVersion: "1710397"
+    selfLink: /api/v1/namespaces/bedrock-prod/services/bedrock-prod
+    uid: a663ca8f-52b3-11e7-8dc9-02859405480d
+  spec:
+    clusterIP: 100.66.12.46
+    ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: bedrock-prod
+      heritage: deis
+      type: web
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
