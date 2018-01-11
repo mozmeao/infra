@@ -6,9 +6,9 @@ This document does not describe the on-call or escalation process, but rather th
 
 ## Declaring an incident and the incident leader (IL) role
 
-The incident leader (IL) serves as the primary point of contact and coordinator for an incident. This person may have been called by the moc, or just noticed that a service is broken. 
+The incident leader (IL) is a Mozillian that serves as the primary point of contact and coordinator for an incident. This person may have been called by the moc, or just noticed that a service is broken.
 
-When an incident occurs, the IL posts messages in IRC stating:
+When an incident occurs, the IL posts messages in the primary developer IRC channel for the service stating:
 
 - an incident has been declared and a few words about the incident
 - "I am the incident leader"
@@ -17,6 +17,16 @@ When an incident occurs, the IL posts messages in IRC stating:
 - a Vidyo chat room if needed
 - finally, decide if you need to notify the appropriate engineers that can help resolve the issue
     - TODO: link to on-call process
+
+These channels are:
+- `#mdndev`
+- `#www`
+- `#basket`
+- `#snippets`
+- `#sumo`
+
+Smaller Mozilla sites/service messages can be posted in `#mozmeao`.
+
 
 ***Security incidents must not be discussed on IRC.***
 
@@ -60,9 +70,11 @@ metadave>  there is an MDN outage, we are working in #mdndev       12:05 PM
 metadave>  I'll post an update here within the next 30 minutes     12:05 PM
 ```
 
-- Notify team lead for the product impacted.
+- Notify the appropriate lead(s) for the product.
 
-> don't post phone numbers in IRC!
+For extended outages, a bug should be filed and the #moc should be notified to update the status page.
+
+> Don't post phone numbers in IRC!
 
 ### Frequency of updates
 
