@@ -18,7 +18,7 @@ When an incident occurs, the IL posts messages in the primary developer IRC chan
 - finally, decide if you need to notify the appropriate engineers that can help resolve the issue
     - TODO: link to on-call process
 
-These channels are:
+Our primary service channels are:
 - `#mdndev`
 - `#www`
 - `#basket`
