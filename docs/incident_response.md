@@ -23,7 +23,7 @@ Our primary service channels are:
 - `#www`
 - `#basket`
 - `#snippets`
-- `#sumo`
+- `#sumodev`
 
 Smaller Mozilla sites/service messages can be posted in `#mozmeao`.
 
