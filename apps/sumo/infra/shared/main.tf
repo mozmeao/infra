@@ -17,7 +17,9 @@ resource "aws_s3_bucket" "logs" {
   acl    = "log-delivery-write"
 }
 
-
+#####################################################################
+# S3 buckets for user media
+#####################################################################
 module "sumo-user-media-dev-bucket" {
     bucket_name = "sumo-user-media-dev"
     iam_policy_name = "SUMOUserMediaDev"
@@ -45,6 +47,9 @@ module "sumo-user-media-prod-bucket" {
     source = "./s3"
 }
 
+#####################################################################
+# user media CDN
+#####################################################################
 module "sumo-user-media-dev-cf" {
     source = "./cloudfront"
 
@@ -75,3 +80,35 @@ module "sumo-user-media-prod-cf" {
     domain_name = "sumo-user-media-prod.s3-website-us-west-2.amazonaws.com"
 }
 
+#####################################################################
+# static media CDN
+#####################################################################
+module "sumo-static-media-dev-cf" {
+    source = "./cloudfront_static_media"
+
+    acm_cert_arn = "TODO"
+    aliases = ["static-media-dev-cdn.sumo.mozilla.net", "static-media-dev-cdn.sumo.moz.works"]
+    comment = "Dev CDN for SUMO static media"
+    distribution_name = "SUMOStaticMediaDevCDN"
+    domain_name = "TODO"
+}
+
+module "sumo-static-media-stage-cf" {
+    source = "./cloudfront_static_media"
+
+    acm_cert_arn = "TODO"
+    aliases = ["static-media-stage-cdn.sumo.mozilla.net", "static-media-stage-cdn.sumo.moz.works"]
+    comment = "Stage CDN for SUMO static media"
+    distribution_name = "SUMOStaticMediaStageCDN"
+    domain_name = "stage.sumo.moz.works"
+}
+
+module "sumo-static-media-prod-cf" {
+    source = "./cloudfront_static_media"
+
+    acm_cert_arn = "TODO"
+    aliases = ["static-media-prod-cdn.sumo.mozilla.net", "static-media-prod-cdn.sumo.moz.works"]
+    comment = "Prod CDN for SUMO static media"
+    distribution_name = "SUMOStaticMediaProdCDN"
+    domain_name = "prod.sumo.moz.works"
+}
