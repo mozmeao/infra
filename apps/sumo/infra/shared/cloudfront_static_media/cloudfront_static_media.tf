@@ -20,6 +20,30 @@ resource "aws_cloudfront_distribution" "sumo-cf-dist" {
     error_code            = 404
   }
 
+cache_behavior {
+    allowed_methods = ["GET", "HEAD"]
+    cached_methods  = ["GET", "HEAD"]
+    compress        = true
+    default_ttl     = 300
+
+    # 86400 = 24 hours
+    max_ttl                = 86400
+    min_ttl                = 0
+    # http://whitenoise.evans.io/en/stable/django.html#restricting-cloudfront-to-static-files
+    path_pattern           = "static/*"  
+    smooth_streaming       = false
+    target_origin_id       = "${var.distribution_name}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
   default_cache_behavior {
     allowed_methods = ["GET", "HEAD"]
     cached_methods  = ["GET", "HEAD"]
@@ -27,12 +51,14 @@ resource "aws_cloudfront_distribution" "sumo-cf-dist" {
     default_ttl     = 300
 
     # 86400 = 24 hours
-    max_ttl = 86400
-
-
+    max_ttl                = 86400
     min_ttl                = 0
+    
     smooth_streaming       = false
     target_origin_id       = "${var.distribution_name}"
+    # http://whitenoise.evans.io/en/stable/django.html#restricting-cloudfront-to-static-files
+    # Restrict Viewer Access
+    trusted_signers        = "self"       
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
