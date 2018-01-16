@@ -58,7 +58,7 @@ cache_behavior {
     target_origin_id       = "${var.distribution_name}"
     # http://whitenoise.evans.io/en/stable/django.html#restricting-cloudfront-to-static-files
     # Restrict Viewer Access
-    trusted_signers        = "self"       
+    trusted_signers        = ["self"]
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
