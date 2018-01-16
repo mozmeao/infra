@@ -6,7 +6,7 @@ This document does not describe the on-call or escalation process, but rather th
 
 ## Declaring an incident and the incident leader (IL) role
 
-The incident leader (IL) is a Mozillian that serves as the primary point of contact and coordinator for an incident. This person may have been called by the moc, or just noticed that a service is broken.
+The incident leader (IL) is a Mozillian on staff that serves as the primary point of contact and coordinator for an incident. This person may have been called by the moc, or just noticed that a service is broken.
 
 When an incident occurs, the IL posts messages in the primary developer IRC channel for the service stating:
 
