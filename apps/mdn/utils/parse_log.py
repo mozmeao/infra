@@ -247,7 +247,8 @@ def report_requests_by_ip(result, verbose, processed_count, total_count):
             print("%d\t%s" % (count, path))
     else:
         print("Top requests:")
-        pprint.pprint(result['path'].most_common(20))
+        for path, count in result['path'].most_common(20):
+            print('%d\t%s' % (count, path))
         print("Status codes:")
         pprint.pprint(result['status_code'].most_common())
 
@@ -285,7 +286,14 @@ papertrail --min-time '%(mintime)s' --max-time '%(maxtime)s'\
 
 
 if __name__ == '__main__':
+    import codecs
+    import locale
     import sys
+
+    # Wrap sys.stdout into a StreamWriter to allow writing unicode.
+    # https://stackoverflow.com/a/4546129/10612
+    sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout) 
+
     parser = get_parser()
     args = parser.parse_args()
     if args.test:
