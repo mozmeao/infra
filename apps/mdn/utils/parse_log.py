@@ -215,38 +215,48 @@ def collect_ips(log, context=None):
     return context
 
 
-def usage(name):
-    """Print usage, and suggest the last 30 minutes for logs."""
+def get_parser():
+    from argparse import ArgumentParser, RawDescriptionHelpFormatter
+
+    # Construct the sample papertrail command line
     now = datetime.datetime.now()
     minutes = now.minute - (now.minute % 5)
     maxtime = datetime.datetime(now.year, now.month, now.day, now.hour, minutes)
     mintime = maxtime - datetime.timedelta(seconds = 60 * 30)
     fmt = '%Y-%m-%d %I:%M %p'
-    maxtime_fmt = maxtime.strftime(fmt)
-    mintime_fmt = mintime.strftime(fmt)
-    outfile = now.date().strftime('%Y-%m-%d.log')
-    print("""\
-%(name)s <filename.log>: Process a papertrail log, counting IP addresses.
-
+    epilog = """\
 Logs are generated using the papertrail command line app:
-papertrail --min-time '%(mintime_fmt)s' --max-time '%(maxtime_fmt)s'\
+papertrail --min-time '%(mintime)s' --max-time '%(maxtime)s'\
  -g portland -- mdn-prod_web '-"GET /readiness"' '-"GET /healthz"'\
- '-"- - HTTP/1.0"' > %(outfile)s
+ '-"- - HTTP/1.0"' > %(outfile)s""" % {
+         'mintime': mintime.strftime(fmt),
+         'maxtime': maxtime.strftime(fmt),
+         'outfile': now.date().strftime('%Y-%m-%d.log'),
+    }
 
-To run tests: %(name)s --test
-"""% locals())
+    # Create the command line parser
+    parser = ArgumentParser(description='Process a papertrail log',
+                            epilog=epilog,
+                            formatter_class=RawDescriptionHelpFormatter)
+    parser.add_argument('logfile', help="A papertrail log", nargs='?')
+    parser.add_argument('--test', help="Run parser tests", action='store_true')
+    return parser
 
 
 if __name__ == '__main__':
     import sys
-    if len(sys.argv) < 2:
-        usage(sys.argv[0])
-        sys.exit(1)
-    filename = sys.argv[1]
-    if filename == '--test':
+    parser = get_parser()
+    args = parser.parse_args()
+    if args.test:
         test()
         sys.exit(0)
-    with open(filename, 'r') as logfile:
+    elif not args.logfile:
+        parser.print_help()
+        print("\nerror: logfile is required.")
+        sys.exit(1)
+
+
+    with open(args.logfile, 'r') as logfile:
         result, lines, unprocessed = process_lines(logfile, collect_ips,
                                                    fail_limit=None)
     processed = lines - unprocessed
