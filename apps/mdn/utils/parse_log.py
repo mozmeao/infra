@@ -215,6 +215,43 @@ def collect_ips(log, context=None):
     return context
 
 
+def report_ips(result, verbose, processed_count, total_count):
+    print("Top IP addresses:")
+    pprint.pprint(result['ips'].most_common(10))
+
+
+def create_ip_context(ip):
+    """Create a context suitable for collect_requests_by_ip"""
+    return {
+        'ip': ip,
+        'path': Counter(),
+        'status_code': Counter(),
+        'count': 0
+    }
+
+
+def collect_requests_by_ip(log, context):
+    """Analyze the requests by an IP address."""
+    assert 'ip' in context
+    if log['log_ip'] == context['ip']:
+        context['count'] += 1
+        context['path'][log.get('log_path')] += 1
+        context['status_code'][log.get('log_status_code')] += 1
+    return context
+
+
+def report_requests_by_ip(result, verbose, processed_count, total_count):
+    print("%d requests by IP %s." % (result['count'], result['ip']))
+    if verbose:
+        for path, count in sorted(result['path'].most_common()):
+            print("%d\t%s" % (count, path))
+    else:
+        print("Top requests:")
+        pprint.pprint(result['path'].most_common(20))
+        print("Status codes:")
+        pprint.pprint(result['status_code'].most_common())
+
+
 def get_parser():
     from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
@@ -240,6 +277,10 @@ papertrail --min-time '%(mintime)s' --max-time '%(maxtime)s'\
                             formatter_class=RawDescriptionHelpFormatter)
     parser.add_argument('logfile', help="A papertrail log", nargs='?')
     parser.add_argument('--test', help="Run parser tests", action='store_true')
+    parser.add_argument('--verbose', '-v', action='count',
+                        help='Increase verbosity of report')
+    parser.add_argument('-i', '--ip',
+                        help="Analyze requests for IP address")
     return parser
 
 
@@ -255,11 +296,20 @@ if __name__ == '__main__':
         print("\nerror: logfile is required.")
         sys.exit(1)
 
+    if args.ip:
+        context = create_ip_context(args.ip)
+        collecter = collect_requests_by_ip
+        report = report_requests_by_ip
+    else:
+        context = None
+        collecter = collect_ips
+        report = report_ips
 
     with open(args.logfile, 'r') as logfile:
-        result, lines, unprocessed = process_lines(logfile, collect_ips,
-                                                   fail_limit=None)
+        result, lines, unprocessed = process_lines(
+            logfile, process_func=collecter, process_context=context,
+            fail_limit=None)
     processed = lines - unprocessed
-    print("Done, processed %d of %d lines. Top IP addresses:" %
-          (processed, lines))
-    pprint.pprint(result['ips'].most_common(10))
+
+    print("Done, processed %d of %d lines" % (processed, lines))
+    report(result, args.verbose, processed, lines)
