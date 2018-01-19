@@ -42,6 +42,10 @@ metadave>  please meet in my Vidyo room                           12:01 PM
     
 > it's helpful to include a short description of the incident when mentioning IRC users. For example `ping metadave` is not very useful when it appears as a notification on my phone, but `ping metadave MDN infra is on fire` lets me know that the issue is urgent without having to open my IRC app.
 
+### Acknowledge Incident In PagerDuty
+
+If you are responding to an incident that has been reported via pagerduty it is important to `acknowledge` the incident within the pagerduty system. Acknowledging the incident stops the automatic escalation process and informs folks who have access to pagerduty that the incident is being worked on.
+
 ### Passing the baton
 
 Incident response can be stressful, and it's ok if you need a break. In the incident comms channel, you can hand off the IL role to someone else if they agree. The new IL should acknowlege that they are now IL.
@@ -103,6 +107,10 @@ When an incident has been resolved, post a message in the incident comms channel
 metadave> TL: the MDN outage has been resolved                      5:00 PM
 metadave> we'll followup with an incident report                    5:00 PM
 ```
+
+### Resolve Incident In PagerDuty
+
+Resolve the incident in pagerduty. Once an incident is resolved, no additional notifications are sent and the incident cannot be triggered again.
 
 ## Incident report
 
