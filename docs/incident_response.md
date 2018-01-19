@@ -44,7 +44,7 @@ metadave>  please meet in my Vidyo room                           12:01 PM
 
 ### Acknowledge Incident In PagerDuty
 
-If you are responding to an incident that has been reported via pagerduty it is important to `acknowledge` the incident witin the pagerduty system. Acknowledging the incident stops the automatic escalation process and lelt's folks who have access to pagerduty know that the incident is being worked in.
+If you are responding to an incident that has been reported via pagerduty it is important to `acknowledge` the incident witin the pagerduty system. Acknowledging the incident stops the automatic escalation process and informs folks who have access to pagerduty that the incident is being worked on.
 
 ### Passing the baton
 
