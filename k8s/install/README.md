@@ -2,7 +2,8 @@
 
 ### Prereqs
 
-- `kops`, latest version 
+- `kops`, using the latest version that supports the targeted K8s version
+- `kubectl`, using the latest version that supports the targeted K8s version
 - `terraform` >= 0.9.8
 - `awscli`, latest version
 - request an AWS ACM certificate for:
@@ -112,6 +113,12 @@ resource "aws_subnet" "ap-northeast-1c-tokyo-moz-works" {
 
 ```
 
+
+### Additional cluster config
+
+To create the cluster autoscaler policy, Deis S3 buckets, and NodePort access security group, take what you need from this [work in progress script](https://github.com/mozmeao/ee-infra-private/blob/master/k8s/clusters/oregon-b/install2.sh
+). 
+
 ### Provisioning AWS resources
 
 When you're ready to continue, apply the Terraform config:
@@ -137,24 +144,7 @@ kubectl config current-context
 kubectl get nodes
 ```
 
-### Upgrade Calico
-
-The version of Calico installed by kops for Kubernetes 1.8.4 needs to be manually upgraded. See [this issue](https://github.com/kubernetes/kops/issues/3910#issuecomment-347009475) for more information. 
-
-#### Update the Calico Policy Controller
-
-```
-# manually change v0.7.0 -> v1.0.0-rc4
-kubectl edit deployment calico-policy-controller -n kube-system
-```
-
-#### Update the calico-node DaemonSet
-
-```
-# manually change v2.4.1 -> v2.6.2
-kubectl edit daemonset calico-node -n kube-system
-# kill each running pod in the daemonset
-```
+### Calico
 
 #### Install Calico RBAC
 
