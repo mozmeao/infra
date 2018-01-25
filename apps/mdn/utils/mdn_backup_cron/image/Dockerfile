@@ -1,4 +1,4 @@
-from quay.io/mozmar/base:latest
+from python:3.6-slim
 
 ENV AWS_ACCESS_KEY_ID setme
 ENV AWS_SECRET_ACCESS_KEY setme
