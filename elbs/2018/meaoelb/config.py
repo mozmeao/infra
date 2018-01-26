@@ -1,12 +1,14 @@
 import pprint
 
+
 class DictLike(dict):
     def __getattr__(self, key):
         return self[key]
 
     def __setattr__(self, key, value):
         self[key] = value
-        
+
+
 class ServiceConfig(DictLike):
     def __init__(
             self,
@@ -23,9 +25,12 @@ class ServiceConfig(DictLike):
         self.vpc_id = vpc_id
         self.subnet_ids = subnet_ids
 
-    def show(self):        
+    def show(self):
         pp = pprint.PrettyPrinter(indent=2)
+        print("-" * 50)
+        print("ELB: {}".format(self.elb_config.name))
         pp.pprint(self)
+
 
 class ELBConfig(DictLike):
     def __init__(
@@ -45,15 +50,22 @@ class ELBConfig(DictLike):
         self.health_check = health_check
         self.elb_atts = elb_atts
 
+
 class ELBAttCrossZoneLoadBalancing(DictLike):
-    def __init__(self, enabled = True):
+    def __init__(self, enabled=True):
         self.enabled = enabled
 
     def aws_merge(self, d):
         d['CrossZoneLoadBalancing'] = {'Enabled': self.enabled}
 
+
 class ELBAttAccessLog(DictLike):
-    def __init__(self, s3_bucket_name, s3_bucket_prefix, emit_interval, enabled = True):
+    def __init__(
+            self,
+            s3_bucket_name,
+            s3_bucket_prefix,
+            emit_interval,
+            enabled=True):
         self.enabled = enabled
         self.s3_bucket_name = s3_bucket_name
         self.s3_bucket_prefix = s3_bucket_prefix
@@ -65,13 +77,17 @@ class ELBAttAccessLog(DictLike):
                           'EmitInterval': self.emit_interval,
                           'S3BucketPrefix': self.s3_bucket_prefix}
 
+
 class ELBAttConnectionDraining(DictLike):
-    def __init__(self, timeout, enabled = True):
+    def __init__(self, timeout, enabled=True):
         self.enabled = enabled
         self.timeout = timeout
 
     def aws_merge(self, d):
-        d['ConnectionDraining'] = {'Enabled': self.enabled, Timeout: self.timeout}
+        d['ConnectionDraining'] = {
+            'Enabled': self.enabled,
+            Timeout: self.timeout}
+
 
 class ELBAttIdleTimeout(DictLike):
     def __init__(self, timeout):
@@ -79,6 +95,7 @@ class ELBAttIdleTimeout(DictLike):
 
     def aws_merge(self, d):
         d['ConnectionSettings'] = {'IdleTimeout': self.timeout}
+
 
 class ELBAtts():
     def __init__(self, *args):
@@ -134,5 +151,3 @@ class ELBHealthCheckConfig(DictLike):
         self.unhealthy_threshold = unhealthy_threshold
         self.timeout = timeout
         self.interval = interval
-
-
