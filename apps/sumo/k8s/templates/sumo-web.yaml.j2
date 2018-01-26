@@ -7,7 +7,7 @@ metadata:
   name: {{ SUMO_WEB_DEPLOYMENT_NAME }}
   namespace: {{ K8S_NAMESPACE }}
 spec:
-  replicas: 3
+  replicas: {{ SUMO_WEB_REPLICAS }}
   selector:
     matchLabels:
       app: {{ SUMO_APP_NAME }}
@@ -133,17 +133,17 @@ spec:
             secretKeyRef:
               key: secret-key
               name: {{ SUMO_SECRETS_NAME }}
-        image: {{ SUMO_IMAGE }}
+        image: {{ SUMO_IMAGE }}:{{ SUMO_IMAGE_TAG }}
         imagePullPolicy: {{ SUMO_IMAGE_PULL_POLICY }}
         name: sumo-{{ TARGET_ENVIRONMENT }}-web
         readinessProbe:
-          failureThreshold: {{ READINESS_FAILURE_THRESHOLD }}
-          initialDelaySeconds: {{ READINESS_INITIAL_DELAY_SECONDS }}
-          periodSeconds: {{ READINESS_PERIOD_SECONDS }}
-          successThreshold: {{ READINESS_SUCCESS_THRESHOLD }}
+          failureThreshold: {{ SUMO_READINESS_FAILURE_THRESHOLD }}
+          initialDelaySeconds: {{ SUMO_READINESS_INITIAL_DELAY_SECONDS }}
+          periodSeconds: {{ SUMO_READINESS_PERIOD_SECONDS }}
+          successThreshold: {{ SUMO_READINESS_SUCCESS_THRESHOLD }}
           tcpSocket:
-            port: {{ READINESS_TCP_SOCKET_PORT }}
-          timeoutSeconds: {{ READINESS_TIMEOUT_SECONDS }}
+            port: {{ SUMO_READINESS_TCP_SOCKET_PORT }}
+          timeoutSeconds: {{ SUMO_READINESS_TIMEOUT_SECONDS }}
         resources:
           requests:
             cpu: {{ SUMO_CPU_REQUEST }}
