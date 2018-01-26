@@ -48,4 +48,5 @@ k8s-sumo-rollback:
 	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${SUMO_WEB_DEPLOYMENT_NAME}
 
 # These tasks don't have file targets
-.PHONY: k8s-web k8s-delete-web k8s-nodeport k8s-delete-nodeport
+.PHONY: check-service-env k8s-web k8s-delete-web k8s-nodeport k8s-delete-nodeport \
+		k8s-sumo-rollout-status k8s-sumo-rollback
