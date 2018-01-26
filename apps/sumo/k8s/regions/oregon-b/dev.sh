@@ -2,6 +2,9 @@ export TARGET_ENVIRONMENT=dev
 export K8S_NAMESPACE=mdn-${TARGET_ENVIRONMENT}
 export AWS_REGION=us-west-2
 
+## Deployment info
+export SUMO_WEB_REPLICAS=3
+
 ## Memory/CPU limits
 export SUMO_CPU_REQUEST=100m
 export SUMO_CPU_LIMIT=2m
