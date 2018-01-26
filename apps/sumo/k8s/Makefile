@@ -4,7 +4,8 @@ export K8S_NAMESPACE ?= SUMO-${TARGET_ENVIRONMENT}
 export AWS_RESOURCE_STACK=SUMO-${TARGET_ENVIRONMENT}
 export AWS_REGION ?= us-west-2
 export SUMO_SECRETS_NAME ?= sumo-secrets-${TARGET_ENVIRONMENT}
-export SUMO_IMAGE ?= mozmar/sumo-dev:v38
+export SUMO_IMAGE ?= mozmar/sumo-dev
+export SUMO_IMAGE_TAG ?= latest
 export SUMO_IMAGE_PULL_POLICY ?= IfNotPresent
 export SUMO_APP_NAME ?= sumo-${TARGET_ENVIRONMENT}
 export SUMO_WEB_DEPLOYMENT_NAME ?= sumo-${TARGET_ENVIRONMENT}-web
@@ -38,6 +39,13 @@ k8s-nodeport: check-service-env
 k8s-delete-nodeport:
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found service ${SUMO_NODEPORT_NAME}
 
+## Rollout/Rollback
+
+k8s-sumo-rollout-status:
+	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${SUMO_WEB_DEPLOYMENT_NAME}
+
+k8s-sumo-rollback:
+	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${SUMO_WEB_DEPLOYMENT_NAME}
 
 # These tasks don't have file targets
 .PHONY: k8s-web k8s-delete-web k8s-nodeport k8s-delete-nodeport

@@ -133,7 +133,7 @@ spec:
             secretKeyRef:
               key: secret-key
               name: {{ SUMO_SECRETS_NAME }}
-        image: {{ SUMO_IMAGE }}
+        image: {{ SUMO_IMAGE }}:{{ SUMO_IMAGE_TAG }}
         imagePullPolicy: {{ SUMO_IMAGE_PULL_POLICY }}
         name: sumo-{{ TARGET_ENVIRONMENT }}-web
         readinessProbe:
