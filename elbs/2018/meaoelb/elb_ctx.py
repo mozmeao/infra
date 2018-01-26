@@ -1,5 +1,6 @@
 import boto3
 from kubernetes import client, config
+import sys
 
 REDIRECTOR_SERVICE_NAME = 'redirector'
 REDIRECTOR_SERVICE_NAMESPACE = 'redirector'
@@ -20,7 +21,7 @@ class ELBContext:
         self.ec2_client = boto3.client('ec2', region_name=aws_region)
         self.elb_client = boto3.client('elb', region_name=aws_region)
         self.asg_client = boto3.client('autoscaling', region_name=aws_region)
-        
+
     def get_cluster_name(self):
         # TODO: clean this up!
         return config.list_kube_config_contexts()[0][0]['name']
@@ -72,29 +73,29 @@ class ELBContext:
 
     def _create_elb(self, service_config):
         elb_config = service_config.elb_config
-        print("➤ Creating {} ELB".format(elb_config.name))
+        print("\t➤ Creating {} ELB...".format(elb_config.name), end='', flush=True)
         response = self.elb_client.create_load_balancer(
             LoadBalancerName=elb_config.name,
             Listeners=list(map(lambda l: l.to_aws(), elb_config.listeners)),
             SecurityGroups=elb_config.security_groups,
             Subnets=elb_config.subnets,
             Tags=elb_config.tags)
-        print("➤ Done")
+        print("Done")
 
     def _modify_elb_atts(self, service_config):
         elb_config = service_config.elb_config
         if elb_config.elb_atts:
-            print("➤ Updating ELB attributes")
+            print("\t➤ Updating ELB attributes...", end='', flush=True)
             response = self.elb_client.modify_load_balancer_attributes(
                 LoadBalancerName=elb_config.name,
                 LoadBalancerAttributes=elb_config.elb_atts.to_aws())
-            print("➤ Done")
+            print("Done")
         else:
             print("➤ No ELB attributes defined")
 
     def _configure_elb_health_checks(self, service_config):
         elb_config = service_config.elb_config
-        print("➤ Creating health checks")
+        print("\t➤ Creating health checks...", end='', flush=True)
         hc = elb_config.health_check
         hc_target = "{}:{}{}".format(
             hc.target_proto,
@@ -109,7 +110,7 @@ class ELBContext:
                 'UnhealthyThreshold': hc.unhealthy_threshold,
                 'HealthyThreshold': hc.healthy_threshold
             })
-        print("➤ Done")
+        print("Done")
 
     def prompt_for_apply(self):
         if not self.confirmed_apply:
@@ -123,16 +124,6 @@ class ELBContext:
         """
         Create an ELB, modify it's attributes, and create health checks.
         """
-
-        if not self.dry_run_mode and not self.confirmed_apply:
-            self.prompt_for_apply()
-
-        print("➤ Processing {}".format(service_config.elb_config.name))
-        if self.elb_exists(service_config.elb_config.name):
-            print(
-                "➤ {} has already been provisioned".format(
-                    service_config.elb_config.name))
-            return
         if self.get_cluster_name() != service_config.target_cluster:
             print(
                 "➤ Currently connected to {} K8s cluster, which is not the target: {}".format(
@@ -140,9 +131,19 @@ class ELBContext:
                     service_config.target_cluster))
             return
 
+        if not self.dry_run_mode and not self.confirmed_apply:
+            self.prompt_for_apply()
+
+        print("➤ Processing {}".format(service_config.elb_config.name))
+        if self.elb_exists(service_config.elb_config.name):
+            print(
+                "\t➤ {} has already been provisioned".format(
+                    service_config.elb_config.name))
+            return
+
         if self.dry_run_mode:
             print(
-                "➤ ELB {} would have been created".format(
+                "\t➤ ELB {} would have been created".format(
                     service_config.elb_config.name))
             return
 
@@ -162,7 +163,6 @@ class ELBContext:
         response = self.asg_client.attach_load_balancers(
             AutoScalingGroupName=asg_name,
             LoadBalancerNames=elb_names)
-        print(response)
 
     def attach_all_elbs(self, asg, services):
         """
