@@ -96,7 +96,7 @@ module "sumo-static-media-dev-cf" {
 module "sumo-static-media-stage-cf" {
     source = "./cloudfront_static_media"
 
-    acm_cert_arn = " arn:aws:acm:us-east-1:236517346949:certificate/11d5784f-997e-4271-a6d5-2cfeb8dccb27"
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/11d5784f-997e-4271-a6d5-2cfeb8dccb27"
     aliases = ["static-media-stage-cdn.sumo.mozilla.net", "static-media-stage-cdn.sumo.moz.works"]
     comment = "Stage CDN for SUMO static media"
     distribution_name = "SUMOStaticMediaStageCDN"
@@ -106,7 +106,7 @@ module "sumo-static-media-stage-cf" {
 module "sumo-static-media-prod-cf" {
     source = "./cloudfront_static_media"
 
-    acm_cert_arn = " arn:aws:acm:us-east-1:236517346949:certificate/a5cc5ef0-7781-4108-8e70-34d8358ea5cc"
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/a5cc5ef0-7781-4108-8e70-34d8358ea5cc"
     aliases = ["static-media-prod-cdn.sumo.mozilla.net", "static-media-prod-cdn.sumo.moz.works"]
     comment = "Prod CDN for SUMO static media"
     distribution_name = "SUMOStaticMediaProdCDN"
