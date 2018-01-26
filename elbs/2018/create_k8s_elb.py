@@ -18,7 +18,6 @@ asg_client = boto3.client('autoscaling', region_name=AWS_REGION)
 
 
 def get_cluster_name():
-    ctxs = config.list_kube_config_contexts()
     # TODO
     return config.list_kube_config_contexts()[0][0]['name']
 
@@ -334,6 +333,7 @@ def attach_elbs_to_asg(asg_name, elb_names):
 
 print("Current cluster:", get_cluster_name())
 
+OREGON_B_ASG = 'nodes.oregon-b.moz.works'
 ## create a bedrock-stage ELB
 bedrock_stage = default_service_config(
     target_cluster='oregon-b.moz.works',
@@ -346,10 +346,12 @@ bedrock_stage.elb_config.elb_atts = ELBAtts(ELBAttIdleTimeout(120))
 
 hc = default_health_check()
 hc.target_path = '/healthz/'
-hc.target_port = 32318
+#hc.target_port = 32318  # TODO, pull from config above
+hc.target_port = get_service_nodeport(bedrock_stage.namespace, bedrock_stage.name)
 hc.target_proto = 'HTTP'
 bedrock_stage.elb_config.health_check = hc
 
+##  TODO: plan and apply
 
 ## 
 pp = pprint.PrettyPrinter(indent=2)
@@ -362,6 +364,6 @@ for elb in region_elbs:
     create_elb(elb)
 
 # finally, attach all the elbs defined above to the ASG
-attach_elbs_to_asg('nodes.oregon-b.moz.works',
+attach_elbs_to_asg(OREGON_B_ASG,
                    list(map(lambda e: e.elb_config.name, region_elbs)))
 
