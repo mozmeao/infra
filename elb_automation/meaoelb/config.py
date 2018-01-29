@@ -100,8 +100,7 @@ class ELBAttIdleTimeout(DictLike):
 class ELBAtts():
     def __init__(self, *args):
         self.items = []
-        for arg in args:
-            self.items.append(arg)
+        self.items = list(args)
 
     def to_aws(self):
         d = {}
