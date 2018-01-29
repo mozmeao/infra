@@ -29,6 +29,3 @@ def rollback_web(ctx):
     namespace = ctx.config['K8S_NAMESPACE']
     web_deployment_name = ctx.config['SUMO_WEB_DEPLOYMENT_NAME']
     ctx.run('kubectl -n {}} rollout undo deploy {}'.format(namespace, web_deployment_name))
-
-    
-
