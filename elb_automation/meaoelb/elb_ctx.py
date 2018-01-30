@@ -116,13 +116,15 @@ class ELBContext:
         """
         Attach a single ELB to an ASG
         """
+        print("\t➤ Attaching to ASG...", end='', flush=True)
         if self.dry_run_mode:
             print(
                 "➤ The {} ELB would have been attached to the {} ASG:".format(service_config.elb_config.name, asg_name))
             return
         self.asg_client.attach_load_balancers(
             AutoScalingGroupName=asg_name,
-            LoadBalancerNames=service_config.elb_config.name)
+            LoadBalancerNames=[service_config.elb_config.name])
+        print("Done")
 
     def prompt_for_apply(self):
         if not self.confirmed_apply:
