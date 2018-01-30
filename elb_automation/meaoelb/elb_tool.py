@@ -68,5 +68,5 @@ class ELBTool:
         """
         print("-" * 50)
         for elb in self.all_elbs:
-            self.ctx.create_elb(elb)
-        self.ctx.attach_all_elbs(self.cfg_defaults.asg_name, self.all_elbs)
+            self.ctx.create_elb(service_config = elb, 
+                                asg_name = self.cfg_defaults.asg_name)
