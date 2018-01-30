@@ -148,7 +148,7 @@ export SYNC_REMOTE_DIR ?= "/backups/efs/"
 
 export BACKUP_CONTAINER_NAME ?= mdn-backup
 export SYNC_FROM_S3_CONTAINER_NAME ?= mdn-sync
-export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:758c79a0fde3
+export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:6f73077
 # cronjob syntax here: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
 export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
 export RESTORE_SERVICE_SCHEDULE ?= "@hourly"

@@ -151,7 +151,47 @@ Example schedules:
 
 #### MDN backup cronjob
 
-- Docs for the `mdn-backup` cronjob are located [here](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron).
+- Development docs for the `mdn-backup` cronjob are located [here](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron).
+
+##### Rebuilding the backup cron image
+
+```
+cd infra/apps/mdn/utils/mdn_backup_cron/image
+./build.sh
+```
+
+##### MDN backup troubleshooting
+
+- To troubleshoot the backup cronjob, first delete the existing cronjob, then create a new pod using the `mdn-prod-backup-test.yaml` located in the `apps/mdn/utils/mdn_backup_cron/k8s/` directory of this repo. Once you've verified that the test pod is working correctly, recreate the cronjob.
+
+```
+    kubectl -n mdn-prod delete cronjob mdn-backup-prod
+    kubectl -n mdn-prod create -f infra/apps/mdn/utils/mdn_backup_cron/k8s/mdn-backup-test-pod.yaml
+    kubectl -n mdn-prod exec -it mdn-backup-test bash
+    # your shell should start with /mdnsync as the current directory
+    ./mdn_sync.sh
+    kubectl -n mdn-prod delete pod mdn-backup-test
+``` 
+
+Once you're finished, recreate the cronjob with:
+
+```
+source ./regions/portland/prod.sh
+CHANGE_MDN_INFRA=true make k8s-backup-cron
+# make sure it appears in this list of cronjobs
+kubectl -n mdn-prod get cronjobs
+```
+
+To make the cronjob run more often:
+
+```
+kubectl -n mdn-prod edit cronjob mdn-backup-prod
+# edit the schedule value:
+# schedule: '*/1 * * * *'
+# the schedule value above runs the cronjob once a minute
+```
+
+> this is useful to see the cronjob run once, then tweak the `schedule` value back to `@hourly`.
 
 #### Datadog/Redis cronjob
 
