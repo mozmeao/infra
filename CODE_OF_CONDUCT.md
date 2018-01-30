@@ -1,0 +1,1 @@
+Please see [Mozilla's Community Participation Guidelines](https://www.mozilla.org/about/governance/policies/participation/).
