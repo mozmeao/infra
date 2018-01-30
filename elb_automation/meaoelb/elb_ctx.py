@@ -112,6 +112,18 @@ class ELBContext:
             })
         print("Done")
 
+    def _attach_elb_to_asg(self, service_config, asg_name):
+        """
+        Attach a single ELB to an ASG
+        """
+        if self.dry_run_mode:
+            print(
+                "➤ The {} ELB would have been attached to the {} ASG:".format(service_config.elb_config.name, asg_name))
+            return
+        self.asg_client.attach_load_balancers(
+            AutoScalingGroupName=asg_name,
+            LoadBalancerNames=service_config.elb_config.name)
+
     def prompt_for_apply(self):
         if not self.confirmed_apply:
             result = input("Enter 'make it so' to continue: ")
@@ -120,7 +132,7 @@ class ELBContext:
             else:
                 self.confirmed_apply = True
 
-    def create_elb(self, service_config):
+    def create_elb(self, service_config, asg_name):
         """
         Create an ELB, modify it's attributes, and create health checks.
         """
@@ -150,6 +162,7 @@ class ELBContext:
         self._create_elb(service_config)
         self._modify_elb_atts(service_config)
         self._configure_elb_health_checks(service_config)
+        self._attach_elb_to_asg(service_config, asg_name)
 
     def attach_elbs_to_asg(self, asg_name, elb_names):
         """
