@@ -31,6 +31,16 @@ bedrock_stage = elb_tool.define_elb(
 bedrock_stage.elb_config.elb_atts = ELBAtts(ELBAttIdleTimeout(120))
 # custom health check configuration
 bedrock_stage.elb_config.health_check.target_path = '/healthz/'
+
+
+bedrock_dev = elb_tool.define_elb(
+    service_namespace='bedrock-dev',
+    service_name='bedrock-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
+bedrock_dev.elb_config.elb_atts = ELBAtts(ELBAttIdleTimeout(120))
+bedrock_dev.elb_config.health_check.target_path = '/healthz/'
+
+
 # show the ELB's before we process them
 elb_tool.show_elbs()
 # create and bind the ELBs
