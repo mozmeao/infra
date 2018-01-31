@@ -41,9 +41,9 @@ class ELBConfigDefaults:
         """
         redirector_port = self.elb_ctx.get_redirector_service_nodeport()
         return ELBListenerConfig(
-            protocol='TCP',
+            protocol='HTTP',
             load_balancer_port=80,
-            instance_protocol='TCP',
+            instance_protocol='HTTP',
             instance_port=redirector_port,
             ssl_arn=None)
 
@@ -51,18 +51,21 @@ class ELBConfigDefaults:
             self,
             service_namespace,
             service_name,
-            ssl_arn):
+            ssl_arn=None,
+            protocol='HTTPS',
+            port=443):
         """
         Generate a ELB listener using the services nodeport
         """
         service_nodeport = self.elb_ctx.get_service_nodeport(
             service_namespace, service_name)
         return ELBListenerConfig(
-            protocol='HTTPS',
-            load_balancer_port=443,
+            protocol=protocol,
+            load_balancer_port=port,
             instance_protocol='HTTP',
             instance_port=service_nodeport,
             ssl_arn=ssl_arn)
+
 
     def default_elb_config(self,
                            service_namespace,
@@ -95,6 +98,40 @@ class ELBConfigDefaults:
             tags,
             health_check)
 
+    def default_elb_config_http(self,
+                                service_namespace,
+                                service_name,
+                                vpc_id,
+                                subnet_ids,
+                                ssl_arn):
+        """
+        Generate an ELB configuration using the supplied values.
+        Both 80 and 443 listeners use the same K8s nodeport, the
+        K8s redirector service is not used.
+        Return value must be used as a child of a ServiceConfig.
+        """
+        http_service_listener = self.default_service_listener(
+            service_namespace, service_name, protocol='HTTP', port=80)
+        https_service_listener = self.default_service_listener(
+            service_namespace, service_name, ssl_arn)
+        listeners = [http_service_listener, https_service_listener]
+        health_check = self.default_health_check(
+            service_namespace, service_name)
+        security_groups = [self.elb_ctx.get_elb_access_security_group(vpc_id)]
+        tags = [{'Key': 'Stack',
+                 'Value': service_namespace},
+                {'Key': 'KubernetesCluster',
+                 'Value': self.elb_ctx.get_cluster_name()}]
+
+        return ELBConfig(
+            service_namespace,
+            listeners,
+            security_groups,
+            subnet_ids,
+            tags,
+            health_check)
+
+
     def generic_service_config(self,
                                target_cluster,
                                service_namespace,
@@ -120,6 +157,7 @@ class ELBConfigDefaults:
             vpc_id=vpc_id,
             subnet_ids=subnet_ids)
 
+
     def default_service_config(self,
                                service_namespace,
                                service_name,
@@ -141,3 +179,28 @@ class ELBConfigDefaults:
             elb_config=elb_config,
             vpc_id=self.vpc_id,
             subnet_ids=self.subnet_ids)
+
+
+    def default_service_config_http(self,
+                               service_namespace,
+                               service_name,
+                               ssl_arn):
+        """
+        Generate a service config using defaults supplied to the ConfigDefaults
+        constructor. Both 80 and 443 listeners use the same K8s nodeport, the
+        K8s redirector service is not used.
+        """
+        elb_config = self.default_elb_config_http(
+            service_namespace,
+            service_name,
+            self.vpc_id,
+            self.subnet_ids,
+            ssl_arn)
+        return ServiceConfig(
+            namespace=service_namespace,
+            name=service_name,
+            target_cluster=self.target_cluster,
+            elb_config=elb_config,
+            vpc_id=self.vpc_id,
+            subnet_ids=self.subnet_ids)
+

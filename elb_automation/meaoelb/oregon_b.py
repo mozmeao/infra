@@ -17,6 +17,7 @@ elb_tool = ELBTool(
     vpc_id=OREGON_B_VPC,
     subnet_ids=OREGON_B_SUBNET_IDS)
 
+### Bedrock Stage
 # Define ELB's that we'd like to have created
 bedrock_stage = elb_tool.define_elb(
     service_namespace='bedrock-stage',
@@ -33,7 +34,8 @@ bedrock_stage.elb_config.elb_atts = ELBAtts(ELBAttIdleTimeout(120))
 bedrock_stage.elb_config.health_check.target_path = '/healthz/'
 
 
-bedrock_dev = elb_tool.define_elb(
+### Bedrock Dev
+bedrock_dev = elb_tool.define_elb_http(
     service_namespace='bedrock-dev',
     service_name='bedrock-nodeport',
     ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
