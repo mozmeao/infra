@@ -244,6 +244,12 @@ Starting to serve on 127.0.0.1:8001
 ### AWS		
 
 [AWS MDN-prod resource group](https://resources.console.aws.amazon.com/r/group/5)	
+
+### elastic.co
+
+Our hosted Elasticsearch cluster is in the `us-west-2` region of AWS. Elastic.co hosting status can be found on [this](https://cloud-status.elastic.co/) page.
+
+
 ## Operations
 
 ### Manually adding/removing K8s Portland cluster nodes
