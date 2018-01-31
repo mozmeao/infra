@@ -212,6 +212,9 @@ class ELBContext:
         if ddiff != {}:
             print("\t➤ ELB config has diverged:")
             print("!" * 30)
+            print('- Values marked "new_value" are from AWS')
+            print('- Values marked "old_value" are from local EBS config')
+
             pprint(ddiff, indent=2)
             print("!" * 30)
         else:
