@@ -58,6 +58,20 @@ class ELBTool:
         self.all_elbs.append(service_def)
         return service_def
 
+    def define_elb_http(self, service_namespace, service_name, ssl_arn):
+        """
+        TODO
+        A convenience method for defining an ELB and storing it in 
+        a list to be created via create_elbs()
+        """
+        service_def = self.cfg_defaults.default_service_config_http(
+            service_namespace=service_namespace,
+            service_name=service_name,
+            ssl_arn=ssl_arn)
+        self.all_elbs.append(service_def)
+        return service_def
+
+
     def show_elbs(self):
         for elb in self.all_elbs:
             elb.show()
