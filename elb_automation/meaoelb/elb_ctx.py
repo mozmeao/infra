@@ -192,14 +192,6 @@ class ELBContext:
         self.attach_elbs_to_asg(
             asg, list(map(lambda e: e.elb_config.name, services)))
 
-
-    def convert_keys_to_string(self, dictionary):
-        """Recursively converts dictionary keys to strings."""
-        if not isinstance(dictionary, dict):
-            return dictionary
-        return dict((str(k), self.convert_keys_to_string(v)) 
-            for k, v in dictionary.items())
-
     def test_elb(self, service_config):
         """
         Compare the defined config with whats in AWS. Convert the local config
