@@ -1,6 +1,7 @@
 import boto3
 from kubernetes import client, config
 import sys
+from meaoelb.config import ELBConfig
 
 REDIRECTOR_SERVICE_NAME = 'redirector'
 REDIRECTOR_SERVICE_NAMESPACE = 'redirector'
@@ -153,6 +154,7 @@ class ELBContext:
             print(
                 "\t➤ {} has already been provisioned".format(
                     service_config.elb_config.name))
+            self.test_elb(service_config)
             return
 
         if self.dry_run_mode:
@@ -186,3 +188,34 @@ class ELBContext:
         """
         self.attach_elbs_to_asg(
             asg, list(map(lambda e: e.elb_config.name, services)))
+
+
+    def convert_keys_to_string(self, dictionary):
+        """Recursively converts dictionary keys to strings."""
+        if not isinstance(dictionary, dict):
+            return dictionary
+        return dict((str(k), self.convert_keys_to_string(v)) 
+            for k, v in dictionary.items())
+
+    def test_elb(self, service_config):
+        from deepdiff import DeepDiff
+        from pprint import pprint
+        elb_response = self.elb_client.describe_load_balancers(
+            LoadBalancerNames=[service_config.elb_config.name])
+        atts_response = self.elb_client.describe_load_balancer_attributes(
+            LoadBalancerName=service_config.elb_config.name)
+        tags_response = self.elb_client.describe_tags(
+            LoadBalancerNames=[service_config.elb_config.name])
+
+        elb_def = elb_response['LoadBalancerDescriptions'][0]
+        atts = atts_response['LoadBalancerAttributes']
+        tags = tags_response['TagDescriptions'][0]['Tags']
+        c = ELBConfig.from_aws(elb_def, atts, tags)
+        if dict(service_config.elb_config)['name'] == dict(c)['name']:
+            print("EQUAL")
+        else:
+            print("NOT EQUAL")
+        #c = self.convert_keys_to_string(c)
+        ddiff = DeepDiff(dict(service_config.elb_config), dict(c), ignore_order=True)
+        pprint(ddiff, indent=2)
+        
