@@ -1,4 +1,7 @@
-import pprint
+import json
+from pygments import highlight
+from pygments.lexers import JsonLexer
+from pygments.formatters import TerminalFormatter
 import re
 
 class DictLike(dict):
@@ -27,11 +30,8 @@ class ServiceConfig(DictLike):
         self.subnet_ids = subnet_ids
 
     def show(self):
-        pp = pprint.PrettyPrinter(indent=2)
-        print("-" * 50)
-        print("ELB: {}".format(self.elb_config.name))
-        pp.pprint(self)
-
+        j = json.dumps(dict(self), indent=2, sort_keys=True)
+        print(highlight(j, JsonLexer(), TerminalFormatter()))
 
 class ELBConfig(DictLike):
     def __init__(
@@ -42,7 +42,7 @@ class ELBConfig(DictLike):
             subnets,
             tags,
             health_check,
-            elb_atts=None):
+            elb_atts):
         self.name = name
         self.listeners = listeners
         self.security_groups = security_groups
@@ -53,22 +53,23 @@ class ELBConfig(DictLike):
 
     @staticmethod
     def from_aws(elb, aws_atts, tags):
-        listeners = []
+        listeners = {}
         for l in elb['ListenerDescriptions']:
-            listener = l['Listener']
-            listeners.append(ELBListenerConfig.from_aws(listener))
+            aws_listener = l['Listener']
+            listener = ELBListenerConfig.from_aws(aws_listener)
+            listeners[listener.load_balancer_port] = listener
         health_check = ELBHealthCheckConfig.from_aws(elb['HealthCheck'])
         atts = ELBAtts.from_aws(aws_atts)
         return ELBConfig(name = elb['LoadBalancerName'],
                          listeners = listeners, 
                          security_groups =elb['SecurityGroups'],
                          subnets = elb['Subnets'],
-                         tags = None,
+                         tags = tags,
                          health_check = health_check,
                          elb_atts = atts)
 
 class ELBAttCrossZoneLoadBalancing(DictLike):
-    def __init__(self, enabled=True):
+    def __init__(self, enabled=False):
         self.enabled = enabled
 
     def aws_merge(self, d):
@@ -81,20 +82,23 @@ class ELBAttCrossZoneLoadBalancing(DictLike):
 class ELBAttAccessLog(DictLike):
     def __init__(
             self,
-            s3_bucket_name,
-            s3_bucket_prefix,
-            emit_interval,
-            enabled=True):
+            s3_bucket_name = None,
+            s3_bucket_prefix = None,
+            emit_interval = None,
+            enabled=False):
         self.enabled = enabled
         self.s3_bucket_name = s3_bucket_name
         self.s3_bucket_prefix = s3_bucket_prefix
         self.emit_interval = emit_interval
 
     def aws_merge(self, d):
-        d['AccessLog'] = {'Enabled': self.enabled,
-                          'S3BucketName': self.s3_bucket_name,
-                          'EmitInterval': self.emit_interval,
-                          'S3BucketPrefix': self.s3_bucket_prefix}
+        if self.enabled:
+            d['AccessLog'] = {'Enabled': self.enabled,
+                            'S3BucketName': self.s3_bucket_name,
+                            'EmitInterval': self.emit_interval,
+                            'S3BucketPrefix': self.s3_bucket_prefix}
+        else:
+            d['AccessLog'] = {'Enabled': False}
 
     @staticmethod
     def from_aws(obj):
@@ -106,7 +110,7 @@ class ELBAttAccessLog(DictLike):
             
 
 class ELBAttConnectionDraining(DictLike):
-    def __init__(self, timeout, enabled=True):
+    def __init__(self, timeout=300, enabled=False):
         self.enabled = enabled
         self.timeout = timeout
 
@@ -120,42 +124,39 @@ class ELBAttConnectionDraining(DictLike):
         return ELBAttConnectionDraining(enabled = obj['Enabled'],
                                         timeout = obj['Timeout'])
 
-class ELBAttIdleTimeout(DictLike):
-    def __init__(self, timeout):
-        self.timeout = timeout
+class ELBConnectionSettings(DictLike):
+    def __init__(self, idle_timeout=120):
+        self.idle_timeout = idle_timeout
 
     def aws_merge(self, d):
-        d['ConnectionSettings'] = {'IdleTimeout': self.timeout}
+        d['ConnectionSettings'] = {'IdleTimeout': self.idle_timeout}
 
     @staticmethod
     def from_aws(obj):
-        return ELBAttIdleTimeout(timeout = obj['IdleTimeout'])
+        return ELBConnectionSettings(idle_timeout = obj['IdleTimeout'])
 
-class ELBAtts():
-    def __init__(self, *args):
-        self.items = []
-        self.items = list(args)
+class ELBAtts(DictLike):
+    def __init__(self):
+        self.cross_zone_load_balancing = ELBAttCrossZoneLoadBalancing()
+        self.access_log = ELBAttAccessLog()
+        self.connection_draining = ELBAttConnectionDraining()
+        self.connection_settings = ELBConnectionSettings()
 
     def to_aws(self):
         d = {}
-        for att in self.items:
-            att.aws_merge(d)
+        self.cross_zone_load_balancing.aws_merge(d)
+        self.access_log.aws_merge(d)
+        self.connection_draining.aws_merge(d)
+        self.connection_settings.aws_merge(d)
         return d
 
     @staticmethod
     def from_aws(atts):
         newatts = ELBAtts()
-        if 'CrossZoneLoadBalancing' in atts:
-            newatts.items.append(ELBAttCrossZoneLoadBalancing.from_aws(atts['CrossZoneLoadBalancing']))
-        
-        if 'AccessLog' in atts:
-            newatts.items.append(ELBAttAccessLog.from_aws(atts['AccessLog']))
-
-        if 'ConnectionDraining':
-            newatts.items.append(ELBAttConnectionDraining.from_aws(atts['ConnectionDraining']))
-        
-        if 'ConnectionSettings':
-            newatts.items.append(ELBAttIdleTimeout.from_aws(atts['ConnectionSettings']))
+        newatts.cross_zone_load_balancing = ELBAttCrossZoneLoadBalancing.from_aws(atts['CrossZoneLoadBalancing'])
+        newatts.access_log = ELBAttAccessLog.from_aws(atts['AccessLog'])
+        newatts.connection_draining = ELBAttConnectionDraining.from_aws(atts['ConnectionDraining'])
+        newatts.connection_settings = ELBConnectionSettings.from_aws(atts['ConnectionSettings'])
         return newatts
 
 class ELBListenerConfig(DictLike):
@@ -187,12 +188,13 @@ class ELBListenerConfig(DictLike):
             cert_id = listener['SSLCertificateId']
         else:
             cert_id = None
+
         return ELBListenerConfig(
             protocol = listener['Protocol'],
-            load_balancer_port = listener['LoadBalancerPort'],
+            load_balancer_port = int(listener['LoadBalancerPort']),
             instance_protocol = listener['InstanceProtocol'],
-            instance_port = listener['InstancePort'],
-            ssl_arn = None)
+            instance_port = int(listener['InstancePort']),
+            ssl_arn = cert_id)
 
 class ELBHealthCheckConfig(DictLike):
     def __init__(
@@ -219,7 +221,7 @@ class ELBHealthCheckConfig(DictLike):
         matches = r.match(hc['Target'])
         return ELBHealthCheckConfig(
                 target_path = matches.group(3),
-                target_port = matches.group(2),
+                target_port = int(matches.group(2)),
                 target_proto = matches.group(1),
                 healthy_threshold = hc['HealthyThreshold'],
                 unhealthy_threshold = hc['UnhealthyThreshold'],

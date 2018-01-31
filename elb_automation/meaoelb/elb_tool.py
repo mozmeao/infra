@@ -1,10 +1,7 @@
 import argparse
 
-
 from meaoelb.elb_ctx import ELBContext
 from meaoelb.defaults import ELBConfigDefaults
-from meaoelb.config import ELBAtts, ELBAttIdleTimeout
-
 
 class ELBTool:
     def __init__(

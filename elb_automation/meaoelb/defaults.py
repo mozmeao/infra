@@ -67,6 +67,9 @@ class ELBConfigDefaults:
             ssl_arn=ssl_arn)
 
 
+    def default_elb_atts(self):
+        return ELBAtts()
+
     def default_elb_config(self,
                            service_namespace,
                            service_name,
@@ -81,7 +84,7 @@ class ELBConfigDefaults:
         redirector_listener = self.default_redirector_listener()
         service_listener = self.default_service_listener(
             service_namespace, service_name, ssl_arn)
-        listeners = [redirector_listener, service_listener]
+        listeners = {80:redirector_listener, 443:service_listener}
         health_check = self.default_health_check(
             service_namespace, service_name)
         security_groups = [self.elb_ctx.get_elb_access_security_group(vpc_id)]
@@ -89,14 +92,15 @@ class ELBConfigDefaults:
                  'Value': service_namespace},
                 {'Key': 'KubernetesCluster',
                  'Value': self.elb_ctx.get_cluster_name()}]
-
+        elb_atts = self.default_elb_atts()
         return ELBConfig(
             service_namespace,
             listeners,
             security_groups,
             subnet_ids,
             tags,
-            health_check)
+            health_check,
+            elb_atts)
 
     def default_elb_config_http(self,
                                 service_namespace,
@@ -114,7 +118,7 @@ class ELBConfigDefaults:
             service_namespace, service_name, protocol='HTTP', port=80)
         https_service_listener = self.default_service_listener(
             service_namespace, service_name, ssl_arn)
-        listeners = [http_service_listener, https_service_listener]
+        listeners = {80:http_service_listener, 443:https_service_listener}
         health_check = self.default_health_check(
             service_namespace, service_name)
         security_groups = [self.elb_ctx.get_elb_access_security_group(vpc_id)]
@@ -122,6 +126,7 @@ class ELBConfigDefaults:
                  'Value': service_namespace},
                 {'Key': 'KubernetesCluster',
                  'Value': self.elb_ctx.get_cluster_name()}]
+        elb_atts = self.default_elb_atts()
 
         return ELBConfig(
             service_namespace,
@@ -129,7 +134,8 @@ class ELBConfigDefaults:
             security_groups,
             subnet_ids,
             tags,
-            health_check)
+            health_check,
+            elb_atts)
 
 
     def generic_service_config(self,

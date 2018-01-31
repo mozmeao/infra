@@ -1,5 +1,4 @@
 from meaoelb.elb_tool import ELBTool
-from meaoelb.config import ELBAtts, ELBAttIdleTimeout
 
 AWS_REGION = 'us-west-2'
 TARGET_CLUSTER = 'oregon-b.moz.works'
@@ -29,22 +28,24 @@ bedrock_stage = elb_tool.define_elb(
 # but elb_tool.define_elb() fills in most of the blanks for you
 
 # add an IdleTimeout as an ELB attribute
-bedrock_stage.elb_config.elb_atts = ELBAtts(ELBAttIdleTimeout(120))
+bedrock_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
 # custom health check configuration
 bedrock_stage.elb_config.health_check.target_path = '/healthz/'
 
 
-### Bedrock Dev
+# ### Bedrock Dev
 bedrock_dev = elb_tool.define_elb_http(
     service_namespace='bedrock-dev',
     service_name='bedrock-nodeport',
     ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
-bedrock_dev.elb_config.elb_atts = ELBAtts(ELBAttIdleTimeout(120))
+bedrock_dev.elb_config.elb_atts.connection_settings.idle_timeout = 120
 bedrock_dev.elb_config.health_check.target_path = '/healthz/'
 
 
 # show the ELB's before we process them
-elb_tool.show_elbs()
+# object output is now colorized JSON
+#elb_tool.show_elbs()
+
 # create and bind the ELBs
 # if an ELB has already been created, skip and continue on to the next
 # This also ensures all ELBs are bound to the ASG
