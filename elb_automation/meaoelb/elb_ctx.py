@@ -77,7 +77,11 @@ class ELBContext:
 
     def _create_elb(self, service_config):
         elb_config = service_config.elb_config
-        print("\t➤ Creating {} ELB...".format(elb_config.name), end='', flush=True)
+        print(
+            "\t➤ Creating {} ELB...".format(
+                elb_config.name),
+            end='',
+            flush=True)
         response = self.elb_client.create_load_balancer(
             LoadBalancerName=elb_config.name,
             Listeners=list(map(lambda l: l.to_aws(), elb_config.listeners)),
@@ -122,7 +126,8 @@ class ELBContext:
         """
         if self.dry_run_mode:
             print(
-                "➤ The {} ELB would have been attached to the {} ASG:".format(service_config.elb_config.name, asg_name))
+                "➤ The {} ELB would have been attached to the {} ASG:".format(
+                    service_config.elb_config.name, asg_name))
             return
         print("\t➤ Attaching to ASG...", end='', flush=True)
         self.asg_client.attach_load_balancers(
@@ -192,13 +197,12 @@ class ELBContext:
         self.attach_elbs_to_asg(
             asg, list(map(lambda e: e.elb_config.name, services)))
 
-
     def convert_keys_to_string(self, dictionary):
         """Recursively converts dictionary keys to strings."""
         if not isinstance(dictionary, dict):
             return dictionary
-        return dict((str(k), self.convert_keys_to_string(v)) 
-            for k, v in dictionary.items())
+        return dict((str(k), self.convert_keys_to_string(v))
+                    for k, v in dictionary.items())
 
     def test_elb(self, service_config):
         """
@@ -216,7 +220,11 @@ class ELBContext:
         atts = atts_response['LoadBalancerAttributes']
         tags = tags_response['TagDescriptions'][0]['Tags']
         c = ELBConfig.from_aws(elb_def, atts, tags)
-        ddiff = DeepDiff(dict(service_config.elb_config), dict(c), ignore_order=True)
+        ddiff = DeepDiff(
+            dict(
+                service_config.elb_config),
+            dict(c),
+            ignore_order=True)
         if ddiff != {}:
             print("\t➤ ELB config has diverged:")
             print("<>" * 50)

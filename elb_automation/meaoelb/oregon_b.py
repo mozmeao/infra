@@ -16,7 +16,7 @@ elb_tool = ELBTool(
     vpc_id=OREGON_B_VPC,
     subnet_ids=OREGON_B_SUBNET_IDS)
 
-### Bedrock Stage
+# Bedrock Stage
 # Define ELB's that we'd like to have created
 bedrock_stage = elb_tool.define_elb(
     service_namespace='bedrock-stage',
@@ -44,7 +44,7 @@ bedrock_dev.elb_config.health_check.target_path = '/healthz/'
 
 # show the ELB's before we process them
 # object output is now colorized JSON
-#elb_tool.show_elbs()
+# elb_tool.show_elbs()
 
 # create and bind the ELBs
 # if an ELB has already been created, skip and continue on to the next
