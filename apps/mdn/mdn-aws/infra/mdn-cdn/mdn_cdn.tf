@@ -12,8 +12,19 @@ terraform {
 
 
 # Primary CDN
+module "mdn-primary-cloudfrom-stage" {
+    source = "./cloudfront_primary"
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/750fe7e9-0990-4d15-a6d4-df9606671e20"
+    aliases = ["test-stage-cdn.mdn.moz.works"]
+    comment = "Primary Stage CDN for AWS-hosted MDN"
+    distribution_name = "MDNPrimaryStageCDN"
+    domain_name = "stage.mdn.moz.works"
+}
+
+
+# Static Media CDN
 module "mdn-cloudfront-stage" {
-    source = "./cloudfront"
+    source = "./cloudfront_static"
 
     acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/f46733a9-d662-4cb4-b344-b09c8a5cb624"
     aliases = ["stage-cdn.mdn.mozilla.net", "stage-cdn.mdn.moz.works"]
@@ -23,7 +34,7 @@ module "mdn-cloudfront-stage" {
 }
 
 module "mdn-cloudfront-prod" {
-    source = "./cloudfront"
+    source = "./cloudfront_static"
 
     acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/8f9e3e77-984b-4e1d-92c6-214e79435df3"
     aliases = ["cdn.mdn.mozilla.net", "cdn.mdn.moz.works"]
@@ -34,7 +45,6 @@ module "mdn-cloudfront-prod" {
 
 
 # Attachments origin
-
 module "mdn-cloudfront-attachments-prod" {
     source = "./cloudfront_attachments"
 
