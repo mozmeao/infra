@@ -379,6 +379,15 @@ k8s-backup-cron: check-service-env
 k8s-delete-backup-cron: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${BACKUP_SERVICE_NAME}
 
+
+# test backup pod
+k8s-backup-test-pod: check-service-env
+	j2 mdn-backup-test-pod.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-backup-test-pod: check-service-env
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pod mdn-backup-test
+
+
 # restore data from S3 to EFS
 k8s-restore-cron: check-service-env
 	j2 mdn-restore-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -

@@ -125,6 +125,7 @@ kubectl -n mdn-prod get service web -o yaml
 
 ### Cronjobs
 
+
 [K8s cronjob docs](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
 
 List cronjobs:
@@ -151,40 +152,89 @@ Example schedules:
 
 #### MDN backup cronjob
 
-- Development docs for the `mdn-backup` cronjob are located [here](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron).
+The cronjob can act either in `PUSH` or `PULL` mode, which is specified as an environment variable in the Cronjob yaml. 
+
+- When in `PUSH` mode, the cronjob is named `mdn-backup-prod`, and files are synchronized from local EFS to S3.
+- When in `PULL` mode, the cronjob is named `mdn-restore-prod`, and files are synchronized from S3 to local EFS.
+
+
+The diagram below shows the MDN regions and PUSH/PULL mode values:
+
+```
+┌──────────────┐              ┌──────────┐              ┌──────────────┐
+│  us-west-2   │              │    S3    │              │ eu-central-1 │
+│  Oregon      │━━PUSH━━━━━━━▶│          │━━━━━━PULL━━━▶│ Frankfurt    │
+└──────────────┘              └──────────┘              └──────────────┘
+```
+
+
+##### kubectl client
+
+When connecting to an older K8s cluster, such as Frankfurt, you may need to download an older version of Kubectl that matches the version of the server.
+
+Newer clients connecting to older K8s servers may display error messages such as:
+
+    Error from server (NotFound): the server could not find the requested resource
+
+
+To determine the K8s server version:
+
+```sh
+$ kubectl version
+Client Version: version.Info{Major:"1", Minor:"9", GitVersion:"v1.9.1", GitCommit:"3a1c9449a956b6026f075fa3134ff92f7d55f812", GitTreeState:"clean", BuildDate:"2018-01-04T11:52:23Z", GoVersion:"go1.9.2", Compiler:"gc", Platform:"linux/amd64"}
+Server Version: version.Info{Major:"1", Minor:"6", GitVersion:"v1.6.4", GitCommit:"d6f433224538d4f9ca2f7ae19b252e6fcb66a3ae", GitTreeState:"clean", BuildDate:"2017-05-19T18:33:17Z", GoVersion:"go1.7.5", Compiler:"gc", Platform:"linux/amd64"}
+```
+
+Check the values that are part of `Server Version`. The output above shows `1.6` (or `v.1.6.4`).
+
+Next, download a binary following the instructions located [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/). 
+
+```sh
+curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.6.4/bin/linux/amd64/kubectl
+chmod +x ./kubectl
+# it may be useful to rename the binary to include K8s version number:
+mv ./kubectl ./kubectl1.6.4
+```
 
 ##### Rebuilding the backup cron image
 
-```
+```sh
 cd infra/apps/mdn/utils/mdn_backup_cron/image
 ./build.sh
 ```
 
 ##### MDN backup troubleshooting
 
-- To troubleshoot the backup cronjob, first delete the existing cronjob, then create a new pod using the `mdn-prod-backup-test.yaml` located in the `apps/mdn/utils/mdn_backup_cron/k8s/` directory of this repo. Once you've verified that the test pod is working correctly, recreate the cronjob.
+- To troubleshoot the backup cronjob, first delete the existing cronjob, then create a new pod using the `k8s-backup-test-pod` make target. Once you've verified that the test pod is working correctly, recreate the cronjob.
 
-```
-    kubectl -n mdn-prod delete cronjob mdn-backup-prod
-    kubectl -n mdn-prod create -f infra/apps/mdn/utils/mdn_backup_cron/k8s/mdn-backup-test-pod.yaml
-    kubectl -n mdn-prod exec -it mdn-backup-test bash
-    # your shell should start with /mdnsync as the current directory
-    ./mdn_sync.sh
-    kubectl -n mdn-prod delete pod mdn-backup-test
+```sh
+cd infra/apps/mdn/mdn-aws/k8s
+kubectl -n mdn-prod delete cronjob mdn-backup-prod
+kubectl -n mdn-prod get jobs | grep mdn-backup-prod
+# Delete any backup related jobs
+kubectl -n mdn-prod delete job <SOME_JOB>
+make k8s-backup-test-pod
+kubectl -n mdn-prod exec -it mdn-backup-test bash
+# your shell should start with /mdnsync as the current directory
+./mdn_sync.sh
+make k8s-delete-backup-test-pod
 ``` 
 
 Once you're finished, recreate the cronjob with:
 
-```
+```sh
+cd infra/apps/mdn/mdn-aws/k8s
 source ./regions/portland/prod.sh
 CHANGE_MDN_INFRA=true make k8s-backup-cron
 # make sure it appears in this list of cronjobs
 kubectl -n mdn-prod get cronjobs
+# the aliased version of the command above can also be used:
+kc get cronjobs
 ```
 
 To make the cronjob run more often:
 
-```
+```sh
 kubectl -n mdn-prod edit cronjob mdn-backup-prod
 # edit the schedule value:
 # schedule: '*/1 * * * *'
@@ -192,6 +242,39 @@ kubectl -n mdn-prod edit cronjob mdn-backup-prod
 ```
 
 > this is useful to see the cronjob run once, then tweak the `schedule` value back to `@hourly`.
+
+
+##### MDN restore troubleshooting
+
+> Please see the "kubectl client" note above when interacting with older clusters.
+
+The `mdn-restore-prod` cronjob is created via:
+
+    make k8s-restore-cron
+    
+To delete the cronjob:
+
+    make 8s-delete-restore-cron
+    
+Additionally, when deleting the restore cronjob, you'll need to cleanup any `Job` resources as well:
+
+```sh
+kubectl -n mdn-prod get jobs | grep restore
+kubectl -n mdn-prod delete job <SOME_JOB>
+```
+
+Useful commands when working with the restore cronjob:
+
+```sh
+kubectl -n mdn-prod get cronjobs mdn-restore-prod -o yaml
+kubectl -n mdn-prod get jobs | grep restore
+kubectl -n mdn-prod get pods | grep restore
+```
+
+##### Dev docs
+
+- Development docs for the `mdn-backup` cronjob are located [here](https://github.com/mozmeao/infra/tree/master/apps/mdn/utils/mdn_backup_cron).
+
 
 #### Datadog/Redis cronjob
 

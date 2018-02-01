@@ -7,41 +7,41 @@ spec:
     - name: mdn-backup-test
       env:
         - name: LOCAL_DIR
-          value: /mdn/www/
+          value: {{ BACKUP_LOCAL_DIR }}
         - name: REMOTE_DIR
-          value: /backups/mdn/
+          value: {{ BACKUP_REMOTE_DIR }}
         - name: BUCKET
-          value: s3://mdn-shared-backup
+          value: "{{ BACKUP_BUCKET }}"
         - name: PUSH_OR_PULL
           value: PUSH
         - name: AWS_REGION
-          value: us-west-2
+          value: {{ AWS_REGION }}
         - name: AWS_S3SYNC_PAGE_SIZE
           value: "100"
         - name: AWS_ACCESS_KEY_ID
           valueFrom:
             secretKeyRef:
               key: access_key
-              name: mdn-backup-secrets
+              name: {{ BACKUP_SECRETS_NAME }}
         - name: AWS_SECRET_ACCESS_KEY
           valueFrom:
             secretKeyRef:
               key: secret_key
-              name: mdn-backup-secrets
+              name: {{ BACKUP_SECRETS_NAME }}
         - name: DEADMANSSNITCH_URL
           valueFrom:
             secretKeyRef:
               key: DEADMANSSNITCH_URL
-              name: mdn-backup-secrets
-      image: quay.io/mozmar/mdn-backup:758c79a0fde3
+              name: {{ BACKUP_SECRETS_NAME }}
+      image: {{ BACKUP_IMAGE }}
       imagePullPolicy: IfNotPresent
       command: [ "/bin/bash", "-c", "--" ]
       args: [ "while true; do sleep 30; done;" ]
       volumeMounts:
-      - mountPath: /mdn
-        name: mdn-shared
+      - mountPath: {{ BACKUP_MOUNT_DIR }}
+        name: {{ SHARED_PVC_NAME }}
     volumes:
-    - name: mdn-shared
+    - name: {{ SHARED_PVC_NAME }}
       persistentVolumeClaim:
-        claimName: mdn-shared
+        claimName: {{ SHARED_PVC_NAME }}
 
