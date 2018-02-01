@@ -6,3 +6,9 @@ oregon-b:
 	# actually perform the changes
 	python3 -m meaoelb.oregon_b
 
+ap-northeast-1:
+	python3 -m meaoelb.ap_northeast_1
+
+eu-central-1:
+	python3 -m meaoelb.eu_central_1
+

@@ -71,3 +71,31 @@ elb_tool.create_and_bind_elbs()
     python3 -m meaoelb.oregon_b
     # you will still be prompted to enter "make it so" before
     # continuing
+
+---
+
+## Generate code for existing ELBs
+
+The `ELBContext` class has a `gen_region()` method on it that will
+generate 90% of the code you need to reprovision ELBs. You may wish to 
+change port numbers to K8s nodeport lookups, see `meaoelb/ap_northeast_1.py` and `meaoelb/eu_central_1.py` for example code.
+
+```
+from meaoelb.elb_ctx import ELBContext
+
+# we don't need to communicate with K8s to generate ELB code
+ctx = ELBContext(aws_region = 'eu-central-1', connect_to_k8s = False)
+ctx.gen_region()
+```
+
+Once the code is generated, you'll need to manually populate the constants at the top of the file:
+
+Example:
+
+```
+AWS_REGION = 'ap-northeast-1'
+TARGET_CLUSTER = 'tokyo.moz.works'
+ASG = "nodes.{}".format(TARGET_CLUSTER)
+VPC = 'vpc-cd1f99a9'
+SUBNET_IDS = ['subnet-115ed549', 'subnet-ed79369b']
+```
