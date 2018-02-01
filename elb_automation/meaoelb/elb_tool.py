@@ -58,7 +58,6 @@ class ELBTool:
 
     def define_elb_http(self, service_namespace, service_name, ssl_arn):
         """
-        TODO
         A convenience method for defining an ELB and storing it in
         a list to be created via create_elbs()
         """
