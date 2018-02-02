@@ -205,6 +205,18 @@ cd infra/apps/mdn/utils/mdn_backup_cron/image
 
 ##### MDN backup troubleshooting
 
+- There is a backup/restore test pod that a developer can instantiate to troubleshoot issues. The deployed backup/restore cronjobs do not need to be deleted in order to use this pod, ***HOWEVER, running the `/mdnsync/mdn_sync.sh` shell script at the same time that the cronjob starts may result in undefined results.*** If you just need to check the filesystem, env vars, etc without running the actual `mdn_sync.sh` script, then all you need is:
+
+```sh
+cd infra/apps/mdn/mdn-aws/k8s
+CHANGE_MDN_INFRA=1 make k8s-backup-test-pod
+kubectl -n mdn-prod exec -it mdn-backup-test bash
+# do stuff
+CHANGE_MDN_INFRA=1 make k8s-delete-backup-test-pod
+```
+
+Otherwise, see the next section on how to delete the backup/restore cronjob(s) and create the test pod.
+
 - To troubleshoot the backup cronjob, first delete the existing cronjob, then create a new pod using the `k8s-backup-test-pod` make target. Once you've verified that the test pod is working correctly, recreate the cronjob.
 
 ```sh
@@ -213,11 +225,11 @@ kubectl -n mdn-prod delete cronjob mdn-backup-prod
 kubectl -n mdn-prod get jobs | grep mdn-backup-prod
 # Delete any backup related jobs
 kubectl -n mdn-prod delete job <SOME_JOB>
-make k8s-backup-test-pod
+CHANGE_MDN_INFRA=1 make k8s-backup-test-pod
 kubectl -n mdn-prod exec -it mdn-backup-test bash
 # your shell should start with /mdnsync as the current directory
 ./mdn_sync.sh
-make k8s-delete-backup-test-pod
+CHANGE_MDN_INFRA=1 make k8s-delete-backup-test-pod
 ``` 
 
 Once you're finished, recreate the cronjob with:
@@ -250,11 +262,11 @@ kubectl -n mdn-prod edit cronjob mdn-backup-prod
 
 The `mdn-restore-prod` cronjob is created via:
 
-    make k8s-restore-cron
+    CHANGE_MDN_INFRA=true make k8s-restore-cron
     
 To delete the cronjob:
 
-    make 8s-delete-restore-cron
+    CHANGE_MDN_INFRA=true make 8s-delete-restore-cron
     
 Additionally, when deleting the restore cronjob, you'll need to cleanup any `Job` resources as well:
 
