@@ -1,6 +1,10 @@
 import boto3
 from kubernetes import client, config
 import sys
+from deepdiff import DeepDiff
+from pprint import pprint
+
+from meaoelb.config import ELBConfig
 
 REDIRECTOR_SERVICE_NAME = 'redirector'
 REDIRECTOR_SERVICE_NAMESPACE = 'redirector'
@@ -153,6 +157,7 @@ class ELBContext:
             print(
                 "\t➤ {} has already been provisioned".format(
                     service_config.elb_config.name))
+            self.test_elb(service_config)
             return
 
         if self.dry_run_mode:
@@ -186,3 +191,31 @@ class ELBContext:
         """
         self.attach_elbs_to_asg(
             asg, list(map(lambda e: e.elb_config.name, services)))
+
+    def test_elb(self, service_config):
+        """
+        Compare the defined config with whats in AWS. Convert the local config
+        to a dict, and use DeepDiff to spot any differences.
+        """
+        elb_response = self.elb_client.describe_load_balancers(
+            LoadBalancerNames=[service_config.elb_config.name])
+        atts_response = self.elb_client.describe_load_balancer_attributes(
+            LoadBalancerName=service_config.elb_config.name)
+        tags_response = self.elb_client.describe_tags(
+            LoadBalancerNames=[service_config.elb_config.name])
+
+        elb_def = elb_response['LoadBalancerDescriptions'][0]
+        atts = atts_response['LoadBalancerAttributes']
+        tags = tags_response['TagDescriptions'][0]['Tags']
+        c = ELBConfig.from_aws(elb_def, atts, tags)
+        ddiff = DeepDiff(dict(service_config.elb_config), dict(c), ignore_order=True)
+        if ddiff != {}:
+            print("\t➤ ELB config has diverged:")
+            print("!" * 30)
+            print('- Values marked "new_value" are from AWS')
+            print('- Values marked "old_value" are from local ELB config')
+
+            pprint(ddiff, indent=2)
+            print("!" * 30)
+        else:
+            print("\t➤ ELB config is valid")

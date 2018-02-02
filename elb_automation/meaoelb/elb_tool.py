@@ -1,9 +1,7 @@
 import argparse
 
-
 from meaoelb.elb_ctx import ELBContext
 from meaoelb.defaults import ELBConfigDefaults
-from meaoelb.config import ELBAtts, ELBAttIdleTimeout
 
 
 class ELBTool:
@@ -48,7 +46,7 @@ class ELBTool:
 
     def define_elb(self, service_namespace, service_name, ssl_arn):
         """
-        A convenience method for defining an ELB and storing it in 
+        A convenience method for defining an ELB and storing it in
         a list to be created via create_elbs()
         """
         service_def = self.cfg_defaults.default_service_config(
@@ -60,8 +58,7 @@ class ELBTool:
 
     def define_elb_http(self, service_namespace, service_name, ssl_arn):
         """
-        TODO
-        A convenience method for defining an ELB and storing it in 
+        A convenience method for defining an ELB and storing it in
         a list to be created via create_elbs()
         """
         service_def = self.cfg_defaults.default_service_config_http(
@@ -70,7 +67,6 @@ class ELBTool:
             ssl_arn=ssl_arn)
         self.all_elbs.append(service_def)
         return service_def
-
 
     def show_elbs(self):
         for elb in self.all_elbs:
@@ -82,5 +78,5 @@ class ELBTool:
         """
         print("-" * 50)
         for elb in self.all_elbs:
-            self.ctx.create_elb(service_config = elb, 
-                                asg_name = self.cfg_defaults.asg_name)
+            self.ctx.create_elb(service_config=elb,
+                                asg_name=self.cfg_defaults.asg_name)
