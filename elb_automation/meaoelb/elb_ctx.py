@@ -108,7 +108,7 @@ class ELBContext:
             flush=True)
         response = self.elb_client.create_load_balancer(
             LoadBalancerName=elb_config.name,
-            Listeners=list(map(lambda l: l.to_aws(), elb_config.listeners)),
+            Listeners=[l.to_aws() for l in elb_config.listeners.values()],
             SecurityGroups=elb_config.security_groups,
             Subnets=elb_config.subnets,
             Tags=elb_config.tags)
