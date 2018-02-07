@@ -3,6 +3,7 @@ from pygments import highlight
 from pygments.lexers import JsonLexer
 from pygments.formatters import TerminalFormatter
 import re
+from meaoelb.templates import *
 
 
 class DictLike(dict):
@@ -69,6 +70,31 @@ class ELBConfig(DictLike):
                          health_check=health_check,
                          elb_atts=atts)
 
+    def gen_code(self):
+        """
+        Generate Python code to automate an ELB config
+        """
+        hc = self.health_check.gen_code()
+        atts = self.elb_atts.gen_code()
+        listener_txt = ""
+
+        for (lport, lvalue) in self.listeners.items():
+            listener_txt += lvalue.gen_code()
+        # this obviously won't convert all characters, but will get us most of
+        # the way
+        method_name = "define_{}".format(self.name.replace('-', '_'))
+
+        code = ELB_CONFIG_TEMPLATE.format(
+            name=repr(self.name),
+            security_groups=self.security_groups,
+            subnets=self.subnets,
+            tags=self.tags,
+            attributes=atts,
+            health_check=hc,
+            listeners=listener_txt,
+            method_name=method_name)
+        return (code, method_name)
+
 
 class ELBAttCrossZoneLoadBalancing(DictLike):
     def __init__(self, enabled=False):
@@ -80,6 +106,10 @@ class ELBAttCrossZoneLoadBalancing(DictLike):
     @staticmethod
     def from_aws(obj):
         return ELBAttCrossZoneLoadBalancing(obj['Enabled'])
+
+    def gen_code(self):
+        return ELB_ATT_CROSS_ZONE_LOAD_BALANCING_TEMPLATE.format(
+            enabled=self.enabled)
 
 
 class ELBAttAccessLog(DictLike):
@@ -111,6 +141,13 @@ class ELBAttAccessLog(DictLike):
             emit_interval=obj.get('EmitInterval', None),
             enabled=obj['Enabled'])
 
+    def gen_code(self):
+        return ELB_ATT_ACCESS_LOG_TEMPLATE.format(
+            enabled=self.enabled,
+            s3_bucket_name=repr(self.s3_bucket_name),
+            s3_bucket_prefix=repr(self.s3_bucket_prefix),
+            emit_interval=self.emit_interval)
+
 
 class ELBAttConnectionDraining(DictLike):
     def __init__(self, timeout=300, enabled=False):
@@ -127,8 +164,13 @@ class ELBAttConnectionDraining(DictLike):
         return ELBAttConnectionDraining(enabled=obj['Enabled'],
                                         timeout=obj['Timeout'])
 
+    def gen_code(self):
+        return ELB_ATT_CONNECTION_DRAINING.format(
+            enabled=self.enabled,
+            timeout=self.timeout)
 
-class ELBConnectionSettings(DictLike):
+
+class ELBAttConnectionSettings(DictLike):
     def __init__(self, idle_timeout=120):
         self.idle_timeout = idle_timeout
 
@@ -137,15 +179,24 @@ class ELBConnectionSettings(DictLike):
 
     @staticmethod
     def from_aws(obj):
-        return ELBConnectionSettings(idle_timeout=obj['IdleTimeout'])
+        return ELBAttConnectionSettings(idle_timeout=obj['IdleTimeout'])
+
+    def gen_code(self):
+        return ELB_ATT_CONNECTION_SETTINGS.format(
+            idle_timeout=self.idle_timeout)
 
 
 class ELBAtts(DictLike):
-    def __init__(self):
-        self.cross_zone_load_balancing = ELBAttCrossZoneLoadBalancing()
-        self.access_log = ELBAttAccessLog()
-        self.connection_draining = ELBAttConnectionDraining()
-        self.connection_settings = ELBConnectionSettings()
+    def __init__(self,
+                 cross_zone_load_balancing=ELBAttCrossZoneLoadBalancing(),
+                 access_log=ELBAttAccessLog(),
+                 connection_draining=ELBAttConnectionDraining(),
+                 connection_settings=ELBAttConnectionSettings()):
+
+        self.cross_zone_load_balancing = cross_zone_load_balancing
+        self.access_log = access_log
+        self.connection_draining = connection_draining
+        self.connection_settings = connection_settings
 
     def to_aws(self):
         d = {}
@@ -163,9 +214,16 @@ class ELBAtts(DictLike):
         newatts.access_log = ELBAttAccessLog.from_aws(atts['AccessLog'])
         newatts.connection_draining = ELBAttConnectionDraining.from_aws(
             atts['ConnectionDraining'])
-        newatts.connection_settings = ELBConnectionSettings.from_aws(
+        newatts.connection_settings = ELBAttConnectionSettings.from_aws(
             atts['ConnectionSettings'])
         return newatts
+
+    def gen_code(self):
+        return ELB_ATTS_TEMPLATE.format(
+            cross_zone_load_balancing=self.cross_zone_load_balancing.gen_code(),
+            access_log=self.access_log.gen_code(),
+            connection_draining=self.connection_draining.gen_code(),
+            connection_settings=self.connection_settings.gen_code())
 
 
 class ELBListenerConfig(DictLike):
@@ -205,6 +263,14 @@ class ELBListenerConfig(DictLike):
             instance_port=int(listener['InstancePort']),
             ssl_arn=cert_id)
 
+    def gen_code(self):
+        return ELB_LISTENER_CONFIG_TEMPLATE.format(
+            load_balancer_port=self.load_balancer_port,
+            protocol=repr(self.protocol),
+            instance_protocol=repr(self.instance_protocol),
+            instance_port=self.instance_port,
+            ssl_arn=repr(self.ssl_arn))
+
 
 class ELBHealthCheckConfig(DictLike):
     def __init__(
@@ -227,7 +293,7 @@ class ELBHealthCheckConfig(DictLike):
     @staticmethod
     def from_aws(hc):
         #print("Matching ", hc['Target'])
-        r = re.compile('([A-Z]+):([0-9]+)(\/.*)')
+        r = re.compile('([A-Z]+):([0-9]+)(\/.*)?')
         matches = r.match(hc['Target'])
         return ELBHealthCheckConfig(
             target_path=matches.group(3),
@@ -237,3 +303,13 @@ class ELBHealthCheckConfig(DictLike):
             unhealthy_threshold=hc['UnhealthyThreshold'],
             timeout=hc['Timeout'],
             interval=hc['Interval'])
+
+    def gen_code(self):
+        return ELB_HEALTHCHECK_CONFIG_TEMPLATE.format(
+            target_path=repr(self.target_path),
+            target_port=self.target_port,
+            target_proto=repr(self.target_proto),
+            healthy_threshold=self.healthy_threshold,
+            unhealthy_threshold=self.unhealthy_threshold,
+            timeout=self.timeout,
+            interval=self.interval)

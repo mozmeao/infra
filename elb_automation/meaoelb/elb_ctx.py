@@ -5,6 +5,7 @@ from deepdiff import DeepDiff
 from pprint import pprint
 
 from meaoelb.config import ELBConfig
+from meaoelb.templates import *
 
 REDIRECTOR_SERVICE_NAME = 'redirector'
 REDIRECTOR_SERVICE_NAMESPACE = 'redirector'
@@ -17,11 +18,15 @@ class ELBContext:
     specific to an AWS region and a K8s cluster.
     """
 
-    def __init__(self, aws_region, dry_run_mode=True):
-        config.load_kube_config()
+    def __init__(self, aws_region, dry_run_mode=True, connect_to_k8s=True):
+        if connect_to_k8s:
+            config.load_kube_config()
+            self.v1 = client.CoreV1Api()
+        else:
+            self.v1 = None
+
         self.dry_run_mode = dry_run_mode
         self.confirmed_apply = False
-        self.v1 = client.CoreV1Api()
         self.ec2_client = boto3.client('ec2', region_name=aws_region)
         self.elb_client = boto3.client('elb', region_name=aws_region)
         self.asg_client = boto3.client('autoscaling', region_name=aws_region)
@@ -30,13 +35,32 @@ class ELBContext:
         # TODO: clean this up!
         return config.list_kube_config_contexts()[0][0]['name']
 
-    def get_service_nodeport(self, service_namespace, service_name):
+    def get_service_nodeport(
+            self,
+            service_namespace,
+            service_name,
+            nodeport_name_filter=None):
         """
         Get the nodeport for a defined service in a namespace
         """
         response = self.v1.read_namespaced_service(
             service_name, service_namespace)
-        return response.spec.ports[0].node_port
+        if nodeport_name_filter:
+            port_matches = [
+                portdef.node_port for portdef in response.spec.ports if portdef.name == nodeport_name_filter]
+            if len(port_matches) != 1:
+                raise Exception(
+                    "Can't find nodeport {} for service {} in namespace {}".format(
+                        nodeport_name_filter, service_name, service_namespace))
+            else:
+                return port_matches[0]
+        else:
+            if len(response.spec.ports) > 1:
+                # pass in a nodeport_name_filter!
+                raise Exception(
+                    "More than 1 nodeport available for service {} in namespace {}".format(
+                        service_name, service_namespace))
+            return response.spec.ports[0].node_port
 
     def get_redirector_service_nodeport(self):
         """
@@ -77,7 +101,11 @@ class ELBContext:
 
     def _create_elb(self, service_config):
         elb_config = service_config.elb_config
-        print("\t➤ Creating {} ELB...".format(elb_config.name), end='', flush=True)
+        print(
+            "\t➤ Creating {} ELB...".format(
+                elb_config.name),
+            end='',
+            flush=True)
         response = self.elb_client.create_load_balancer(
             LoadBalancerName=elb_config.name,
             Listeners=list(map(lambda l: l.to_aws(), elb_config.listeners)),
@@ -122,7 +150,8 @@ class ELBContext:
         """
         if self.dry_run_mode:
             print(
-                "➤ The {} ELB would have been attached to the {} ASG:".format(service_config.elb_config.name, asg_name))
+                "➤ The {} ELB would have been attached to the {} ASG:".format(
+                    service_config.elb_config.name, asg_name))
             return
         print("\t➤ Attaching to ASG...", end='', flush=True)
         self.asg_client.attach_load_balancers(
@@ -157,7 +186,7 @@ class ELBContext:
             print(
                 "\t➤ {} has already been provisioned".format(
                     service_config.elb_config.name))
-            self.test_elb(service_config)
+            self.test_elb(service_config.elb_config)
             return
 
         if self.dry_run_mode:
@@ -192,23 +221,23 @@ class ELBContext:
         self.attach_elbs_to_asg(
             asg, list(map(lambda e: e.elb_config.name, services)))
 
-    def test_elb(self, service_config):
+    def test_elb(self, elb_config):
         """
         Compare the defined config with whats in AWS. Convert the local config
         to a dict, and use DeepDiff to spot any differences.
         """
         elb_response = self.elb_client.describe_load_balancers(
-            LoadBalancerNames=[service_config.elb_config.name])
+            LoadBalancerNames=[elb_config.name])
         atts_response = self.elb_client.describe_load_balancer_attributes(
-            LoadBalancerName=service_config.elb_config.name)
+            LoadBalancerName=elb_config.name)
         tags_response = self.elb_client.describe_tags(
-            LoadBalancerNames=[service_config.elb_config.name])
+            LoadBalancerNames=[elb_config.name])
 
         elb_def = elb_response['LoadBalancerDescriptions'][0]
         atts = atts_response['LoadBalancerAttributes']
         tags = tags_response['TagDescriptions'][0]['Tags']
         c = ELBConfig.from_aws(elb_def, atts, tags)
-        ddiff = DeepDiff(dict(service_config.elb_config), dict(c), ignore_order=True)
+        ddiff = DeepDiff(dict(elb_config), dict(c), ignore_order=True)
         if ddiff != {}:
             print("\t➤ ELB config has diverged:")
             print("!" * 30)
@@ -218,4 +247,30 @@ class ELBContext:
             pprint(ddiff, indent=2)
             print("!" * 30)
         else:
-            print("\t➤ ELB config is valid")
+            print("\t➤ ELB config is valid: {}".format(c.name))
+
+    def gen_region(self):
+        """
+        Generates Python ELB automation code for a given region.
+        """
+        print(HEADER_TEMPLATE)
+        elbs = self.elb_client.describe_load_balancers()
+        all_methods = []
+        for elb_def in elbs['LoadBalancerDescriptions']:
+            elb_name = elb_def['LoadBalancerName']
+            elb_response = self.elb_client.describe_load_balancers(
+                LoadBalancerNames=[elb_name])
+            atts_response = self.elb_client.describe_load_balancer_attributes(
+                LoadBalancerName=elb_name)
+            tags_response = self.elb_client.describe_tags(
+                LoadBalancerNames=[elb_name])
+            elb_def = elb_response['LoadBalancerDescriptions'][0]
+            atts = atts_response['LoadBalancerAttributes']
+            tags = tags_response['TagDescriptions'][0]['Tags']
+            c = ELBConfig.from_aws(elb_def, atts, tags)
+            (code, method_name) = c.gen_code()
+            print(code)
+            all_methods.append(method_name)
+        for method_name in all_methods:
+            print("elb_tool.define_generic_elb({}())".format(method_name))
+        print(FOOTER_TEMPLATE)
