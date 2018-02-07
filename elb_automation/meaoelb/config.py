@@ -157,7 +157,7 @@ class ELBAttConnectionDraining(DictLike):
     def aws_merge(self, d):
         d['ConnectionDraining'] = {
             'Enabled': self.enabled,
-            Timeout: self.timeout}
+            'Timeout': self.timeout}
 
     @staticmethod
     def from_aws(obj):

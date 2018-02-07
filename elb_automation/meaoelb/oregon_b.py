@@ -42,9 +42,18 @@ bedrock_dev.elb_config.elb_atts.connection_settings.idle_timeout = 120
 bedrock_dev.elb_config.health_check.target_path = '/healthz/'
 
 
+# ### Snippets Stage
+snippets_stage = elb_tool.define_elb_http(
+    service_namespace='snippets-stage',
+    service_name='snippets-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
+snippets_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
+snippets_stage.elb_config.health_check.target_path = '/healthz/'
+
+
 # show the ELB's before we process them
 # object output is now colorized JSON
-# elb_tool.show_elbs()
+elb_tool.show_elbs()
 
 # create and bind the ELBs
 # if an ELB has already been created, skip and continue on to the next
