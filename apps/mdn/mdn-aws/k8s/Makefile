@@ -148,7 +148,7 @@ export SYNC_REMOTE_DIR ?= "/backups/efs/"
 
 export BACKUP_CONTAINER_NAME ?= mdn-backup
 export SYNC_FROM_S3_CONTAINER_NAME ?= mdn-sync
-export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:758c79a0fde3
+export BACKUP_IMAGE ?= quay.io/mozmar/mdn-backup:6f73077
 # cronjob syntax here: https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/
 export BACKUP_SERVICE_SCHEDULE ?= "@hourly"
 export RESTORE_SERVICE_SCHEDULE ?= "@hourly"
@@ -378,6 +378,15 @@ k8s-backup-cron: check-service-env
 
 k8s-delete-backup-cron: check-service-env
 	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${BACKUP_SERVICE_NAME}
+
+
+# test backup pod
+k8s-backup-test-pod: check-service-env
+	j2 mdn-backup-test-pod.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+
+k8s-delete-backup-test-pod: check-service-env
+	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pod mdn-backup-test
+
 
 # restore data from S3 to EFS
 k8s-restore-cron: check-service-env
