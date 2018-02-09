@@ -226,8 +226,16 @@ class ELBContext:
         Compare the defined config with whats in AWS. Convert the local config
         to a dict, and use DeepDiff to spot any differences.
         """
-        elb_response = self.elb_client.describe_load_balancers(
-            LoadBalancerNames=[elb_config.name])
+        try:
+            elb_response = self.elb_client.describe_load_balancers(
+                LoadBalancerNames=[elb_config.name])
+        except Exception as e:
+            s = str(e)
+            if "There is no ACTIVE Load Balancer" in s:
+                print("\t➤ ELB does not exist: {}".format(elb_config.name))
+                return
+            else:
+                raise e
         atts_response = self.elb_client.describe_load_balancer_attributes(
             LoadBalancerName=elb_config.name)
         tags_response = self.elb_client.describe_tags(
