@@ -41,12 +41,19 @@ bedrock_dev = elb_tool.define_elb_http(
 bedrock_dev.elb_config.elb_atts.connection_settings.idle_timeout = 120
 bedrock_dev.elb_config.health_check.target_path = '/healthz/'
 
+# ### Careers Stage
+careers_stage = elb_tool.define_elb_http(
+    service_namespace='careers-stage',
+    service_name='careers-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/4952e9c1-dda2-450b-b156-908a42869f4f')
+careers_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
+careers_stage.elb_config.health_check.target_path = '/healthz/'
 
 # ### Snippets Stage
 snippets_stage = elb_tool.define_elb_http(
     service_namespace='snippets-stage',
     service_name='snippets-nodeport',
-    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/375fd27c-bf20-409d-a48b-4ff0b0fe3658')
 snippets_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
 snippets_stage.elb_config.health_check.target_path = '/healthz/'
 
