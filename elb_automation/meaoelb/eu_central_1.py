@@ -639,14 +639,13 @@ elb_tool.define_generic_elb(define_mdn_dev())
 elb_tool.define_generic_elb(define_openvpn())
 
 
-# TODO: to automatically assign instance ports to K8s nodeports, replace
-# target_port=30150,
-#   with
-# target_port = elb_tool.ctx.get_service_nodeport(service_namespace, service_name),
-#    OR
-# target_port = elb_tool.ctx.get_service_nodeport(service_namespace, service_name, "my_nodeport_name"),
-
-# TODO: to use the redirector service nodeport:
-# target_port = redirector_port
+## 2018 load balancers
+sumo_dev_frankfurt = elb_tool.define_elb_http(
+    service_namespace='sumo-dev',
+    service_name='sumo-nodeport',
+    ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/6bf2d490-690a-476e-992b-c9ad73488d2f')
+sumo_dev_frankfurt.elb_config.elb_atts.connection_settings.idle_timeout = 120
+sumo_dev_frankfurt.elb_config.health_check.target_path = '/healthz/'
 
 elb_tool.test_elbs()
+elb_tool.create_and_bind_elbs()
