@@ -3,6 +3,7 @@ export TARGET_ENVIRONMENT ?= dev
 export K8S_NAMESPACE ?= mdn-${TARGET_ENVIRONMENT}
 export AWS_RESOURCE_STACK=MDN-${TARGET_ENVIRONMENT}
 export AWS_REGION ?= us-west-2
+export KUBECTL ?= kubectl
 
 # Note PVs are available within ALL namespaces, so delimit them with
 # the name of the target environment.
@@ -171,7 +172,7 @@ export BACKUP_DEADMANSSNITCH_URL_BASE64 ?= $(shell echo -n "${BACKUP_DEADMANSSNI
 export ADMIN_NODE_NAME ?= mdn-admin
 
 # HTTP -> HTTPS redirector service port
-export REDIRECTOR_PORT ?= $(shell  kubectl -n redirector get service redirector -o json \
+export REDIRECTOR_PORT ?= $(shell  ${KUBECTL} -n redirector get service redirector -o json \
                              | jq ".spec.ports[] | select(.name == \"http\") | .nodePort")
 
 # is logging enabled for this ELB? true | false
@@ -217,10 +218,10 @@ export DATADOG_REDIS_CONFIG_BASE64 ?= $(shell echo -n "${DATADOG_REDIS_CONFIG}" 
 ### core tasks
 
 k8s-ns: check-service-env
-	kubectl create ns ${K8S_NAMESPACE} | true
+	${KUBECTL} create ns ${K8S_NAMESPACE} | true
 
 k8s-delete-ns: check-service-env
-	kubectl delete --ignore-not-found ns ${K8S_NAMESPACE}
+	${KUBECTL} delete --ignore-not-found ns ${K8S_NAMESPACE}
 
 k8s-shared-storage: k8s-pv-shared k8s-pvc-shared k8s-efs-setup-job
 
@@ -248,38 +249,38 @@ k8s-delete-kumascript-deployments: k8s-delete-kumascript
 k8s-rollout-status: k8s-kuma-rollout-status k8s-kumascript-rollout-status
 
 k8s-kuma-rollout-status:
-	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${WEB_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${API_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_WORKERS_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_BEAT_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_CAM_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${WEB_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${API_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_WORKERS_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_BEAT_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${CELERY_CAM_NAME}
 
 k8s-kumascript-rollout-status:
-	kubectl -n ${K8S_NAMESPACE} rollout status deploy ${KUMASCRIPT_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout status deploy ${KUMASCRIPT_NAME}
 
 k8s-rollback: k8s-kuma-rollback k8s-kumascript-rollback
 
 k8s-kuma-rollback:
-	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${WEB_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${API_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_WORKERS_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_BEAT_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_CAM_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${WEB_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${API_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_WORKERS_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_BEAT_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${CELERY_CAM_NAME}
 
 k8s-kumascript-rollback:
-	kubectl -n ${K8S_NAMESPACE} rollout undo deploy ${KUMASCRIPT_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout undo deploy ${KUMASCRIPT_NAME}
 
 k8s-history: k8s-kuma-history k8s-kumascript-history
 
 k8s-kuma-history:
-	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${WEB_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${API_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_WORKERS_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_BEAT_NAME}
-	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_CAM_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${WEB_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${API_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_WORKERS_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_BEAT_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${CELERY_CAM_NAME}
 
 k8s-kumascript-history:
-	kubectl -n ${K8S_NAMESPACE} rollout history deploy ${KUMASCRIPT_NAME}
+	${KUBECTL} -n ${K8S_NAMESPACE} rollout history deploy ${KUMASCRIPT_NAME}
 
 k8s-db-migration-job: k8s-delete-db-migration-job
 	env KUMA_NAME=mdn-db-migration \
@@ -290,32 +291,32 @@ k8s-db-migration-job: k8s-delete-db-migration-job
 		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
 		KUMA_RATELIMIT_ENABLE=False \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
-	j2 mdn-db-migration-job.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-db-migration-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 	env JOB_NAME=mdn-db-migration ./wait_for_job.sh
 
 k8s-delete-db-migration-job:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-db-migration
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-db-migration
 
 ### end core tasks
 ###############################
 
 k8s-pv-shared: check-service-env
-	j2 shared.pv.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 shared.pv.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-pv-shared: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${SHARED_PV_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found pv ${SHARED_PV_NAME}
 
 k8s-pvc-shared: check-service-env
-	j2 shared.pvc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 shared.pvc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-pvc-shared: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${SHARED_PVC_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found pvc ${SHARED_PVC_NAME}
 
 k8s-efs-setup-job: check-service-env
-	j2 mdn-efs-setup-job.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-efs-setup-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-efs-setup-job: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-efs-setup
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-efs-setup
 
 k8s-web-svc: check-service-env
 	env SERVICE_NAME=${WEB_SERVICE_NAME} \
@@ -325,11 +326,11 @@ k8s-web-svc: check-service-env
 		SERVICE_PROTOCOL=${WEB_SERVICE_PROTOCOL} \
 		SERVICE_CERT_ARN=${WEB_SERVICE_CERT_ARN} \
 		TARGET_ENVIRONMENT=${TARGET_ENVIRONMENT} \
-		j2 cert.svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 cert.svc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 	./configure_elb.sh
 
 k8s-delete-web-svc: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${WEB_SERVICE_NAME}
 
 k8s-api-svc: check-service-env
@@ -338,10 +339,10 @@ k8s-api-svc: check-service-env
 		SERVICE_PORT=${API_SERVICE_PORT} \
 		SERVICE_TARGET_PORT=${API_SERVICE_TARGET_PORT} \
 		SERVICE_PROTOCOL=${API_SERVICE_PROTOCOL} \
-		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 svc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-api-svc: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${API_SERVICE_NAME}
 
 k8s-kumascript-svc: check-service-env
@@ -350,10 +351,10 @@ k8s-kumascript-svc: check-service-env
 		SERVICE_PORT=${KUMASCRIPT_SERVICE_PORT} \
 		SERVICE_TARGET_PORT=${KUMASCRIPT_SERVICE_TARGET_PORT} \
 		SERVICE_PROTOCOL=${KUMASCRIPT_SERVICE_PROTOCOL} \
-		j2 svc.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 svc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-kumascript-svc: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		svc ${KUMASCRIPT_SERVICE_NAME}
 
 ###############################
@@ -361,64 +362,64 @@ k8s-delete-kumascript-svc: check-service-env
 # not referenced from parent targets
 
 k8s-newrelic-secrets: check-service-env
-	j2 mdn-newrelic-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-newrelic-secrets.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-newrelic-secrets: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${NEW_RELIC_SECRETS_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${NEW_RELIC_SECRETS_NAME}
 
 k8s-backup-secrets: check-service-env
-	j2 mdn-backup-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-backup-secrets.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-backup-secrets: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${BACKUP_SECRETS_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${BACKUP_SECRETS_NAME}
 
 # backup EFS to S3, for production
 k8s-backup-cron: check-service-env
-	j2 mdn-backup-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-backup-cron.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-backup-cron: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${BACKUP_SERVICE_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${BACKUP_SERVICE_NAME}
 
 
 # test backup pod
 k8s-backup-test-pod: check-service-env
-	j2 mdn-backup-test-pod.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-backup-test-pod.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-backup-test-pod: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found pod mdn-backup-test
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found pod mdn-backup-test
 
 
 # restore data from S3 to EFS
 k8s-restore-cron: check-service-env
-	j2 mdn-restore-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-restore-cron.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-restore-cron: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${RESTORE_SERVICE_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${RESTORE_SERVICE_NAME}
 
 # pull files from S3 (SCL3), for dev/stage
 k8s-sync-from-s3-cron: check-service-env
-	j2 mdn-sync-from-s3-cron.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-sync-from-s3-cron.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-sync-from-s3-cron: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${SYNC_FROM_S3_SERVICE_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found cronjob ${SYNC_FROM_S3_SERVICE_NAME}
 
 k8s-admin-node: check-service-env
-	j2 mdn-admin-node.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-admin-node.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-admin-node: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${ADMIN_NODE_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${ADMIN_NODE_NAME}
 
 k8s-datadog-secrets: check-service-env
-	j2 datadog-secrets.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 datadog-secrets.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-datadog-secrets: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${DATADOG_SECRETS_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found secret ${DATADOG_SECRETS_NAME}
 
 k8s-redis-dd: check-service-env
-	j2 mdn-dd-redis.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+	j2 mdn-dd-redis.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-redis-dd: check-service-env
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${DATADOG_REDIS_DEPLOYMENT_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deployment ${DATADOG_REDIS_DEPLOYMENT_NAME}
 
 ### end administrative tasks
 ###############################
@@ -437,10 +438,10 @@ k8s-web:
 		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
 		KUMA_RATELIMIT_ENABLE=${WEB_RATELIMIT_ENABLE} \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
-		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 kuma.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-web:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${WEB_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${WEB_NAME}
 
 k8s-api:
 	env KUMA_NAME=${API_NAME} \
@@ -456,18 +457,18 @@ k8s-api:
 		KUMA_ALLOWED_HOSTS=${API_ALLOWED_HOSTS} \
 		KUMA_RATELIMIT_ENABLE=False \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_API_NAME} \
-		j2 kuma.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 kuma.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-api:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${API_NAME}
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found deploy ${API_NAME}
 
 k8s-kumascript:
 	env KUMASCRIPT_APP_LABEL=${KUMASCRIPT_SERVICE_NAME} \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_KUMASCRIPT_NAME} \
-		j2 kumascript.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 kumascript.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-kumascript:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${KUMASCRIPT_NAME}
 
 k8s-celery: k8s-celery-workers k8s-celery-beat k8s-celery-cam
@@ -486,10 +487,10 @@ k8s-celery-workers:
 		KUMA_ALLOWED_HOSTS="" \
 		KUMA_RATELIMIT_ENABLE=False \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_CELERY_NAME} \
-		j2 celery.workers.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 celery.workers.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-workers:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_WORKERS_NAME}
 
 k8s-celery-beat:
@@ -503,10 +504,10 @@ k8s-celery-beat:
 		KUMA_ALLOWED_HOSTS="" \
 		KUMA_RATELIMIT_ENABLE=False \
 		NEW_RELIC_APP_NAME="" \
-		j2 celery.beat.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 celery.beat.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-beat:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_BEAT_NAME}
 
 k8s-celery-cam:
@@ -520,10 +521,10 @@ k8s-celery-cam:
 		KUMA_ALLOWED_HOSTS="" \
 		KUMA_RATELIMIT_ENABLE=False \
 		NEW_RELIC_APP_NAME="" \
-		j2 celery.cam.deploy.yaml.j2 | kubectl apply -n ${K8S_NAMESPACE} -f -
+		j2 celery.cam.deploy.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 
 k8s-delete-celery-cam:
-	kubectl delete -n ${K8S_NAMESPACE} --ignore-not-found \
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
 		deploy ${CELERY_CAM_NAME}
 
 check-service-env:
