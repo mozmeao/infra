@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 echo '--> Setting environment to PROD in FRANKFURT'
 
-export KUBECONFIG=~/.kube/frankfurt.config
+export KUBECONFIG=${HOME}/.kube/frankfurt.config
 
 # Define defaults for environment variables that personalize the commands.
 export TARGET_ENVIRONMENT=prod
