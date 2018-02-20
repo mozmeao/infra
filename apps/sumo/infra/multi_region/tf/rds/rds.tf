@@ -102,8 +102,7 @@ resource "aws_db_instance" "sumo_rds" {
 }
 
 resource "aws_security_group" "sumo_rds_sg" {
-  name        = ["${split(",", var.mysql_security_group_names)}"]
-
+  name        = "${var.mysql_security_group_name}"
   description = "Allow all inbound traffic"
   vpc_id      = "${var.vpc_id}"
 

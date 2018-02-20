@@ -48,7 +48,7 @@ module "mysql-dev" {
     mysql_identifier = "sumo-dev"
     mysql_instance_class = "db.t2.small"
     mysql_backup_retention_days = 0
-    mysql_security_group_names = "${var.nodes_security_groups}"
+    mysql_security_group_name = "sumo_rds_sg_dev"
     mysql_storage_gb = 250
     mysql_storage_type = "gp2"
     vpc_id = "${var.vpc_id}"
@@ -88,8 +88,8 @@ module "mysql-prod" {
     mysql_storage_gb = 250
     mysql_storage_type = "gp2"
     subnets = "${var.subnets}"
-    vpc_id = "${var.shared_vpc_id}"
-    vpc_cidr = "${var.shared_vpc_cidr}"
+    vpc_id = "${var.vpc_id}"
+    vpc_cidr = "${var.vpc_cidr}"
 }
 
 
