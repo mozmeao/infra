@@ -81,7 +81,7 @@ module "mysql-prod" {
     mysql_db_name = "sumo_prod"
     mysql_username = "root"
     mysql_password = "${var.mysql_prod_password}"
-    mysql_identifier = "sumo-prod"
+    mysql_identifier = "sumo"
     mysql_instance_class = "db.m4.2xlarge"
     mysql_backup_retention_days = 7
     mysql_security_group_name = "sumo_rds_sg_prod"
