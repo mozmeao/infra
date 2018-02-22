@@ -22,7 +22,7 @@ module "redis-stage" {
     redis_node_size = "cache.t2.small"
     redis_num_nodes = 3
     subnets = "${var.subnets}"
-    nodes_security_group = "${var.nodes_security_group}"
+    nodes_security_group = ["${split(",", var.nodes_security_groups)}"]
 }
 
 module "redis-prod" {
@@ -31,7 +31,7 @@ module "redis-prod" {
     redis_node_size = "cache.m3.xlarge"
     redis_num_nodes = 3
     subnets = "${var.subnets}"
-    nodes_security_group = "${var.nodes_security_group}"
+    nodes_security_group = ["${split(",", var.nodes_security_groups)}"]
 }
 */
 
@@ -72,22 +72,25 @@ module "mysql-stage" {
     vpc_id = "${var.vpc_id}"
     vpc_cidr = "${var.vpc_cidr}"
 }
+*/
 
 module "mysql-prod" {
-    source = "rds"
+    source = "rds-multi-az"
     # DBName must begin with a letter and contain only alphanumeric characters
     mysql_env     = "prod"
     mysql_db_name = "sumo_prod"
     mysql_username = "root"
     mysql_password = "${var.mysql_prod_password}"
-    mysql_identifier = "sumo-prod"
-    mysql_instance_class = "db.m4.xlarge"
+    mysql_identifier = "sumo"
+    mysql_instance_class = "db.m4.2xlarge"
     mysql_backup_retention_days = 7
     mysql_security_group_name = "sumo_rds_sg_prod"
     mysql_storage_gb = 250
     mysql_storage_type = "gp2"
+    subnets = "${var.subnets}"
     vpc_id = "${var.vpc_id}"
     vpc_cidr = "${var.vpc_cidr}"
 }
-*/
+
+
 

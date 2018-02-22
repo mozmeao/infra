@@ -20,7 +20,7 @@ variable "redis_engine_version" {
 }
 
 variable "subnets" {}
-variable "nodes_security_group" {}
+variable "nodes_security_groups" {}
 
 resource "aws_elasticache_subnet_group" "sumo-redis-subnet-group" {
   name       = "redis-${var.redis_name}-subnet-group"
@@ -37,7 +37,7 @@ resource "aws_elasticache_replication_group" "sumo-redis-rg" {
   parameter_group_name          = "${var.redis_param_group}"
   engine_version                = "${var.redis_engine_version}"
   subnet_group_name             = "${aws_elasticache_subnet_group.sumo-redis-subnet-group.name}"
-  security_group_ids            = ["${var.nodes_security_group}"]
+  security_group_ids            = ["${var.nodes_security_groups}"]
 
   tags {
     Stack = "SUMO-${var.redis_name}"

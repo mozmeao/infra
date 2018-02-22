@@ -31,6 +31,7 @@ setup_tf_envs() {
     # this MUST be run in the dir that this file resides in
     set +e
     terraform env new frankfurt
+    terraform env new oregon-shared
     set -e
 }
 
