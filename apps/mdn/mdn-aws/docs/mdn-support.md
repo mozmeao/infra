@@ -458,6 +458,14 @@ There are limits that apply to using VPC ACLs documented [here](http://docs.aws.
 ```
 
 
+### Accessing a MySQL snapshot or cold backup
+
+We take daily snapshots of the mdn-prod RDS instance. Follow the [AWS docs on restoring a DB instance from a DB snapshot](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_RestoreFromSnapshot.html).
+
+
+The [rds\_backup\_tool](https://github.com/mozmeao/infra/blob/master/tools/aws/rds_backup_tool/README.md) takes full mdn-prod encrypted backups that are stored in S3 (and moved to Glacier after 30 days). To access and decrypt a backup, follow [these](https://github.com/mozmeao/infra/blob/master/tools/aws/rds_backup_tool/README.md#decrypting-a-database-archive) instructions.
+
+
 ### Manual Cluster failover
 
 - **verify the Frankfurt read replica**

@@ -141,10 +141,6 @@ aws s3 cp s3://meao-rds-backups/backups/developer_mozilla_org/developer_mozilla_
 openssl aes-256-cbc -in developer_mozilla_org.2017-11-17.sql.gz.aes -d -pass pass:foobar123 | zcat | mysql ...
 # decrypt to a file
 openssl aes-256-cbc -in developer_mozilla_org.2017-11-17.sql.gz.aes -d -pass pass:foobar123 -out developer_mozilla_org.2017-11-17.sql.gz
-
-
-
-
 ```
 
 ## Initial setup
