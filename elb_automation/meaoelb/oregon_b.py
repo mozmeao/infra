@@ -58,9 +58,25 @@ snippets_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
 snippets_stage.elb_config.health_check.target_path = '/healthz/'
 
 
+sumo_stage = elb_tool.define_elb_http(
+    service_namespace='sumo-stage',
+    service_name='sumo-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
+sumo_stage.elb_config.health_check.target_path = '/healthz/'
+sumo_stage.elb_config.name = 'sumo-stage-b'
+
+sumo_prod = elb_tool.define_elb_http(
+    service_namespace='sumo-prod',
+    service_name='sumo-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
+sumo_prod.elb_config.health_check.target_path = '/healthz/'
+sumo_prod.elb_config.name = 'sumo-prod-b'
+
 # show the ELB's before we process them
 # object output is now colorized JSON
 elb_tool.show_elbs()
+
+elb_tool.test_elbs()
 
 # create and bind the ELBs
 # if an ELB has already been created, skip and continue on to the next
