@@ -644,8 +644,20 @@ sumo_dev_frankfurt = elb_tool.define_elb_http(
     service_namespace='sumo-dev',
     service_name='sumo-nodeport',
     ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/6bf2d490-690a-476e-992b-c9ad73488d2f')
-sumo_dev_frankfurt.elb_config.elb_atts.connection_settings.idle_timeout = 120
 sumo_dev_frankfurt.elb_config.health_check.target_path = '/healthz/'
+
+sumo_stage_frankfurt = elb_tool.define_elb_http(
+    service_namespace='sumo-stage',
+    service_name='sumo-nodeport',
+    ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/b74e73f7-6fd7-4fea-99fa-c67e34556077')
+sumo_stage_frankfurt.elb_config.health_check.target_path = '/healthz/'
+
+sumo_prod_frankfurt = elb_tool.define_elb_http(
+    service_namespace='sumo-prod',
+    service_name='sumo-nodeport',
+    ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/88ff1ddb-7a2f-4a78-85b3-cdcc0ea97124')
+sumo_prod_frankfurt.elb_config.health_check.target_path = '/healthz/'
+
 
 elb_tool.test_elbs()
 elb_tool.create_and_bind_elbs()
