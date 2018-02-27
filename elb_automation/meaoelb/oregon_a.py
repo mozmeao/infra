@@ -17,14 +17,14 @@ elb_tool = ELBTool(
 sumo_stage = elb_tool.define_elb_http(
     service_namespace='sumo-stage',
     service_name='sumo-nodeport',
-    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/0a683933-3b11-4651-bf48-4fd8097d6b64')
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/192b6409-996e-46ac-a3d9-c78a69670dae')
 sumo_stage.elb_config.health_check.target_path = '/healthz/'
 sumo_stage.elb_config.name = 'sumo-stage-a'
 
 sumo_prod = elb_tool.define_elb_http(
     service_namespace='sumo-prod',
     service_name='sumo-nodeport',
-    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/0a683933-3b11-4651-bf48-4fd8097d6b64')
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/b427fcf8-4321-41ca-8fe0-57a90da17d52')
 sumo_prod.elb_config.health_check.target_path = '/healthz/'
 sumo_prod.elb_config.name = 'sumo-prod-a'
 

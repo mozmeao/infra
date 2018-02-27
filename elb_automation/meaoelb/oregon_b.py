@@ -61,14 +61,14 @@ snippets_stage.elb_config.health_check.target_path = '/healthz/'
 sumo_stage = elb_tool.define_elb_http(
     service_namespace='sumo-stage',
     service_name='sumo-nodeport',
-    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/192b6409-996e-46ac-a3d9-c78a69670dae')
 sumo_stage.elb_config.health_check.target_path = '/healthz/'
 sumo_stage.elb_config.name = 'sumo-stage-b'
 
 sumo_prod = elb_tool.define_elb_http(
     service_namespace='sumo-prod',
     service_name='sumo-nodeport',
-    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/b427fcf8-4321-41ca-8fe0-57a90da17d52')
 sumo_prod.elb_config.health_check.target_path = '/healthz/'
 sumo_prod.elb_config.name = 'sumo-prod-b'
 
