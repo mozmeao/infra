@@ -10,19 +10,34 @@ terraform {
   }
 }
 
-
+########################################
 # Primary CDN
+########################################
 module "mdn-primary-cloudfrom-stage" {
     source = "./cloudfront_primary"
+    # *.mdn.moz.works cert
     acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/750fe7e9-0990-4d15-a6d4-df9606671e20"
-    aliases = ["test-stage-cdn.mdn.moz.works"]
+    aliases = ["primary-stage.mdn.moz.works"]
     comment = "Primary Stage CDN for AWS-hosted MDN"
     distribution_name = "MDNPrimaryStageCDN"
+    # do we skip the traffic policy here and just use an ALIAS in between CDN and ELB?
     domain_name = "stage.mdn.moz.works"
 }
 
+module "mdn-primary-cloudfrom-prod" {
+    source = "./cloudfront_primary"
+    # *.mdn.moz.works cert
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/750fe7e9-0990-4d15-a6d4-df9606671e20"
+    aliases = ["primary-prod.mdn.moz.works"]
+    comment = "Primary Prod CDN for AWS-hosted MDN"
+    distribution_name = "MDNPrimaryProdCDN"
+    # do we skip the traffic policy here and just use an ALIAS in between CDN and ELB?
+    domain_name = "prod.mdn.moz.works"
+}
 
+########################################
 # Static Media CDN
+########################################
 module "mdn-cloudfront-stage" {
     source = "./cloudfront_static"
 
@@ -43,8 +58,9 @@ module "mdn-cloudfront-prod" {
     domain_name = "developer.mozilla.org"
 }
 
-
+########################################
 # Attachments origin
+########################################
 module "mdn-cloudfront-attachments-prod" {
     source = "./cloudfront_attachments"
 

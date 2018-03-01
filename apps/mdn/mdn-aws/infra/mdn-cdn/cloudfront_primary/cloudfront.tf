@@ -12,112 +12,24 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
   comment         = "${var.comment}"
   enabled         = true
   http_version    = "http2"
-  is_ipv6_enabled = false
+  is_ipv6_enabled = true
   price_class     = "PriceClass_All"
 
-  custom_error_response {
-    error_caching_min_ttl = 10
-    error_code            = 404
-  }
+  # custom_error_response {
+  #   error_caching_min_ttl = 10
+  #   error_code            = 404
+  # }
 
 
+  # 0
   cache_behavior {
-    path_pattern = "*/docs/*"
+    path_pattern = "static/*"
 
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
     compress               = true
-    default_ttl            = 60
-    max_ttl                = 120
-    min_ttl                = 60
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-
-      cookies {
-        forward = "whitelist"
-        whitelisted_names = ["dwf_*", "sessionid"]
-      }
-    }
-  }
-
-  cache_behavior {
-    path_pattern = "*/docs/ckeditor_config.js"
-
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 60
-    max_ttl                = 120
-    min_ttl                = 60
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = false
-
-      cookies {
-        forward = "none"
-      }
-    }
-  }
-
-  cache_behavior {
-    path_pattern = "*/docs.json"
-
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 60
-    max_ttl                = 120
-    min_ttl                = 60
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      query_string_cache_keys = ["slug", "title"]
-      cookies {
-        forward = "none"
-      }
-    }
-  }
-
-  cache_behavior {
-    path_pattern = "*/docs/get-documents"
-
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 60
-    max_ttl                = 120
-    min_ttl                = 60
-    smooth_streaming       = false
-    target_origin_id       = "${var.distribution_name}"
-    viewer_protocol_policy = "redirect-to-https"
-
-    forwarded_values {
-      query_string = true
-      query_string_cache_keys = ["current_locale", "exclude_current_locale", "locale", "term"]
-      cookies {
-        forward = "none"
-      }
-    }
-  }
-
-
-
- default_cache_behavior {
-    allowed_methods        = ["GET", "HEAD"]
-    cached_methods         = ["GET", "HEAD"]
-    compress               = true
-    default_ttl            = 0
-    max_ttl                = 0
+    default_ttl            = 86400
+    max_ttl                = 31536000
     min_ttl                = 0
     smooth_streaming       = false
     target_origin_id       = "${var.distribution_name}"
@@ -128,6 +40,148 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
       cookies {
         forward = "none"
+      }
+    }
+  }
+
+  # 1
+  cache_behavior {
+    path_pattern = "media/*"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = "${var.distribution_name}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = false
+
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+  # 2
+  cache_behavior {
+    path_pattern = "*/docs/*"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = "${var.distribution_name}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+
+      cookies {
+        forward = "whitelist"
+        whitelisted_names = ["dwf_sg_task_completion", "sessionid"]
+      }
+    }
+  }
+
+
+  # 3
+  cache_behavior {
+    path_pattern = "*/dashboards/revisions"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = "${var.distribution_name}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+      headers = ["X-Requested-With"]
+      cookies {
+        forward = "whitelist"
+        whitelisted_names = ["sessionid"]
+      }
+    }
+  }
+
+  # 4
+  cache_behavior {
+    path_pattern = "*/dashboards/user_lookup"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = "${var.distribution_name}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+      query_string_cache_keys = ["user"]
+      headers = ["X-Requested-With"]
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+  # 5
+  cache_behavior {
+    path_pattern = "*/dashboards/topic_lookup"
+
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = "${var.distribution_name}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+      query_string_cache_keys = ["topic"]
+      headers = ["X-Requested-With"]
+      cookies {
+        forward = "none"
+      }
+    }
+  }
+
+ 
+ default_cache_behavior {
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = "${var.distribution_name}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+
+      cookies {
+        forward = "whitelist"
+        whitelisted_names = ["sessionid"]
       }
     }
   }
@@ -159,6 +213,6 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     ssl_support_method  = "sni-only"
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
-    minimum_protocol_version = "TLSv1"
+    minimum_protocol_version = "TLSv1.1_2016"
   }
 }
