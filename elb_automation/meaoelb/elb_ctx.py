@@ -247,7 +247,7 @@ class ELBContext:
         c = ELBConfig.from_aws(elb_def, atts, tags)
         ddiff = DeepDiff(dict(elb_config), dict(c), ignore_order=True)
         if ddiff != {}:
-            print("\t➤ ELB config has diverged:")
+            print("\t➤ ELB config for {} has diverged:".format(elb_config.name))
             print("!" * 30)
             print('- Values marked "new_value" are from AWS')
             print('- Values marked "old_value" are from local ELB config')
