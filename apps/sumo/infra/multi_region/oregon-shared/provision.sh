@@ -12,6 +12,5 @@ export TF_VAR_vpc_id="vpc-ea93e58f"
 export TF_VAR_vpc_cidr="10.0.0.0/16"
 
 # Apply Terraform
-# NOTE: we're only creating the mysql-prod resource in this region
-cd ../tf && ./common.sh -target=module.mysql-prod
+cd ../tf && ./common.sh -target=module.mysql-prod -target=module.redis-shared
 

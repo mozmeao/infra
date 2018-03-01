@@ -10,6 +10,5 @@ export TF_VAR_vpc_id="vpc-4d036a25"
 export TF_VAR_vpc_cidr="172.20.0.0/16"
 
 # Apply Terraform
-cd ../tf && ./common.sh
-
+cd ../tf && ./common.sh -target=module.mysql-dev
 

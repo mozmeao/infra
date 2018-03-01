@@ -15,25 +15,15 @@ terraform {
 #########################################
 # Redis
 #########################################
-/*
-module "redis-stage" {
-    source = "redis"
-    redis_name = "stage"
-    redis_node_size = "cache.t2.small"
-    redis_num_nodes = 3
-    subnets = "${var.subnets}"
-    nodes_security_group = ["${split(",", var.nodes_security_groups)}"]
-}
 
-module "redis-prod" {
+module "redis-shared" {
     source = "redis"
-    redis_name = "prod"
-    redis_node_size = "cache.m3.xlarge"
+    redis_name = "shared"
+    redis_node_size = "cache.m3.large"
     redis_num_nodes = 3
     subnets = "${var.subnets}"
-    nodes_security_group = ["${split(",", var.nodes_security_groups)}"]
+    nodes_security_groups = "${var.nodes_security_groups}"
 }
-*/
 
 #########################################
 # MySQL
