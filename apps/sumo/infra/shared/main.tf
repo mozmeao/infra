@@ -119,7 +119,7 @@ module "sumo-static-media-prod-cf" {
 module "sumo-failover-cf" {
     source = "./cloudfront_failover"
 
-    acm_cert_arn = "TODO"
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/c677a888-a2ee-4486-92f5-cc99355624b7"
     aliases = ["support.mozilla.org", "support.mozilla.com", "failover-cdn.sumo.moz.works"]
     comment = "Frankfurt failover CDN"
     distribution_name = "SUMOFailoverCDN"
