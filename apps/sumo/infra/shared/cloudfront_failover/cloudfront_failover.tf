@@ -2,6 +2,9 @@ variable "distribution_name" {}
 variable "comment" {}
 variable "domain_name" {}
 variable "acm_cert_arn" {}
+variable "default_ttl" {}
+variable "min_ttl" {}
+variable "max_ttl" {}
 
 variable "aliases" {
   type = "list"
@@ -19,13 +22,13 @@ resource "aws_cloudfront_distribution" "sumo-cf-dist" {
     allowed_methods = ["GET", "HEAD"]
     cached_methods  = ["GET", "HEAD"]
     compress        = true
-    default_ttl     = 300
+    default_ttl     = "${var.default_ttl}"
 
-    # 14400 seconds = 4 hours
-    max_ttl = 14400
+  
+    max_ttl = "${var.max_ttl}"
 
 
-    min_ttl                = 0
+    min_ttl                = "${var.min_ttl}"
     smooth_streaming       = false
     target_origin_id       = "${var.distribution_name}"
     viewer_protocol_policy = "redirect-to-https"

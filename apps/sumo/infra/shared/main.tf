@@ -124,4 +124,7 @@ module "sumo-failover-cf" {
     comment = "Frankfurt failover CDN"
     distribution_name = "SUMOFailoverCDN"
     domain_name = "prod-frankfurt.sumo.moz.works"
+    default_ttl = 28800 /* 8 hours */
+    min_ttl = 14400 /* 4 hours */
+    max_ttl = 28800 /* 8 hours */
 }
