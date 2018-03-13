@@ -43,6 +43,11 @@ resource "aws_cloudfront_distribution" "sumo-cf-dist" {
     domain_name = "${var.domain_name}"
     origin_id   = "${var.distribution_name}"
 
+    custom_header = {
+        name = "X-Forwarded-Host"
+        value = "support.mozilla.org"
+    }
+
     custom_origin_config {
       http_port                = "80"
       https_port               = "443"
