@@ -24,10 +24,7 @@ resource "aws_cloudfront_distribution" "sumo-cf-dist" {
     compress        = true
     default_ttl     = "${var.default_ttl}"
 
-  
     max_ttl = "${var.max_ttl}"
-
-
     min_ttl                = "${var.min_ttl}"
     smooth_streaming       = false
     target_origin_id       = "${var.distribution_name}"
@@ -35,7 +32,7 @@ resource "aws_cloudfront_distribution" "sumo-cf-dist" {
 
     forwarded_values {
       query_string = false
-
+      headers = ["Accept-Language", "X-Mobile", "User-Agent"]
       cookies {
         forward = "none"
       }
