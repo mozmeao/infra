@@ -112,3 +112,19 @@ module "sumo-static-media-prod-cf" {
     distribution_name = "SUMOStaticMediaProdCDN"
     domain_name = "prod-tp.sumo.moz.works"
 }
+
+#####################################################################
+# failover CDN
+#####################################################################
+module "sumo-failover-cf" {
+    source = "./cloudfront_failover"
+
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/c677a888-a2ee-4486-92f5-cc99355624b7"
+    aliases = ["support.mozilla.org", "support.mozilla.com", "failover-cdn.sumo.moz.works"]
+    comment = "Frankfurt failover CDN"
+    distribution_name = "SUMOFailoverCDN"
+    domain_name = "prod-frankfurt.sumo.moz.works"
+    min_ttl = 0
+    max_ttl = 28800     /* 8 hours */
+    default_ttl = 14400 /* 4 hours */
+}
