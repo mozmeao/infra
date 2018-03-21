@@ -32,7 +32,7 @@ resource "aws_cloudfront_distribution" "sumo-cf-dist" {
 
     forwarded_values {
       query_string = false
-      headers = ["Accept-Language", "X-Mobile", "User-Agent"]
+      headers = ["Accept-Language"]
       cookies {
         forward = "none"
       }
