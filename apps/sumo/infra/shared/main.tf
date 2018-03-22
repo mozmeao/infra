@@ -110,7 +110,7 @@ module "sumo-static-media-prod-cf" {
     aliases = ["static-media-prod-cdn.sumo.mozilla.net", "static-media-prod-cdn.sumo.moz.works"]
     comment = "Prod CDN for SUMO static media"
     distribution_name = "SUMOStaticMediaProdCDN"
-    domain_name = "prod-tp.sumo.moz.works"
+    domain_name = "support.mozilla.org"
 }
 
 #####################################################################
