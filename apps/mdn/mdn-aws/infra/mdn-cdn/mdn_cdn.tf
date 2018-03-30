@@ -13,27 +13,25 @@ terraform {
 ########################################
 # Primary CDN
 ########################################
-module "mdn-primary-cloudfrom-stage" {
+module "mdn-primary-cloudfront-stage" {
     source = "./cloudfront_primary"
-    # *.mdn.moz.works cert
-    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/750fe7e9-0990-4d15-a6d4-df9606671e20"
-    aliases = ["primary-stage.mdn.moz.works"]
+    # *.allizom.org
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/bb01357f-b5b5-4e0b-91bb-ccf16c2a49ab"
+    aliases = ["developer.allizom.org"]
     comment = "Primary Stage CDN for AWS-hosted MDN"
     distribution_name = "MDNPrimaryStageCDN"
-    # do we skip the traffic policy here and just use an ALIAS in between CDN and ELB?
     domain_name = "stage.mdn.moz.works"
 }
 
-module "mdn-primary-cloudfrom-prod" {
-    source = "./cloudfront_primary"
-    # *.mdn.moz.works cert
-    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/750fe7e9-0990-4d15-a6d4-df9606671e20"
-    aliases = ["primary-prod.mdn.moz.works"]
-    comment = "Primary Prod CDN for AWS-hosted MDN"
-    distribution_name = "MDNPrimaryProdCDN"
-    # do we skip the traffic policy here and just use an ALIAS in between CDN and ELB?
-    domain_name = "prod.mdn.moz.works"
-}
+#module "mdn-primary-cloudfront-prod" {
+#    source = "./cloudfront_primary"
+#    # *.mdn.moz.works cert
+#    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/750fe7e9-0990-4d15-a6d4-df9606671e20"
+#    aliases = ["developer.mozilla.org"]
+#    comment = "Primary Prod CDN for AWS-hosted MDN"
+#    distribution_name = "MDNPrimaryProdCDN"
+#    domain_name = "prod.mdn.moz.works"
+#}
 
 ########################################
 # Static Media CDN
