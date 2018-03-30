@@ -36,6 +36,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     viewer_protocol_policy = "redirect-to-https"
 
     forwarded_values {
+      headers = ["Host"]
       query_string = false
 
       cookies {
@@ -60,6 +61,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = false
+      headers = ["Host"]
 
       cookies {
         forward = "none"
@@ -83,6 +85,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
+      headers = ["Host"]
 
       cookies {
         forward = "whitelist"
@@ -108,7 +111,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
-      headers = ["X-Requested-With"]
+      headers = ["Host", "X-Requested-With"]
       cookies {
         forward = "whitelist"
         whitelisted_names = ["sessionid"]
@@ -133,7 +136,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     forwarded_values {
       query_string = true
       query_string_cache_keys = ["user"]
-      headers = ["X-Requested-With"]
+      headers = ["Host", "X-Requested-With"]
       cookies {
         forward = "none"
       }
@@ -157,7 +160,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     forwarded_values {
       query_string = true
       query_string_cache_keys = ["topic"]
-      headers = ["X-Requested-With"]
+      headers = ["Host", "X-Requested-With"]
       cookies {
         forward = "none"
       }
@@ -178,6 +181,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
     forwarded_values {
       query_string = true
+      headers = ["Host"]
 
       cookies {
         forward = "whitelist"
