@@ -51,7 +51,7 @@ export WEB_CPU_LIMIT=2
 export WEB_CPU_REQUEST=100m
 export WEB_MEMORY_LIMIT=4Gi
 export WEB_MEMORY_REQUEST=256Mi
-export WEB_ALLOWED_HOSTS="developer.allizom.org,stage.mdn.moz.works,stage-cdn.mdn.mozilla.net,stage-files.mdn.moz.works"
+export WEB_ALLOWED_HOSTS="developer.allizom.org,stage.mdn.moz.works,stage-files.mdn.moz.works"
 
 export API_NAME=api
 export API_REPLICAS=1
