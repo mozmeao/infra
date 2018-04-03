@@ -15,11 +15,10 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
   is_ipv6_enabled = true
   price_class     = "PriceClass_All"
 
-  # custom_error_response {
-  #   error_caching_min_ttl = 10
-  #   error_code            = 404
-  # }
-
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = 504
+  }
 
   # 0
   cache_behavior {
@@ -167,7 +166,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
     }
   }
 
- 
+
  default_cache_behavior {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
@@ -200,7 +199,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
       http_port                = "80"
       https_port               = "443"
       origin_protocol_policy   = "https-only"
-      origin_read_timeout      = 30
+      origin_read_timeout      = 60
       origin_ssl_protocols     = ["TLSv1", "TLSv1.1", "TLSv1.2"]
       origin_keepalive_timeout = 5
     }
