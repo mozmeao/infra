@@ -34,7 +34,7 @@ upgrade_node() {
     ssh -o "ServerAliveInterval 2" $ssh_username@$public_node_ip "sudo reboot"
     echo "Waiting for reboot"
     # Hey, I've added a sleep statement to this script. Before you
-    # throw tomoatoes at me, it's here because the node reboot
+    # throw tomatoes at me, it's here because the node reboot
     # can happen before K8s registers that the node is NotReady,
     # which leads to uncordining while possibly in an undesirable
     # state. Maybe it's fine, but I'd prefer to wait.
