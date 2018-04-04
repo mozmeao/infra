@@ -22,16 +22,18 @@ def format_node_command(node):
     node_type = node.metadata.labels['kubernetes.io/role']
     public_ip = get_public_ip(node.status.addresses)
 
-    print("for ELB in {}; do".format(" ".join(elbs)))
-    print("aws elb deregister-instances-from-load-balancer --load-balancer-name"
-          " $ELB --instances {} &; done".format(external_id))
+    if elbs:
+        print("for ELB in {}; do".format(" ".join(elbs)))
+        print("aws elb deregister-instances-from-load-balancer --load-balancer-name"
+            " $ELB --instances {} &; done".format(external_id))
 
     print("./upgrade_node.sh {} {}".format(public_ip, node_name))
 
-    print("for ELB in {}; do".format(" ".join(elbs)))
-    print("aws elb register-instances-with-load-balancer --load-balancer-name"
-          " $ELB --instances {} &; done".format(external_id))
-    print("./elbs_for_instance.py {}".format(external_id))
+    if elbs:
+        print("for ELB in {}; do".format(" ".join(elbs)))
+        print("aws elb register-instances-with-load-balancer --load-balancer-name"
+            " $ELB --instances {} &; done".format(external_id))
+        print("./elbs_for_instance.py {}".format(external_id))
 
     print("-"*50)
 
