@@ -18,7 +18,6 @@ def format_node_command(node):
     node_name = node.metadata.name
     external_id = node.spec.external_id
     elbs = elbs_for_instance_id(external_id)
-    elbs.sort()
     node_type = node.metadata.labels['kubernetes.io/role']
     public_ip = get_public_ip(node.status.addresses)
 
