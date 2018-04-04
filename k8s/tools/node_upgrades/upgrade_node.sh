@@ -38,7 +38,7 @@ upgrade_node() {
     # can happen before K8s registers that the node is NotReady,
     # which leads to uncordining while possibly in an undesirable
     # state. Maybe it's fine, but I'd prefer to wait.
-     While this might be ok, I'd prefer to wait and let K8s
+    # While this might be ok, I'd prefer to wait and let K8s
     # do it's thing instead of sneaking 
     sleep 60
     wait_for_node
