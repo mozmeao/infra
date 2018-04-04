@@ -1,26 +1,12 @@
+#!/usr/bin/env python3
 from kubernetes import client, config
-import boto3
+from elbs_for_instance import elbs_for_instance_id
 
 # specify context in the next method call if desired
 config.load_kube_config()
 
 v1 = client.CoreV1Api()
 
-# TODO: hardcoded region
-autoscaling_client = boto3.client('autoscaling', region_name='us-west-2')
-ec2_client = boto3.client('ec2', region_name='us-west-2')
-elb_client = boto3.client('elb', region_name='us-west-2')
-
-
-def elbs_for_instance_id(instance_id):
-  elbs = elb_client.describe_load_balancers()
-  all_names = []
-  for elb in elbs['LoadBalancerDescriptions']:
-    #print(elb['LoadBalancerName'])
-    iids = [i['InstanceId'] for i in elb['Instances']]
-    if instance_id in iids:
-      all_names.append(elb['LoadBalancerName'])	
-  return all_names
 
 def get_public_ip(addresses):
     public_ip = [a.address for a in addresses if a.type == 'ExternalIP']
@@ -32,15 +18,20 @@ def format_node_command(node):
     node_name = node.metadata.name
     external_id = node.spec.external_id
     elbs = elbs_for_instance_id(external_id)
+    elbs.sort()
     node_type = node.metadata.labels['kubernetes.io/role']
     public_ip = get_public_ip(node.status.addresses)
 
-    for elb in elbs:
-      print("aws elb deregister-instances-from-load-balancer --load-balancer-name {} --instances {}".format(elb, external_id))
+    print("for ELB in {}; do".format(" ".join(elbs)))
+    print("aws elb deregister-instances-from-load-balancer --load-balancer-name"
+          " $ELB --instances {} &; done".format(external_id))
 
     print("./upgrade_node.sh {} {}".format(public_ip, node_name))
-    for elb in elbs:
-      print("rereg {}".format(elb))
+
+    print("for ELB in {}; do".format(" ".join(elbs)))
+    print("aws elb register-instances-with-load-balancer --load-balancer-name"
+          " $ELB --instances {} &; done".format(external_id))
+    print("./elbs_for_instance.py {}".format(external_id))
 
     print("-"*50)
 
