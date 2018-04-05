@@ -37,18 +37,19 @@ def format_node_command(node):
                   external_id))
         print("./elbs_for_instance.py {}".format(external_id))
 
-    print("-"*50)
 
 
 nodes_response = v1.list_node()
 
-print("# Workers:")
+print("# Workers")
 for node in nodes_response.items:
     if node.metadata.labels['kubernetes.io/role'] == 'node':
+        print("#"*50)
         format_node_command(node)
 
 print("#" * 50)
-print("# Masters:")
+print("")
+print("# Masters")
 for node in nodes_response.items:
     if node.metadata.labels['kubernetes.io/role'] == 'master':
         format_node_command(node)
