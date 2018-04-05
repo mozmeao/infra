@@ -49,6 +49,7 @@ upgrade_node() {
 
 public_node_ip=$1
 k8s_node_name=$2
+
 if [[ -z "${public_node_ip}" ]]; then
     echo "Pleast pass in a public_node_ip value"
     exit 1
