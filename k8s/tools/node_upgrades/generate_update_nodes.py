@@ -38,7 +38,6 @@ def format_node_command(node):
         print("./elbs_for_instance.py {}".format(external_id))
 
 
-
 nodes_response = v1.list_node()
 
 print("# Workers")
