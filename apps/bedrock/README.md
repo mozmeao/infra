@@ -16,7 +16,6 @@ If provisioning a new region:
 
 - Set environment-specific environment variables:
   - `DEIS_DOMAIN`
-  - `DATABASE_URL`
   - `NEW_RELIC_APP_NAME`
 
 ### Project Source
