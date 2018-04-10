@@ -44,9 +44,6 @@ class ELBRegionReport:
         bound_asgs = []
 
         for asg in self.region_asgs:
-            # print("XXXX ASG:", asg['AutoScalingGroupName'])
-            # print("     ELB:", elb_name)
-            # print(asg['LoadBalancerNames'])
             if elb_name in asg['LoadBalancerNames']:
                 bound_asgs.append(asg['AutoScalingGroupName'])
         return bound_asgs
