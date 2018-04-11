@@ -33,14 +33,6 @@ bedrock_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
 bedrock_stage.elb_config.health_check.target_path = '/healthz/'
 
 
-# ### Bedrock Dev
-bedrock_dev = elb_tool.define_elb_http(
-    service_namespace='bedrock-dev',
-    service_name='bedrock-nodeport',
-    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45')
-bedrock_dev.elb_config.elb_atts.connection_settings.idle_timeout = 120
-bedrock_dev.elb_config.health_check.target_path = '/healthz/'
-
 # ### Careers Stage
 careers_stage = elb_tool.define_elb_http(
     service_namespace='careers-stage',
@@ -57,7 +49,16 @@ snippets_stage = elb_tool.define_elb_http(
 snippets_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
 snippets_stage.elb_config.health_check.target_path = '/healthz/'
 
+# ### Snippets Prod
+snippets_stage = elb_tool.define_elb_http(
+    service_namespace='snippets-prod',
+    service_name='snippets-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/fbe34166-ae87-43f8-b9cc-7bc9a45d904c')
+snippets_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
+snippets_stage.elb_config.health_check.target_path = '/healthz/'
 
+
+# ### SUMO Stage
 sumo_stage = elb_tool.define_elb_http(
     service_namespace='sumo-stage',
     service_name='sumo-nodeport',
@@ -65,6 +66,7 @@ sumo_stage = elb_tool.define_elb_http(
 sumo_stage.elb_config.health_check.target_path = '/healthz/'
 sumo_stage.elb_config.name = 'sumo-stage-b'
 
+# ### SUMO prod
 sumo_prod = elb_tool.define_elb_http(
     service_namespace='sumo-prod',
     service_name='sumo-nodeport',
