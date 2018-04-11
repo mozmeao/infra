@@ -28,7 +28,6 @@ bedrock_stage = elb_tool.define_elb(
 # but elb_tool.define_elb() fills in most of the blanks for you
 
 # add an IdleTimeout as an ELB attribute
-bedrock_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
 # custom health check configuration
 bedrock_stage.elb_config.health_check.target_path = '/healthz/'
 
@@ -38,24 +37,8 @@ careers_stage = elb_tool.define_elb_http(
     service_namespace='careers-stage',
     service_name='careers-nodeport',
     ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/4952e9c1-dda2-450b-b156-908a42869f4f')
-careers_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
 careers_stage.elb_config.health_check.target_path = '/healthz/'
 
-# ### Snippets Stage
-snippets_stage = elb_tool.define_elb_http(
-    service_namespace='snippets-stage',
-    service_name='snippets-nodeport',
-    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/375fd27c-bf20-409d-a48b-4ff0b0fe3658')
-snippets_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
-snippets_stage.elb_config.health_check.target_path = '/healthz/'
-
-# ### Snippets Prod
-snippets_prod = elb_tool.define_elb_http(
-    service_namespace='snippets-prod',
-    service_name='snippets-nodeport',
-    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/fbe34166-ae87-43f8-b9cc-7bc9a45d904c')
-snippets_prod.elb_config.elb_atts.connection_settings.idle_timeout = 60
-snippets_prod.elb_config.health_check.target_path = '/healthz/'
 
 
 # ### SUMO Stage
