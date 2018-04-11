@@ -54,7 +54,7 @@ snippets_stage = elb_tool.define_elb_http(
     service_namespace='snippets-prod',
     service_name='snippets-nodeport',
     ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/fbe34166-ae87-43f8-b9cc-7bc9a45d904c')
-snippets_stage.elb_config.elb_atts.connection_settings.idle_timeout = 120
+snippets_stage.elb_config.elb_atts.connection_settings.idle_timeout = 60
 snippets_stage.elb_config.health_check.target_path = '/healthz/'
 
 
