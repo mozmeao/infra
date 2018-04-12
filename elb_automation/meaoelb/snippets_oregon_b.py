@@ -17,17 +17,14 @@ snippets_prod.elb_config.health_check.target_path = '/healthz/'
 
 # show the ELB's before we process them
 # object output is now colorized JSON
-#elb_tool.show_elbs()
+elb_tool.show_elbs()
 
-#elb_tool.test_elbs()
+elb_tool.test_elbs()
 
 # create and bind the ELBs
 # if an ELB has already been created, skip and continue on to the next
 # This also ensures all ELBs are bound to the ASG
-#elb_tool.create_and_bind_elbs()
+elb_tool.create_and_bind_elbs()
 
-for elb_name in set(elb['elb_config']['name'] for elb in elb_tool.all_elbs):
-    print(elb_name)
-    elb_tool.ctx.elb_client.modify_load_balancer_attributes(
-        LoadBalancerName=elb_name,
-        LoadBalancerAttributes={'ConnectionSettings': {'IdleTimeout': 60}})
+# modification example
+# elb_tool.modify_elb_attributes({'ConnectionSettings': {'IdleTimeout': 60}})

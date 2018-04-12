@@ -100,3 +100,11 @@ class ELBTool:
         """
         for elb in self.all_elbs:
             self.ctx.test_elb(elb.elb_config)
+
+    def modify_elb_attributes(self, attributes):
+        for elb_name in set(elb['elb_config']['name'] for elb in self.all_elbs):
+            print('Modifying ' + elb_name)
+            if not self.ctx.dry_run_mode:
+                self.ctx.elb_client.modify_load_balancer_attributes(
+                    LoadBalancerName=elb_name,
+                    LoadBalancerAttributes=attributes)
