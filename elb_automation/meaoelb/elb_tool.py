@@ -38,7 +38,7 @@ class ELBTool:
         args = parser.parse_args()
         if args.apply:
             print("X" * 50)
-            print("DRY RUN MODE HAS BEEN DISABLE")
+            print("DRY RUN MODE HAS BEEN DISABLED")
             print("X" * 50)
             self.ctx.dry_run_mode = False
         else:
