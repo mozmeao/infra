@@ -29,10 +29,9 @@ class ELBRegionReport:
         'listener_2',
         'listener_3',
         'listener_4',
-        'listener_5',
-        'listener_6',
+        'listener_5'
     ]
-    MAX_LISTENERS = 4
+    MAX_LISTENERS = 6
 
     def __init__(self, region):
         self.elb_client = boto3.client('elb', region_name=region)
@@ -88,7 +87,7 @@ class ELBRegionReport:
             raise Exception("Please add additional listener_N columns (up to {})".format(
                 len(elb['ListenerDescriptions'])))
 
-        # listeners
+        # listeners        
         for idx, listener in enumerate(elb['ListenerDescriptions']):
             listener = listener['Listener']
             key = "listener_{}".format(idx)
