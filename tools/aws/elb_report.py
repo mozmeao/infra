@@ -87,7 +87,7 @@ class ELBRegionReport:
             raise Exception("Please add additional listener_N columns (up to {})".format(
                 len(elb['ListenerDescriptions'])))
 
-        # listeners        
+        # listeners
         for idx, listener in enumerate(elb['ListenerDescriptions']):
             listener = listener['Listener']
             key = "listener_{}".format(idx)
