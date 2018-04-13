@@ -24,12 +24,14 @@ class ELBRegionReport:
         'atts_connection_draining',
         'atts_idle_timeout',
         'tags',
+        'listener_0',
         'listener_1',
         'listener_2',
         'listener_3',
         'listener_4',
+        'listener_5'
     ]
-    MAX_LISTENERS = 4
+    MAX_LISTENERS = 6
 
     def __init__(self, region):
         self.elb_client = boto3.client('elb', region_name=region)
