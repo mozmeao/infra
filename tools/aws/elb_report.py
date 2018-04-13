@@ -24,10 +24,13 @@ class ELBRegionReport:
         'atts_connection_draining',
         'atts_idle_timeout',
         'tags',
+        'listener_0',
         'listener_1',
         'listener_2',
         'listener_3',
         'listener_4',
+        'listener_5',
+        'listener_6',
     ]
     MAX_LISTENERS = 4
 
