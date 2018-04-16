@@ -35,16 +35,6 @@ module "mdn-primary-cloudfront-prod" {
 ########################################
 # Static Media CDN
 ########################################
-module "mdn-cloudfront-stage" {
-    source = "./cloudfront_static"
-
-    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/f46733a9-d662-4cb4-b344-b09c8a5cb624"
-    aliases = ["stage-cdn.mdn.mozilla.net", "stage-cdn.mdn.moz.works"]
-    comment = "Stage CDN for AWS-hosted MDN"
-    distribution_name = "MDNStageCDN"
-    domain_name = "stage.mdn.moz.works"
-}
-
 module "mdn-cloudfront-prod" {
     source = "./cloudfront_static"
 
