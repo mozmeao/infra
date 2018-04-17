@@ -38,7 +38,7 @@ class ELBTool:
         args = parser.parse_args()
         if args.apply:
             print("X" * 50)
-            print("DRY RUN MODE HAS BEEN DISABLE")
+            print("DRY RUN MODE HAS BEEN DISABLED")
             print("X" * 50)
             self.ctx.dry_run_mode = False
         else:
@@ -100,3 +100,11 @@ class ELBTool:
         """
         for elb in self.all_elbs:
             self.ctx.test_elb(elb.elb_config)
+
+    def modify_elb_attributes(self, attributes):
+        for elb_name in {elb['elb_config']['name'] for elb in self.all_elbs}:
+            if not self.ctx.dry_run_mode:
+                print('Modifying ' + elb_name)
+                self.ctx.elb_client.modify_load_balancer_attributes(
+                    LoadBalancerName=elb_name,
+                    LoadBalancerAttributes=attributes)

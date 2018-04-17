@@ -106,7 +106,7 @@ class ELBContext:
                 elb_config.name),
             end='',
             flush=True)
-        response = self.elb_client.create_load_balancer(
+        self.elb_client.create_load_balancer(
             LoadBalancerName=elb_config.name,
             Listeners=[l.to_aws() for l in elb_config.listeners.values()],
             SecurityGroups=elb_config.security_groups,
@@ -118,7 +118,7 @@ class ELBContext:
         elb_config = service_config.elb_config
         if elb_config.elb_atts:
             print("\t➤ Updating ELB attributes...", end='', flush=True)
-            response = self.elb_client.modify_load_balancer_attributes(
+            self.elb_client.modify_load_balancer_attributes(
                 LoadBalancerName=elb_config.name,
                 LoadBalancerAttributes=elb_config.elb_atts.to_aws())
             print("Done")
@@ -133,7 +133,7 @@ class ELBContext:
             hc.target_proto,
             hc.target_port,
             hc.target_path)
-        response = self.elb_client.configure_health_check(
+        self.elb_client.configure_health_check(
             LoadBalancerName=elb_config.name,
             HealthCheck={
                 'Target': hc_target,
@@ -209,7 +209,7 @@ class ELBContext:
                 "➤ The following ELBs would have been attached to the {} ASG:".format(asg_name))
             print(elb_names)
             return
-        response = self.asg_client.attach_load_balancers(
+        self.asg_client.attach_load_balancers(
             AutoScalingGroupName=asg_name,
             LoadBalancerNames=elb_names)
 

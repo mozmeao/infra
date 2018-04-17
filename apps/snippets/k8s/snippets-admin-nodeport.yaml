@@ -3,13 +3,13 @@ kind: Service
 metadata:
   annotations:
   labels:
-    app: snippets-prod
+    app: snippets-admin
   name: snippets-nodeport
-  namespace: snippets-prod
+  namespace: snippets-admin
 spec:
   type: NodePort
   selector:
-    app: snippets-prod
+    app: snippets-admin
     type: web
   ports:
     - name: http
