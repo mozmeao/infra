@@ -15,6 +15,14 @@ snippets_prod = elb_tool.define_elb_http(
 snippets_prod.elb_config.elb_atts.connection_settings.idle_timeout = 60
 snippets_prod.elb_config.health_check.target_path = '/healthz/'
 
+snippets_admin = elb_tool.define_elb_http(
+    service_namespace='snippets-admin',
+    service_name='snippets-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/8c872772-53de-425e-ba46-bd55779a2b13')
+
+snippets_admin.elb_config.elb_atts.connection_settings.idle_timeout = 60
+snippets_admin.elb_config.health_check.target_path = '/healthz/'
+
 snippets_stats = elb_tool.define_elb_http(
     service_namespace='snippets-stats',
     service_name='snippets-stats-nodeport',
@@ -23,7 +31,6 @@ snippets_stats.elb_config.elb_atts.connection_settings.idle_timeout = 60
 # snippets-stats does not currently have a /healthz/ endpoint
 # elb named 'snippets-stats' already exists for usw cluster
 snippets_stats.elb_config.name = 'snippets-stats-b'
-
 
 # show the ELB's before we process them
 # object output is now colorized JSON
