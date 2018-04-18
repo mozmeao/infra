@@ -131,7 +131,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 4
   cache_behavior {
-    path_pattern = "*/docs/*$edit"
+    path_pattern = "*$edit"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -154,7 +154,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 5
   cache_behavior {
-    path_pattern = "*/docs/*$subscribe"
+    path_pattern = "*$subscribe"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -177,7 +177,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 6
   cache_behavior {
-    path_pattern = "*/docs/*$subscribe_to_tree"
+    path_pattern = "*$subscribe_to_tree"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -200,7 +200,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 7
   cache_behavior {
-    path_pattern = "*/docs/*$translate"
+    path_pattern = "*$translate"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -223,7 +223,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 8
   cache_behavior {
-    path_pattern = "*/docs/*$quick-review"
+    path_pattern = "*$quick-review"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -246,7 +246,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 9
   cache_behavior {
-    path_pattern = "*/docs/*$move"
+    path_pattern = "*$move"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -269,7 +269,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 10
   cache_behavior {
-    path_pattern = "*/docs/*$delete"
+    path_pattern = "*$delete"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -292,7 +292,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 11
   cache_behavior {
-    path_pattern = "*/docs/*$revert/*"
+    path_pattern = "*$revert/*"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -315,7 +315,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 12
   cache_behavior {
-    path_pattern = "*/docs/*$purge"
+    path_pattern = "*$purge"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -338,7 +338,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 13
   cache_behavior {
-    path_pattern = "*/docs/*$files"
+    path_pattern = "*$files"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
