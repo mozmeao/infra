@@ -5,6 +5,14 @@ careers_stage = elb_tool.define_elb_http(
     service_name='careers-nodeport',
     ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/4952e9c1-dda2-450b-b156-908a42869f4f')
 careers_stage.elb_config.health_check.target_path = '/healthz/'
+#elb_tool.modify_elb_attributes({'ConnectionSettings': {'IdleTimeout': 60}})
+
+careers_prod = elb_tool.define_elb_http(
+    service_namespace='careers-prod',
+    service_name='careers-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/1bf60ff2-141f-4f9c-a3b0-e3391cdf6994')
+careers_prod.elb_config.health_check.target_path = '/healthz/'
+careers_prod.elb_config.elb_atts.connection_settings.idle_timeout = 60
 
 # show the ELB's before we process them
 # object output is now colorized JSON
