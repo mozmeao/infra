@@ -44,7 +44,7 @@ py.test -m "not login" tests/functional tests/redirects --base-url https://devel
 ```
 
 Some tests will fail the first time they are run against a server with cold
-caches. Some tests are flakey, and will intermittantly fail. If a test passes
+caches. Some tests are flaky, and will intermittently fail. If a test passes
 once in three tries, we consider it a success.
 
 * [ ] Functional tests pass
