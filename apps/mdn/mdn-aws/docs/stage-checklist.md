@@ -68,6 +68,7 @@ These URLs should have similar results for anonymous or logged-in users:
 * [ ] https://developer.allizom.org/@api/deki/files/3613/=hut.jpg - 200, image of a hat
 * [ ] https://developer.allizom.org/contribute.json - 200, project info
 * [ ] https://developer.allizom.org/diagrams/workflow/workflow.svg - 200, SVG with images
+* [ ] https://developer.allizom.org/en-US/Firefox/Releases - 200, Firefox logo, list of releases (zoned URL)
 * [ ] https://developer.allizom.org/en-US/dashboards/macros - 200, list of macros and page counts
 * [ ] https://developer.allizom.org/en-US/dashboards/revisions - 200, list of recent changes
 * [ ] https://developer.allizom.org/en-US/dashboards/spam - Redirects to Maintenance Mode page
@@ -116,6 +117,7 @@ Test these URLs as an anonymous user:
 
 * [ ] https://developer.allizom.org/admin/users/user/1/ - 302 redirect to the Admin login page, asking for a username and password.
 * [ ] https://developer.allizom.org/en-US/docs/Web/HTML$edit - 302 redirect to user sign-in page, asking to Sign In with GitHub
+* [ ] https://developer.allizom.org/en-US/Firefox/Releases$edit - 302 redirect to user sign-in page
 
 ## Regular Account Tests
 
@@ -126,17 +128,19 @@ Some things to try with a regular account, to exercise write functionality:
 * [ ] Update the account profile
 * [ ] Add and verify a new email for a profile
 * [ ] Create a new page, such as https://developer.allizom.org/en-US/docs/User:Test
-* [ ] Create a translation of the the page
+* [ ] Create a translation of the new page
 * [ ] Subscribe to a page, and change it with a different account
 * [ ] Update the original page with a KumaScript macro, such as ``{{cssxref("background")}}``.
 * [ ] Update the translation of a changed English page
 * [ ] Upload an image to the page
 * [ ] Add the image to the page content
+* [ ] Edit a zoned URL like https://developer.allizom.org/en-US/Firefox/Releases
 * [ ] Log out
 
 ## Admin Tests
 
 * [ ] Move a page
 * [ ] Delete a page
+* [ ] Move a zoned page
 * [ ] View https://developer.allizom.org/admin/users/user/1/
 
