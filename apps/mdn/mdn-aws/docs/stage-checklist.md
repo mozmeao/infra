@@ -97,7 +97,7 @@ These URLs should have similar results for anonymous or logged-in users:
 * [ ] https://developer.allizom.org/en-US/profiles/sheppy - 200, Sheppy's profile
 * [ ] https://developer.allizom.org/en-US/promote/ - 200, Promote MDN with 4 buttons
 * [ ] https://developer.allizom.org/en-US/search - 200, Search results
-* [ ] https://developer.allizom.org/fellowship/ - 200, 2015 MDN Fellowship Program
+* [ ] https://developer.allizom.org/fellowship/ - 301 to archive of 2015 MDN Fellowship Program
 * [ ] https://developer.allizom.org/files/12984/web-font-example.png - Redirects to https://stage-files.mdn.moz.works
 * [ ] https://developer.allizom.org/fr/docs/feeds/rss/l10n-updates/ - 200, RSS feed of out-of-date pages
 * [ ] https://developer.allizom.org/fr/docs/localization-tag/inprogress - 200, paginated list of documents
