@@ -2,16 +2,24 @@ default:
 	@echo "Please select a target"
 
 oregon-b:
+	python3 -m meaoelb.basket_oregon_b
 	python3 -m meaoelb.bedrock_oregon_b
 	python3 -m meaoelb.careers_oregon_b
 	python3 -m meaoelb.snippets_oregon_b
 	python3 -m meaoelb.sumo_oregon_b
 
 apply-oregon-b:
+	python3 -m meaoelb.basket_oregon_b --apply
 	python3 -m meaoelb.bedrock_oregon_b --apply
 	python3 -m meaoelb.careers_oregon_b --apply
 	python3 -m meaoelb.snippets_oregon_b --apply
 	python3 -m meaoelb.sumo_oregon_b --apply
+
+basket-oregon-b:
+	python3 -m meaoelb.basket_oregon_b
+
+apply-basket-oregon-b:
+	python3 -m meaoelb.basket_oregon_b --apply
 
 bedrock-oregon-b:
 	python3 -m meaoelb.bedrock_oregon_b
