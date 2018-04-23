@@ -1,4 +1,4 @@
-FROM python:2-slim
+FROM python:3-slim
 
 # from https://github.com/mozmeao/docker-pythode/blob/master/Dockerfile.footer
 

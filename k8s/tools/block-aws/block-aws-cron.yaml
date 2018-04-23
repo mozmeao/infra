@@ -50,6 +50,6 @@ spec:
         spec:
           containers:
           - name: block-aws-cron
-            image: quay.io/mozmar/blockaws:38f6943
+            image: quay.io/mozmar/blockaws:8e443a3
           serviceAccountName: blockaws
           restartPolicy: OnFailure
