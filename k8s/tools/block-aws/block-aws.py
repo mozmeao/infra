@@ -12,7 +12,7 @@ from kubernetes import client, config
 WHITELISTED_NAMESPACES = ['kube-system']
 AWS_NETWORK_POLICY_NAME = 'block-aws'
 
-config.load_kube_config()
+config.load_incluster_config()
 
 v1 = client.CoreV1Api()
 v1beta1 = client.ExtensionsV1beta1Api()
