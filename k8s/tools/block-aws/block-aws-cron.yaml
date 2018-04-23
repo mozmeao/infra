@@ -1,3 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: grant-netpol-access
+rules:
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["networkpolicies"]
+  verbs: ["get", "list", "update", "create"]
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: grant-netpol-access
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: meaocron
+roleRef:
+  kind: ClusterRole
+  name: grant-netpol-access
+  apiGroup: rbac.authorization.k8s.io
+---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -14,5 +39,5 @@ spec:
         spec:
           containers:
           - name: block-aws-cron
-            image: quay.io/mozmar/blockaws:e879510
+            image: quay.io/mozmar/blockaws:38f6943
           restartPolicy: OnFailure
