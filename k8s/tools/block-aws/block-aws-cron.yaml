@@ -40,7 +40,7 @@ metadata:
   name: block-aws-cron
   namespace: meaocron
 spec:
-  schedule: "*/1 * * * *"
+  schedule: "*/5 * * * *"
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 3
   successfulJobsHistoryLimit: 3
