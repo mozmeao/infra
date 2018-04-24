@@ -7,12 +7,15 @@ network policy in kube-system, but others may be installed in kube-system
 via some other method).
 """
 
+import os
+
 from kubernetes import client, config
+import requests
 
 WHITELISTED_NAMESPACES = ['kube-system']
 AWS_NETWORK_POLICY_NAME = 'block-aws'
 
-config.load_kube_config()
+config.load_incluster_config()
 
 v1 = client.CoreV1Api()
 v1beta1 = client.ExtensionsV1beta1Api()
@@ -53,3 +56,10 @@ for ns in namespace_response.items:
                 response.metadata.namespace))
     else:
         print("\tAWS already blocked")
+
+if 'DMS_URL' in os.environ:
+    print("Notifying DMS")
+    r = requests.get(os.environ['DMS_URL'])
+    print(r.status_code)
+else:
+    print('DMS_URL not found, not notifying DMS')
