@@ -1,5 +1,3 @@
-GIT_COMMIT_RAW=$(git rev-parse HEAD)
-GIT_COMMIT=${GIT_COMMIT_RAW:0:7}
-
-docker build . -t quay.io/mozmar/blockaws:${GIT_COMMIT}
+#!/bin/bash
+docker build . -t quay.io/mozmar/blockaws:${GIT_COMMIT:=$(git rev-parse --short HEAD)}
 docker push quay.io/mozmar/blockaws:${GIT_COMMIT}
