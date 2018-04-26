@@ -55,6 +55,7 @@ spec:
   successfulJobsHistoryLimit: 3
   jobTemplate:
     spec:
+      activeDeadlineSeconds: 60
       template:
         spec:
           containers:
