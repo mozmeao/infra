@@ -8,6 +8,7 @@ via some other method).
 """
 
 import os
+import sys
 
 from kubernetes import client, config
 import requests
@@ -63,3 +64,6 @@ if 'DMS_URL' in os.environ:
     print(r.status_code)
 else:
     print('DMS_URL not found, not notifying DMS')
+
+# https://github.com/kubernetes-client/python/issues/411
+sys.exit()

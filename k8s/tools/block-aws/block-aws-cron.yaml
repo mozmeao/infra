@@ -55,11 +55,12 @@ spec:
   successfulJobsHistoryLimit: 3
   jobTemplate:
     spec:
+      activeDeadlineSeconds: 60
       template:
         spec:
           containers:
           - name: block-aws-cron
-            image: quay.io/mozmar/blockaws:1f888cb
+            image: quay.io/mozmar/blockaws:7a317c6
             env:
               - name: DMS_URL
                 valueFrom:
