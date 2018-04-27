@@ -7,6 +7,7 @@ network policy in kube-system, but others may be installed in kube-system
 via some other method).
 """
 
+from collections import defaultdict
 import os
 
 from kubernetes import client, config
@@ -15,9 +16,11 @@ import requests
 import sh
 import yaml
 
-WHITELISTED_NAMESPACES = ['kube-system']
-AWS_NETWORK_POLICY_NAME = 'block-aws'
-POLICY_FILENAME = 'block-aws-networkpolicy.yaml'
+WHITELISTED_NAMESPACES = os.getenv('WHITELISTED_NAMESPACES',
+                                   'kube-system').split(',')
+AWS_NETWORK_POLICY_NAME = os.getenv('AWS_NETWORK_POLICY_NAME', 'block-aws')
+POLICY_FILENAME = os.getenv('POLICY_FILENAME', 'block-aws-networkpolicy.yaml')
+DMS_URL = os.getenv('DMS_URL')
 USE_KUBECTL = os.getenv('USE_KUBECTL', True)
 IN_CLUSTER = os.getenv('IN_CLUSTER', True)
 
@@ -28,12 +31,25 @@ else:
 
 
 def kubemunch(*args):
-    kubectl_yaml = sh.kubectl.bake('-o', 'yaml')
-    munched = munchify(yaml.load(kubectl_yaml(args).stdout))
+    kubectl = sh.kubectl.bake('-o', 'yaml')
+    munched = munchify(yaml.load(kubectl(args).stdout))
     if 'items' in munched.keys():
         # override items method
         munched.items = munched['items']
     return munched
+
+
+def namespace_network_policy_names(use_kubectl=USE_KUBECTL):
+    if use_kubectl:
+        policies = kubemunch('get', 'netpol', '--all-namespaces').items
+    else:
+        v1beta1 = client.ExtensionsV1beta1Api()
+        policies = v1beta1.list_network_policy_for_all_namespaces().items
+
+    ns_policies = defaultdict(list)
+    for policy in policies:
+        ns_policies[policy.metadata.namespace].append(policy.metadata.name)
+    return ns_policies
 
 
 def namespaces(use_kubectl=USE_KUBECTL):
@@ -41,16 +57,7 @@ def namespaces(use_kubectl=USE_KUBECTL):
         return [ns.metadata.name for ns in kubemunch('get', 'ns').items]
     else:
         v1 = client.CoreV1Api()
-        return [ns.metadata.name for ns in v1.list_namespace()]
-
-
-def network_policies(namespace, use_kubectl=USE_KUBECTL):
-    if use_kubectl:
-        ns_policies = kubemunch('get', 'networkpolicy', '-n', namespace)
-    else:
-        v1beta1 = client.ExtensionsV1beta1Api()
-        ns_policies = v1beta1.list_namespaced_network_policy(namespace)
-    return [ns_policy.metadata.name for ns_policy in ns_policies.items]
+        return [ns.metadata.name for ns in v1.list_namespace().items]
 
 
 def create_policy(namespace, use_kubectl=USE_KUBECTL):
@@ -76,30 +83,26 @@ def create_policy(namespace, use_kubectl=USE_KUBECTL):
         networkingv1 = client.NetworkingV1Api()
         response = networkingv1.create_namespaced_network_policy(namespace,
                                                                  policy)
-    print(
-        "\tCreated {} in NS {}".format(
-            response.metadata.name,
-            response.metadata.namespace))
+    print("\tCreated {} in ns {}".format(response.metadata.name,
+                                         response.metadata.namespace))
 
 
 def ping_dms():
-    if 'DMS_URL' in os.environ:
+    if DMS_URL:
         print("Notifying DMS")
-        r = requests.get(os.environ['DMS_URL'])
+        r = requests.get(DMS_URL)
         print(r.status_code)
     else:
         print('DMS_URL not found, not notifying DMS')
 
 
 def main():
+    ns_policies = namespace_network_policy_names()
     for namespace in namespaces():
         print("-> ", namespace)
         if namespace in WHITELISTED_NAMESPACES:
             print("\tskipping, ns whitelisted")
-            continue
-
-        local_policies = network_policies(namespace)
-        if AWS_NETWORK_POLICY_NAME not in local_policies:
+        elif AWS_NETWORK_POLICY_NAME not in ns_policies[namespace]:
             create_policy(namespace)
         else:
             print("\tAWS already blocked")
