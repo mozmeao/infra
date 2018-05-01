@@ -588,7 +588,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
       cookies {
         forward = "whitelist"
-        whitelisted_names = ["django_language", "sessionid"]
+        whitelisted_names = ["django_language", "dwf_sg_task_completion", "sessionid"]
       }
     }
   }
