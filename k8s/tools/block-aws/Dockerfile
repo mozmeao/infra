@@ -8,20 +8,26 @@ ENV PYTHONUNBUFFERED=1
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 
 # add non-priviledged user
-RUN adduser --uid 1000 --disabled-password --gecos '' --no-create-home webdev
+RUN adduser --uid 1000 --disabled-password --gecos '' --no-create-home blocker
 
 # end from Dockerfile.footer
 
 WORKDIR /app
 
 # Install app
-COPY block-aws.py /app/block-aws.py
+COPY block_aws.py /app/block_aws.py
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["python", "/app/block-aws.py"]
+# Install kubectl
+# to get latest version: "curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt"
+ENV KUBECTL_VERSION="v1.10.1"
+ADD https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VERSION}/bin/linux/amd64/kubectl /usr/local/bin/kubectl
+RUN chmod +x /usr/local/bin/kubectl
+
+CMD ["python", "/app/block_aws.py"]
 
 # Change User
-RUN chown webdev.webdev -R .
-USER webdev
+RUN chown blocker.blocker -R .
+USER blocker
 
