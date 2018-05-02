@@ -25,8 +25,8 @@ module "mdn-primary-cloudfront-stage" {
 
 module "mdn-primary-cloudfront-prod" {
    source = "./cloudfront_primary"
-   acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/144c40ad-1a60-4865-a252-58ff23961787"
-   aliases = ["developer.mozilla.org"]
+   acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/68395c25-b5d4-4875-b85a-8c89b80c4e01"
+   aliases = ["developer.mozilla.org", "cdn.mdn.mozilla.net"]
    comment = "Primary Prod CDN for AWS-hosted MDN"
    distribution_name = "MDNPrimaryProdCDN"
    domain_name = "prod.mdn.moz.works"
@@ -57,4 +57,3 @@ module "mdn-cloudfront-attachments-prod" {
     distribution_name = "MDNProdAttachmentsCDN"
     domain_name = "mdn-demos-origin.moz.works"
 }
-
