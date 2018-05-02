@@ -8,6 +8,7 @@
             - worker
             - "--events"
             - "--autoreload"
+            - "--loglevel=INFO"
             - "--logfile=/dev/stdout"
             - "--concurrency={{ CELERY_WORKERS_CONCURRENCY }}"
             - "--queues={{ CELERY_WORKERS_QUEUES }}"
