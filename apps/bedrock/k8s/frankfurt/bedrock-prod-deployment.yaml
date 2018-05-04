@@ -1,0 +1,1302 @@
+apiVersion: v1
+items:
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "136"
+      kubernetes.io/change-cause: jenkins deployed mozorg/bedrock:frankfurt-prod-5d6972c84eb463ea09e0bb2f31f74acc9a2f5e61
+    creationTimestamp: 2017-06-20T18:58:17Z
+    generation: 143
+    labels:
+      app: bedrock-prod
+      heritage: deis
+      type: clock
+    name: bedrock-prod-clock
+    namespace: bedrock-prod
+    resourceVersion: "41872771"
+    selfLink: /apis/extensions/v1beta1/namespaces/bedrock-prod/deployments/bedrock-prod-clock
+    uid: 6bcbc1cb-55ea-11e7-8dc9-02859405480d
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: bedrock-prod
+        heritage: deis
+        type: clock
+    strategy:
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: bedrock-prod
+          heritage: deis
+          type: clock
+          version: v140
+        name: bedrock-prod-clock
+        namespace: bedrock-prod
+      spec:
+        containers:
+        - args:
+          - ./bin/run-clock.sh
+          command:
+          - /bin/bash
+          - -c
+          env:
+          - name: ALLOWED_HOSTS
+            valueFrom:
+              secretKeyRef:
+                key: allowed-hosts
+                name: bedrock-prod-v140-env
+          - name: BASKET_API_KEY
+            valueFrom:
+              secretKeyRef:
+                key: basket-api-key
+                name: bedrock-prod-v140-env
+          - name: BASKET_URL
+            valueFrom:
+              secretKeyRef:
+                key: basket-url
+                name: bedrock-prod-v140-env
+          - name: CSP_REPORT_ENABLE
+            valueFrom:
+              secretKeyRef:
+                key: csp-report-enable
+                name: bedrock-prod-v140-env
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                key: database-url
+                name: bedrock-prod-v140-env
+          - name: DEAD_MANS_SNITCH_URL
+            valueFrom:
+              secretKeyRef:
+                key: dead-mans-snitch-url
+                name: bedrock-prod-v140-env
+          - name: DEBUG
+            valueFrom:
+              secretKeyRef:
+                key: debug
+                name: bedrock-prod-v140-env
+          - name: DEIS_APP
+            valueFrom:
+              secretKeyRef:
+                key: deis-app
+                name: bedrock-prod-v140-env
+          - name: DEIS_DOMAIN
+            valueFrom:
+              secretKeyRef:
+                key: deis-domain
+                name: bedrock-prod-v140-env
+          - name: EMAIL_HOST
+            valueFrom:
+              secretKeyRef:
+                key: email-host
+                name: bedrock-prod-v140-env
+          - name: EMAIL_HOST_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: email-host-password
+                name: bedrock-prod-v140-env
+          - name: EMAIL_HOST_USER
+            valueFrom:
+              secretKeyRef:
+                key: email-host-user
+                name: bedrock-prod-v140-env
+          - name: EMAIL_PORT
+            valueFrom:
+              secretKeyRef:
+                key: email-port
+                name: bedrock-prod-v140-env
+          - name: EMAIL_USE_TLS
+            valueFrom:
+              secretKeyRef:
+                key: email-use-tls
+                name: bedrock-prod-v140-env
+          - name: ENABLE_CSP_MIDDLEWARE
+            valueFrom:
+              secretKeyRef:
+                key: enable-csp-middleware
+                name: bedrock-prod-v140-env
+          - name: ENABLE_VARY_NOCACHE_MIDDLEWARE
+            valueFrom:
+              secretKeyRef:
+                key: enable-vary-nocache-middleware
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_110_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-110-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_110_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-110-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_111_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-111-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_111_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-111-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_112_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-112-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_112_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-112-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_113_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-113-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_113_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-113-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_119_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-119-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_119_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-119-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_120_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-120-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_120_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-120-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_121_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-121-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_121_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-121-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_122_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-122-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_122_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-122-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_130_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-130-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_130_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-130-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_131_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-131-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_131_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-131-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_132_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-132-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_132_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-132-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-locales
+                name: bedrock-prod-v140-env
+          - name: GTM_CONTAINER_ID
+            valueFrom:
+              secretKeyRef:
+                key: gtm-container-id
+                name: bedrock-prod-v140-env
+          - name: HTTPS
+            valueFrom:
+              secretKeyRef:
+                key: https
+                name: bedrock-prod-v140-env
+          - name: L10N_CRON
+            valueFrom:
+              secretKeyRef:
+                key: l10n-cron
+                name: bedrock-prod-v140-env
+          - name: LOGLEVEL
+            valueFrom:
+              secretKeyRef:
+                key: loglevel
+                name: bedrock-prod-v140-env
+          - name: MOFO_SECURITY_ADVISORIES_PATH
+            valueFrom:
+              secretKeyRef:
+                key: mofo-security-advisories-path
+                name: bedrock-prod-v140-env
+          - name: NEWRELIC_PYTHON_INI_FILE
+            valueFrom:
+              secretKeyRef:
+                key: newrelic-python-ini-file
+                name: bedrock-prod-v140-env
+          - name: NEW_RELIC_APP_NAME
+            valueFrom:
+              secretKeyRef:
+                key: new-relic-app-name
+                name: bedrock-prod-v140-env
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                key: new-relic-license-key
+                name: bedrock-prod-v140-env
+          - name: OPTIMIZELY_PROJECT_ID
+            valueFrom:
+              secretKeyRef:
+                key: optimizely-project-id
+                name: bedrock-prod-v140-env
+          - name: PORT
+            valueFrom:
+              secretKeyRef:
+                key: port
+                name: bedrock-prod-v140-env
+          - name: PROD
+            valueFrom:
+              secretKeyRef:
+                key: prod
+                name: bedrock-prod-v140-env
+          - name: RUN_SUPERVISOR
+            valueFrom:
+              secretKeyRef:
+                key: run-supervisor
+                name: bedrock-prod-v140-env
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secret-key
+                name: bedrock-prod-v140-env
+          - name: SECURE_HSTS_SECONDS
+            valueFrom:
+              secretKeyRef:
+                key: secure-hsts-seconds
+                name: bedrock-prod-v140-env
+          - name: SECURE_SSL_REDIRECT
+            valueFrom:
+              secretKeyRef:
+                key: secure-ssl-redirect
+                name: bedrock-prod-v140-env
+          - name: SENTRY_DSN
+            valueFrom:
+              secretKeyRef:
+                key: sentry-dsn
+                name: bedrock-prod-v140-env
+          - name: STATCOUNTER_PROJECT_ID
+            valueFrom:
+              secretKeyRef:
+                key: statcounter-project-id
+                name: bedrock-prod-v140-env
+          - name: STATCOUNTER_SECURITY_ID
+            valueFrom:
+              secretKeyRef:
+                key: statcounter-security-id
+                name: bedrock-prod-v140-env
+          - name: STD_SMS_COUNTRIES_WHATSNEW50
+            valueFrom:
+              secretKeyRef:
+                key: std-sms-countries-whatsnew50
+                name: bedrock-prod-v140-env
+          - name: STUB_ATTRIBUTION_HMAC_KEY
+            valueFrom:
+              secretKeyRef:
+                key: stub-attribution-hmac-key
+                name: bedrock-prod-v140-env
+          - name: STUB_ATTRIBUTION_RATE
+            valueFrom:
+              secretKeyRef:
+                key: stub-attribution-rate
+                name: bedrock-prod-v140-env
+          - name: SWITCH_57_QUANTUM_PREVIEW
+            valueFrom:
+              secretKeyRef:
+                key: switch-57-quantum-preview
+                name: bedrock-prod-v140-env
+          - name: SWITCH_DATA_PRIVACY_DAY_2017
+            valueFrom:
+              secretKeyRef:
+                key: switch-data-privacy-day-2017
+                name: bedrock-prod-v140-env
+          - name: SWITCH_DISABLE_SHA1_DOWNLOADS
+            valueFrom:
+              secretKeyRef:
+                key: switch-disable-sha1-downloads
+                name: bedrock-prod-v140-env
+          - name: SWITCH_DOUBLE_CLICK
+            valueFrom:
+              secretKeyRef:
+                key: switch-double-click
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIREFOX_FAMILY
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firefox-family
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIREFOX_NEW_ALL_LINKS_PT2
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firefox-new-all-links-pt2
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIREFOX_NEW_FUNNELCAKES_110_113
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firefox-new-funnelcakes-110-113
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIREFOX_NEW_UP_TO_DATE_USERS
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firefox-new-up-to-date-users
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIRSTRUN_EMAIL_FIRST
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firstrun-email-first
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_PAGE
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-page
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_RUST_VIDEO
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-rust-video
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_TECHNOLOGY_RUST_VIDEO
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-technology-rust-video
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_57_RELEASE
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-57-release
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_DEV_FALL
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-dev-fall
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_FEATURES_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-features-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_FEATURES_SEND_TABS_VIDEO_EXPERIMENT
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-features-send-tabs-video-experiment
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_FIRSTRUN_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-firstrun-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_HOME_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-home-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_IOS_GLOBAL
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-ios-global
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_MAU2ACCOUNT
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-mau2account
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_BATMFREE
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-batmfree
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_BATMFREE_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-batmfree-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_BATM_SCENE2_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-batm-scene2-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_FXLIFESTYLEWORKINGOUT_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-fxlifestyleworkingout-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_SCENE2_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-scene2-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_UNBRANDED_SEARCH_FUNNELCAKES
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-unbranded-search-funnelcakes
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_UNSUPPORTED_BROWSER_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-unsupported-browser-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_UPDATE_NOTIFICATION
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-update-notification
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_UPDATE_NOTIFICATION_MODAL
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-update-notification-modal
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FLASHTALKING
+            valueFrom:
+              secretKeyRef:
+                key: switch-flashtalking
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FX40_FIRSTRUN
+            valueFrom:
+              secretKeyRef:
+                key: switch-fx40-firstrun
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FX_PRODUCT_PAGE_DEV_QUANTUM
+            valueFrom:
+              secretKeyRef:
+                key: switch-fx-product-page-dev-quantum
+                name: bedrock-prod-v140-env
+          - name: SWITCH_INTERNET_HEALTH_REPORT_LIVE
+            valueFrom:
+              secretKeyRef:
+                key: switch-internet-health-report-live
+                name: bedrock-prod-v140-env
+          - name: SWITCH_MOZORG_HOME_BRAND_ANNOUNCE
+            valueFrom:
+              secretKeyRef:
+                key: switch-mozorg-home-brand-announce
+                name: bedrock-prod-v140-env
+          - name: SWITCH_MOZORG_HOME_BRAND_POPUP
+            valueFrom:
+              secretKeyRef:
+                key: switch-mozorg-home-brand-popup
+                name: bedrock-prod-v140-env
+          - name: SWITCH_MOZORG_HOME_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-mozorg-home-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_NEWSLETTER_MAINTENANCE_MODE
+            valueFrom:
+              secretKeyRef:
+                key: switch-newsletter-maintenance-mode
+                name: bedrock-prod-v140-env
+          - name: SWITCH_RESTART_THINGS
+            valueFrom:
+              secretKeyRef:
+                key: switch-restart-things
+                name: bedrock-prod-v140-env
+          - name: SWITCH_RESTART_THINGS_AGAIN
+            valueFrom:
+              secretKeyRef:
+                key: switch-restart-things-again
+                name: bedrock-prod-v140-env
+          - name: SWITCH_SOM_2016
+            valueFrom:
+              secretKeyRef:
+                key: switch-som-2016
+                name: bedrock-prod-v140-env
+          - name: SWITCH_STATCOUNTER_EXPERIMENT
+            valueFrom:
+              secretKeyRef:
+                key: switch-statcounter-experiment
+                name: bedrock-prod-v140-env
+          - name: SWITCH_TASK_COMPLETION_RATE_SURVEY
+            valueFrom:
+              secretKeyRef:
+                key: switch-task-completion-rate-survey
+                name: bedrock-prod-v140-env
+          - name: SWITCH_TRACKING_PIXEL
+            valueFrom:
+              secretKeyRef:
+                key: switch-tracking-pixel
+                name: bedrock-prod-v140-env
+          - name: SWITCH_TRACKING_PROTECTION
+            valueFrom:
+              secretKeyRef:
+                key: switch-tracking-protection
+                name: bedrock-prod-v140-env
+          - name: SWITCH_TRACKING_PROTECTION_REDIRECT
+            valueFrom:
+              secretKeyRef:
+                key: switch-tracking-protection-redirect
+                name: bedrock-prod-v140-env
+          - name: TWITTER_ACCESS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: twitter-access-token
+                name: bedrock-prod-v140-env
+          - name: TWITTER_ACCESS_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: twitter-access-token-secret
+                name: bedrock-prod-v140-env
+          - name: TWITTER_CONSUMER_KEY
+            valueFrom:
+              secretKeyRef:
+                key: twitter-consumer-key
+                name: bedrock-prod-v140-env
+          - name: TWITTER_CONSUMER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: twitter-consumer-secret
+                name: bedrock-prod-v140-env
+          - name: USE_SECURE_PROXY_HEADER
+            valueFrom:
+              secretKeyRef:
+                key: use-secure-proxy-header
+                name: bedrock-prod-v140-env
+          - name: WORKFLOW_RELEASE
+            valueFrom:
+              secretKeyRef:
+                key: workflow-release
+                name: bedrock-prod-v140-env
+          - name: WORKFLOW_RELEASE_CREATED_AT
+            valueFrom:
+              secretKeyRef:
+                key: workflow-release-created-at
+                name: bedrock-prod-v140-env
+          - name: WORKFLOW_RELEASE_SUMMARY
+            valueFrom:
+              secretKeyRef:
+                key: workflow-release-summary
+                name: bedrock-prod-v140-env
+          image: 127.0.0.1:5555/bedrock-prod:v140
+          imagePullPolicy: Always
+          name: bedrock-prod-clock
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: 2018-01-08T20:58:20Z
+      lastUpdateTime: 2018-01-08T20:58:20Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 143
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: extensions/v1beta1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "137"
+      kubernetes.io/change-cause: jenkins deployed mozorg/bedrock:frankfurt-prod-5d6972c84eb463ea09e0bb2f31f74acc9a2f5e61
+    creationTimestamp: 2017-06-16T16:48:47Z
+    generation: 18933
+    labels:
+      app: bedrock-prod
+      heritage: deis
+      type: web
+    name: bedrock-prod-web
+    namespace: bedrock-prod
+    resourceVersion: "42287917"
+    selfLink: /apis/extensions/v1beta1/namespaces/bedrock-prod/deployments/bedrock-prod-web
+    uid: aaba9b5c-52b3-11e7-8dc9-02859405480d
+  spec:
+    replicas: 6
+    selector:
+      matchLabels:
+        app: bedrock-prod
+        heritage: deis
+        type: web
+    strategy:
+      rollingUpdate:
+        maxSurge: 5
+        maxUnavailable: 0
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: bedrock-prod
+          heritage: deis
+          type: web
+          version: v140
+        name: bedrock-prod-web
+        namespace: bedrock-prod
+      spec:
+        containers:
+        - args:
+          - ./bin/run.sh
+          command:
+          - /bin/bash
+          - -c
+          env:
+          - name: ALLOWED_HOSTS
+            valueFrom:
+              secretKeyRef:
+                key: allowed-hosts
+                name: bedrock-prod-v140-env
+          - name: BASKET_API_KEY
+            valueFrom:
+              secretKeyRef:
+                key: basket-api-key
+                name: bedrock-prod-v140-env
+          - name: BASKET_URL
+            valueFrom:
+              secretKeyRef:
+                key: basket-url
+                name: bedrock-prod-v140-env
+          - name: CSP_REPORT_ENABLE
+            valueFrom:
+              secretKeyRef:
+                key: csp-report-enable
+                name: bedrock-prod-v140-env
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                key: database-url
+                name: bedrock-prod-v140-env
+          - name: DEAD_MANS_SNITCH_URL
+            valueFrom:
+              secretKeyRef:
+                key: dead-mans-snitch-url
+                name: bedrock-prod-v140-env
+          - name: DEBUG
+            valueFrom:
+              secretKeyRef:
+                key: debug
+                name: bedrock-prod-v140-env
+          - name: DEIS_APP
+            valueFrom:
+              secretKeyRef:
+                key: deis-app
+                name: bedrock-prod-v140-env
+          - name: DEIS_DOMAIN
+            valueFrom:
+              secretKeyRef:
+                key: deis-domain
+                name: bedrock-prod-v140-env
+          - name: EMAIL_HOST
+            valueFrom:
+              secretKeyRef:
+                key: email-host
+                name: bedrock-prod-v140-env
+          - name: EMAIL_HOST_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: email-host-password
+                name: bedrock-prod-v140-env
+          - name: EMAIL_HOST_USER
+            valueFrom:
+              secretKeyRef:
+                key: email-host-user
+                name: bedrock-prod-v140-env
+          - name: EMAIL_PORT
+            valueFrom:
+              secretKeyRef:
+                key: email-port
+                name: bedrock-prod-v140-env
+          - name: EMAIL_USE_TLS
+            valueFrom:
+              secretKeyRef:
+                key: email-use-tls
+                name: bedrock-prod-v140-env
+          - name: ENABLE_CSP_MIDDLEWARE
+            valueFrom:
+              secretKeyRef:
+                key: enable-csp-middleware
+                name: bedrock-prod-v140-env
+          - name: ENABLE_VARY_NOCACHE_MIDDLEWARE
+            valueFrom:
+              secretKeyRef:
+                key: enable-vary-nocache-middleware
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_110_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-110-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_110_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-110-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_111_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-111-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_111_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-111-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_112_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-112-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_112_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-112-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_113_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-113-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_113_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-113-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_119_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-119-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_119_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-119-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_120_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-120-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_120_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-120-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_121_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-121-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_121_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-121-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_122_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-122-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_122_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-122-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_130_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-130-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_130_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-130-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_131_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-131-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_131_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-131-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_132_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-132-locales
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_132_PLATFORMS
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-132-platforms
+                name: bedrock-prod-v140-env
+          - name: FUNNELCAKE_LOCALES
+            valueFrom:
+              secretKeyRef:
+                key: funnelcake-locales
+                name: bedrock-prod-v140-env
+          - name: GTM_CONTAINER_ID
+            valueFrom:
+              secretKeyRef:
+                key: gtm-container-id
+                name: bedrock-prod-v140-env
+          - name: HTTPS
+            valueFrom:
+              secretKeyRef:
+                key: https
+                name: bedrock-prod-v140-env
+          - name: L10N_CRON
+            valueFrom:
+              secretKeyRef:
+                key: l10n-cron
+                name: bedrock-prod-v140-env
+          - name: LOGLEVEL
+            valueFrom:
+              secretKeyRef:
+                key: loglevel
+                name: bedrock-prod-v140-env
+          - name: MOFO_SECURITY_ADVISORIES_PATH
+            valueFrom:
+              secretKeyRef:
+                key: mofo-security-advisories-path
+                name: bedrock-prod-v140-env
+          - name: NEWRELIC_PYTHON_INI_FILE
+            valueFrom:
+              secretKeyRef:
+                key: newrelic-python-ini-file
+                name: bedrock-prod-v140-env
+          - name: NEW_RELIC_APP_NAME
+            valueFrom:
+              secretKeyRef:
+                key: new-relic-app-name
+                name: bedrock-prod-v140-env
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                key: new-relic-license-key
+                name: bedrock-prod-v140-env
+          - name: OPTIMIZELY_PROJECT_ID
+            valueFrom:
+              secretKeyRef:
+                key: optimizely-project-id
+                name: bedrock-prod-v140-env
+          - name: PORT
+            valueFrom:
+              secretKeyRef:
+                key: port
+                name: bedrock-prod-v140-env
+          - name: PROD
+            valueFrom:
+              secretKeyRef:
+                key: prod
+                name: bedrock-prod-v140-env
+          - name: RUN_SUPERVISOR
+            valueFrom:
+              secretKeyRef:
+                key: run-supervisor
+                name: bedrock-prod-v140-env
+          - name: SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secret-key
+                name: bedrock-prod-v140-env
+          - name: SECURE_HSTS_SECONDS
+            valueFrom:
+              secretKeyRef:
+                key: secure-hsts-seconds
+                name: bedrock-prod-v140-env
+          - name: SECURE_SSL_REDIRECT
+            valueFrom:
+              secretKeyRef:
+                key: secure-ssl-redirect
+                name: bedrock-prod-v140-env
+          - name: SENTRY_DSN
+            valueFrom:
+              secretKeyRef:
+                key: sentry-dsn
+                name: bedrock-prod-v140-env
+          - name: STATCOUNTER_PROJECT_ID
+            valueFrom:
+              secretKeyRef:
+                key: statcounter-project-id
+                name: bedrock-prod-v140-env
+          - name: STATCOUNTER_SECURITY_ID
+            valueFrom:
+              secretKeyRef:
+                key: statcounter-security-id
+                name: bedrock-prod-v140-env
+          - name: STD_SMS_COUNTRIES_WHATSNEW50
+            valueFrom:
+              secretKeyRef:
+                key: std-sms-countries-whatsnew50
+                name: bedrock-prod-v140-env
+          - name: STUB_ATTRIBUTION_HMAC_KEY
+            valueFrom:
+              secretKeyRef:
+                key: stub-attribution-hmac-key
+                name: bedrock-prod-v140-env
+          - name: STUB_ATTRIBUTION_RATE
+            valueFrom:
+              secretKeyRef:
+                key: stub-attribution-rate
+                name: bedrock-prod-v140-env
+          - name: SWITCH_57_QUANTUM_PREVIEW
+            valueFrom:
+              secretKeyRef:
+                key: switch-57-quantum-preview
+                name: bedrock-prod-v140-env
+          - name: SWITCH_DATA_PRIVACY_DAY_2017
+            valueFrom:
+              secretKeyRef:
+                key: switch-data-privacy-day-2017
+                name: bedrock-prod-v140-env
+          - name: SWITCH_DISABLE_SHA1_DOWNLOADS
+            valueFrom:
+              secretKeyRef:
+                key: switch-disable-sha1-downloads
+                name: bedrock-prod-v140-env
+          - name: SWITCH_DOUBLE_CLICK
+            valueFrom:
+              secretKeyRef:
+                key: switch-double-click
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIREFOX_FAMILY
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firefox-family
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIREFOX_NEW_ALL_LINKS_PT2
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firefox-new-all-links-pt2
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIREFOX_NEW_FUNNELCAKES_110_113
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firefox-new-funnelcakes-110-113
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIREFOX_NEW_UP_TO_DATE_USERS
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firefox-new-up-to-date-users
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_FIRSTRUN_EMAIL_FIRST
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-firstrun-email-first
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_PAGE
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-page
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_RUST_VIDEO
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-rust-video
+                name: bedrock-prod-v140-env
+          - name: SWITCH_EXPERIMENT_TECHNOLOGY_RUST_VIDEO
+            valueFrom:
+              secretKeyRef:
+                key: switch-experiment-technology-rust-video
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_57_RELEASE
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-57-release
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_DEV_FALL
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-dev-fall
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_FEATURES_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-features-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_FEATURES_SEND_TABS_VIDEO_EXPERIMENT
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-features-send-tabs-video-experiment
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_FIRSTRUN_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-firstrun-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_HOME_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-home-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_IOS_GLOBAL
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-ios-global
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_MAU2ACCOUNT
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-mau2account
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_BATMFREE
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-batmfree
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_BATMFREE_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-batmfree-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_BATM_SCENE2_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-batm-scene2-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_FXLIFESTYLEWORKINGOUT_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-fxlifestyleworkingout-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_SCENE2_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-scene2-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_UNBRANDED_SEARCH_FUNNELCAKES
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-unbranded-search-funnelcakes
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_NEW_UNSUPPORTED_BROWSER_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-new-unsupported-browser-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_UPDATE_NOTIFICATION
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-update-notification
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FIREFOX_UPDATE_NOTIFICATION_MODAL
+            valueFrom:
+              secretKeyRef:
+                key: switch-firefox-update-notification-modal
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FLASHTALKING
+            valueFrom:
+              secretKeyRef:
+                key: switch-flashtalking
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FX40_FIRSTRUN
+            valueFrom:
+              secretKeyRef:
+                key: switch-fx40-firstrun
+                name: bedrock-prod-v140-env
+          - name: SWITCH_FX_PRODUCT_PAGE_DEV_QUANTUM
+            valueFrom:
+              secretKeyRef:
+                key: switch-fx-product-page-dev-quantum
+                name: bedrock-prod-v140-env
+          - name: SWITCH_INTERNET_HEALTH_REPORT_LIVE
+            valueFrom:
+              secretKeyRef:
+                key: switch-internet-health-report-live
+                name: bedrock-prod-v140-env
+          - name: SWITCH_MOZORG_HOME_BRAND_ANNOUNCE
+            valueFrom:
+              secretKeyRef:
+                key: switch-mozorg-home-brand-announce
+                name: bedrock-prod-v140-env
+          - name: SWITCH_MOZORG_HOME_BRAND_POPUP
+            valueFrom:
+              secretKeyRef:
+                key: switch-mozorg-home-brand-popup
+                name: bedrock-prod-v140-env
+          - name: SWITCH_MOZORG_HOME_OPTIMIZELY
+            valueFrom:
+              secretKeyRef:
+                key: switch-mozorg-home-optimizely
+                name: bedrock-prod-v140-env
+          - name: SWITCH_NEWSLETTER_MAINTENANCE_MODE
+            valueFrom:
+              secretKeyRef:
+                key: switch-newsletter-maintenance-mode
+                name: bedrock-prod-v140-env
+          - name: SWITCH_RESTART_THINGS
+            valueFrom:
+              secretKeyRef:
+                key: switch-restart-things
+                name: bedrock-prod-v140-env
+          - name: SWITCH_RESTART_THINGS_AGAIN
+            valueFrom:
+              secretKeyRef:
+                key: switch-restart-things-again
+                name: bedrock-prod-v140-env
+          - name: SWITCH_SOM_2016
+            valueFrom:
+              secretKeyRef:
+                key: switch-som-2016
+                name: bedrock-prod-v140-env
+          - name: SWITCH_STATCOUNTER_EXPERIMENT
+            valueFrom:
+              secretKeyRef:
+                key: switch-statcounter-experiment
+                name: bedrock-prod-v140-env
+          - name: SWITCH_TASK_COMPLETION_RATE_SURVEY
+            valueFrom:
+              secretKeyRef:
+                key: switch-task-completion-rate-survey
+                name: bedrock-prod-v140-env
+          - name: SWITCH_TRACKING_PIXEL
+            valueFrom:
+              secretKeyRef:
+                key: switch-tracking-pixel
+                name: bedrock-prod-v140-env
+          - name: SWITCH_TRACKING_PROTECTION
+            valueFrom:
+              secretKeyRef:
+                key: switch-tracking-protection
+                name: bedrock-prod-v140-env
+          - name: SWITCH_TRACKING_PROTECTION_REDIRECT
+            valueFrom:
+              secretKeyRef:
+                key: switch-tracking-protection-redirect
+                name: bedrock-prod-v140-env
+          - name: TWITTER_ACCESS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: twitter-access-token
+                name: bedrock-prod-v140-env
+          - name: TWITTER_ACCESS_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: twitter-access-token-secret
+                name: bedrock-prod-v140-env
+          - name: TWITTER_CONSUMER_KEY
+            valueFrom:
+              secretKeyRef:
+                key: twitter-consumer-key
+                name: bedrock-prod-v140-env
+          - name: TWITTER_CONSUMER_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: twitter-consumer-secret
+                name: bedrock-prod-v140-env
+          - name: USE_SECURE_PROXY_HEADER
+            valueFrom:
+              secretKeyRef:
+                key: use-secure-proxy-header
+                name: bedrock-prod-v140-env
+          - name: WORKFLOW_RELEASE
+            valueFrom:
+              secretKeyRef:
+                key: workflow-release
+                name: bedrock-prod-v140-env
+          - name: WORKFLOW_RELEASE_CREATED_AT
+            valueFrom:
+              secretKeyRef:
+                key: workflow-release-created-at
+                name: bedrock-prod-v140-env
+          - name: WORKFLOW_RELEASE_SUMMARY
+            valueFrom:
+              secretKeyRef:
+                key: workflow-release-summary
+                name: bedrock-prod-v140-env
+          image: 127.0.0.1:5555/bedrock-prod:v140
+          imagePullPolicy: Always
+          name: bedrock-prod-web
+          readinessProbe:
+            failureThreshold: 1
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8000
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 600Mi
+            requests:
+              cpu: 250m
+              memory: 300Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 6
+    conditions:
+    - lastTransitionTime: 2018-01-10T21:48:50Z
+      lastUpdateTime: 2018-01-10T21:48:50Z
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 18933
+    readyReplicas: 6
+    replicas: 6
+    updatedReplicas: 6
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
