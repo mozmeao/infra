@@ -16,6 +16,7 @@ WORKDIR /app
 
 # Install app
 COPY block_aws.py /app/block_aws.py
+COPY block-aws-networkpolicy.yaml /app/block-aws-networkpolicy.yaml
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
