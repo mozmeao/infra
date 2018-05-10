@@ -59,7 +59,7 @@ spec:
         spec:
           containers:
           - name: block-aws-cron
-            image: quay.io/mozmar/blockaws:0905680
+            image: quay.io/mozmar/blockaws:673f9b0
             env:
               - name: DMS_URL
                 valueFrom:
