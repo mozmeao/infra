@@ -52,7 +52,7 @@ def process_requests_and_limits(line, container):
 def process_hpas(line, ns, deployment_name):
     hpas = get_hpa_for_deployment(ns, deployment_name)
     if len(hpas) > 1:
-        raise Exception("Too many HPAs for deployment")
+        raise Exception("Too many HPAs for deployment ", deployment_name)
     elif hpas:
         hpa = hpas[0]
         line.hpa_max_replicas = hpa.spec.maxReplicas
