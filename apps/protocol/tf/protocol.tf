@@ -192,7 +192,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
 resource "aws_cloudfront_distribution" "stage_s3_distribution" {
   origin {
-    domain_name = "protocol-stage.s3-website-us-west-2.amazonaws.com"
+    domain_name = "mozilla-protocol-stage.s3-website-us-west-2.amazonaws.com"
     origin_id   = "protocolstage"
     custom_origin_config {
       origin_protocol_policy = "http-only"
