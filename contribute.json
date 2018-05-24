@@ -1,0 +1,24 @@
+{
+  "name": "infra",
+  "description": "MDN Web Docs scripts and configuration",
+  "repository": {
+    "url": "https://github.com/mdn/infra",
+    "license": "CC0"
+  },
+  "participate": {
+    "home": "https://developer.mozilla.org/",
+    "docs": "https://github.com/mdn/infra/README.md",
+    "mailing-list": "https://discourse.mozilla.org/c/mdn",
+    "irc": "irc://irc.mozilla.org/mdndev"
+  },
+  "keywords": [
+    "infrastructure",
+    "kubernetes",
+    "kops",
+    "operations",
+    "docker",
+    "aws",
+    "terraform",
+    "jenkins"
+  ]
+}
