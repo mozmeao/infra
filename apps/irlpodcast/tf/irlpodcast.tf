@@ -193,7 +193,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 resource "aws_cloudfront_distribution" "www_s3_distribution" {
   origin {
     domain_name = "irlpodcast.s3-website-us-west-2.amazonaws.com"
-    origin_id   = "IRLPodcast"
+    origin_id   = "WWWIRLPodcast"
     custom_origin_config {
       origin_protocol_policy = "http-only"
       http_port = "80"
@@ -218,10 +218,10 @@ resource "aws_cloudfront_distribution" "www_s3_distribution" {
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
-    target_origin_id = "IRLPodcast"
+    target_origin_id = "WWWIRLPodcast"
 
     forwarded_values {
-      query_string = false
+      query_string = true
 
       cookies {
         forward = "none"
