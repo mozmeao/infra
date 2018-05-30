@@ -190,6 +190,66 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 }
 
+resource "aws_cloudfront_distribution" "www_s3_distribution" {
+  origin {
+    domain_name = "irlpodcast.s3-website-us-west-2.amazonaws.com"
+    origin_id   = "WWWIRLPodcast"
+    custom_origin_config {
+      origin_protocol_policy = "http-only"
+      http_port = "80"
+      https_port = "443"
+      origin_ssl_protocols = ["TLSv1"]
+    }
+  }
+
+  enabled             = true
+  is_ipv6_enabled     = true
+  comment             = "No comment"
+  default_root_object = "index.html"
+
+  logging_config {
+    include_cookies = false
+    bucket          = "irlpodcast-logs.s3.amazonaws.com"
+    prefix          = "cflogs_www"
+  }
+
+  aliases = ["www.irlpodcast.org"]
+
+  default_cache_behavior {
+    allowed_methods  = ["GET", "HEAD", "OPTIONS"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = "WWWIRLPodcast"
+
+    forwarded_values {
+      query_string = true
+
+      cookies {
+        forward = "none"
+      }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = 0
+    default_ttl            = 60
+    max_ttl                = 86400
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/92927e4f-8b1a-4d52-9f92-3912151e5dea"
+    ssl_support_method  = "sni-only"
+
+    # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
+    minimum_protocol_version = "TLSv1"
+  }
+}
+
+
 resource "aws_cloudfront_distribution" "stage_s3_distribution" {
   origin {
     domain_name = "irlpodcast-stage.s3-website-us-west-2.amazonaws.com"
