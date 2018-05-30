@@ -1,11 +1,5 @@
 # MozMEAO http->https redirector
 
-### Building the image
-
-```shell
-make image
-```
-
 ### Deploying the service
 
 ```shell
