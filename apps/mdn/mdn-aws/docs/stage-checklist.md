@@ -33,27 +33,37 @@ Load https://developer.allizom.org/en-US/docs/Web/HTML
 * [ ] No Maintenance Mode banner
 * [ ] Has "Sign in" or "View Profile" at the top
 
-# Automated Checks
+# Functional Tests
 
-With a Kuma environment,
-[run the functional tests](https://kuma.readthedocs.io/en/latest/tests-ui.html),
-using a command like:
+With a Kuma environment and Docker, [run the functional tests][]:
+
+[run the functional tests]: https://kuma.readthedocs.io/en/latest/tests-ui.html#run-tests-locally-using-selenium-docker-images
 
 ```
-py.test -m "not login" tests/functional tests/redirects --base-url https://developer.allizom.org --driver Chrome --driver-path /path/to/chromedriver
+BASE_URL=https://developer.allizom.org scripts/run_functional_tests.sh
 ```
 
-Some tests will fail the first time they are run against a server with cold
-caches. Some tests are flaky, and will intermittently fail. If a test passes
-once in three tries, we consider it a success.
+
+This will run a selection of safe Selenium tests (no login, no page edits) with
+Chrome and Firefox, running in Docker images. A failing test is automatically
+re-run before calling it a failure. Test results are created, with screenshots,
+tracebacks, and logs for failing tests, including xfail and rerun tests.
 
 * [ ] Functional tests pass
 
-These check basic site functionality without logging in. It duplicates the Manual Sanity Check.
+# Headless Tests
+
+Headless tests require a Python environment with the requirements in
+``requirements/test.txt``. See [Setting up test virtual environment][].
+Run the headless tests, which make safe HTTP requests (no POSTs, no logins):
+
+[Setting up test virtual environment]: https://kuma.readthedocs.io/en/latest/tests-ui.html#setting-up-test-virtual-environment
 
 ```
-py.test -m "not login" tests/functional tests/redirects --base-url https://developer.allizom.org --driver Chrome --driver-path /path/to/chromedriver
+pytest tests/headless --base-url https://developer.allizom.org
 ```
+
+* [ ] Headless tests pass
 
 # Full Manual Tests
 
@@ -71,7 +81,6 @@ These URLs should have similar results for anonymous or logged-in users:
 * [ ] https://developer.allizom.org/en-US/Firefox/Releases - 200, Firefox logo, list of releases (zoned URL)
 * [ ] https://developer.allizom.org/en-US/dashboards/macros - 200, list of macros and page counts
 * [ ] https://developer.allizom.org/en-US/dashboards/revisions - 200, list of recent changes
-* [ ] https://developer.allizom.org/en-US/dashboards/spam - Redirects to Maintenance Mode page
 * [ ] https://developer.allizom.org/en-US/docs/Learn/CSS/Styling_text/Fundamentals#Color - 200, with sample as iframe
 * [ ] https://developer.allizom.org/en-US/docs/Learn/CSS/Styling_text/Fundamentals$toc - 200, HTML table of contents
 * [ ] https://developer.allizom.org/en-US/docs/Web/HTML$children - 200, JSON list of child pages
@@ -79,7 +88,6 @@ These URLs should have similar results for anonymous or logged-in users:
 * [ ] https://developer.allizom.org/en-US/docs/Web/HTML$history - 200, list of revisions
 * [ ] https://developer.allizom.org/en-US/docs/Web/HTML$json - 200, JSON of page metadata
 * [ ] https://developer.allizom.org/en-US/docs/Web/HTML$revision/1293895 - 200, historical revision
-* [ ] https://developer.allizom.org/en-US/docs/Web/HTML$translate - Redirect to Maintenance Mode page
 * [ ] https://developer.allizom.org/en-US/docs/all - 200, paginated list of docs
 * [ ] https://developer.allizom.org/en-US/docs/ckeditor_config.js - 200, JavaScript
 * [ ] https://developer.allizom.org/en-US/docs/feeds/atom/files/ - 200, Atom feed of changed files
@@ -94,7 +102,6 @@ These URLs should have similar results for anonymous or logged-in users:
 * [ ] https://developer.allizom.org/en-US/docs/top-level - 200, paginated list of documents
 * [ ] https://developer.allizom.org/en-US/docs/with-errors - 200, (empty?) paginated list of documents
 * [ ] https://developer.allizom.org/en-US/docs/without-parent - 200, paginated list of documents
-* [ ] https://developer.allizom.org/en-US/miel  - 500 Internal Server Error
 * [ ] https://developer.allizom.org/en-US/profiles/sheppy - 200, Sheppy's profile
 * [ ] https://developer.allizom.org/en-US/promote/ - 200, Promote MDN with 4 buttons
 * [ ] https://developer.allizom.org/en-US/search - 200, Search results
@@ -105,6 +112,7 @@ These URLs should have similar results for anonymous or logged-in users:
 * [ ] https://developer.allizom.org/humans.txt - 200, list of GitHub usernames
 * [ ] https://developer.allizom.org/media/kumascript-revision.txt - 200, git commit hash for kumascript
 * [ ] https://developer.allizom.org/media/revision.txt - 200, git commit hash for kuma
+* [ ] https://developer.allizom.org/miel  - 500 Internal Server Error
 * [ ] https://developer.allizom.org/presentations/microsummaries/index.html - 200, 2006 OSCON presentation
 * [ ] https://developer.allizom.org/robots.txt - 200, robots disallow list
 * [ ] https://developer.allizom.org/samples/webgl/sample3 - 200, Shows WebGL demo
@@ -116,8 +124,11 @@ These URLs should have similar results for anonymous or logged-in users:
 Test these URLs as an anonymous user:
 
 * [ ] https://developer.allizom.org/admin/users/user/1/ - 302 redirect to the Admin login page, asking for a username and password.
-* [ ] https://developer.allizom.org/en-US/docs/Web/HTML$edit - 302 redirect to user sign-in page, asking to Sign In with GitHub
+* [ ] https://developer.allizom.org/en-US/dashboards/spam - 302 redirect to user sign-in page, asking to Sign In with GitHub
+* [ ] https://developer.allizom.org/en-US/docs/Web/HTML$edit - 302 redirect to user sign-in page
+* [ ] https://developer.allizom.org/en-US/docs/Web/HTML$translate - 302 redirect to user sign-in page
 * [ ] https://developer.allizom.org/en-US/Firefox/Releases$edit - 302 redirect to user sign-in page
+* [ ] https://developer.allizom.org/en-US/Firefox/Releases$translate - 302 redirect to user sign-in page
 
 ## Regular Account Tests
 
@@ -139,8 +150,11 @@ Some things to try with a regular account, to exercise write functionality:
 
 ## Admin Tests
 
+Some things to try with an admin account, to exercise restricted functionality:
+
 * [ ] Move a page
 * [ ] Delete a page
 * [ ] Move a zoned page
-* [ ] View https://developer.allizom.org/admin/users/user/1/
+* [ ] View https://developer.allizom.org/admin/users/user/1/ - 200, first user
+* [ ] View https://developer.allizom.org/en-US/dashboards/spam - 200, "please wait" or dashboard
 
