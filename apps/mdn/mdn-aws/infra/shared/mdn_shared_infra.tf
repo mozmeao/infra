@@ -2,24 +2,36 @@ provider "aws" {
   region = "${var.region}"
 }
 
-terraform {
-  backend "s3" {
-    bucket = "mdn-shared-provisioning-tf-state"
-    key    = "tf-state"
-    region = "us-west-2"
+resource "random_id" "rand-var" {
+  count = "${var.enabled}"
+
+  keepers = {
+    db_storage_bucket_name = "${var.db_storage_bucket_name}"
+    elb_logs_bucket_name   = "${var.elb_logs_bucket_name}"
+    downloads_bucket_name  = "${var.downloads_bucket_name}"
   }
+
+  byte_length = 8
+}
+
+locals {
+  db_storage            = "${var.db_storage_bucket_name}-${var.environment}-${random_id.rand-var.hex}"
+  db_storage_anonymized = "${var.db_storage_bucket_name}-anonymized-${var.environment}-${random_id.rand-var.hex}"
+  elb_logs              = "${var.elb_logs_bucket_name}-${var.environment}-${random_id.rand-var.hex}"
+  downloads             = "${var.downloads_bucket_name}-${var.environment}-${random_id.rand-var.hex}"
+  shared_backup         = "${var.shared_backup_bucket_name}-${var.environment}-${random_id.rand-var.hex}"
 }
 
 # access is controlled via private IAM policy
 # do NOT enable public access to this bucket
 resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
-  bucket              = "mdn-db-storage-anonymized"
+  bucket              = "${local.db_storage_anonymized}"
   region              = "${var.region}"
   acceleration_status = "Enabled"
   acl                 = "log-delivery-write"
 
   logging {
-    target_bucket = "mdn-db-storage-anonymized"
+    target_bucket = "${local.db_storage_anonymized}"
     target_prefix = "logs/"
   }
 
@@ -28,21 +40,25 @@ resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
   }
 
   tags {
-     Stack = "MDN-prod"
+    Name        = "${local.db_storage_anonymized}"
+    Stack       = "MDN-${var.environment}"
+    Environment = "${var.environment}"
+    Purpose     = "db-storage"
   }
 }
 
 # access is controlled via private IAM policy
 # do NOT enable public access to this bucket
-resource "aws_s3_bucket" "mdn-db-storage-production" {
-  bucket              = "mdn-db-storage-production"
+resource "aws_s3_bucket" "mdn-db-storage" {
+  count = "${var.enabled}"
+
+  bucket              = "${local.db_storage}"
   region              = "${var.region}"
   acceleration_status = "Enabled"
   acl                 = "private"
 
-
   logging {
-    target_bucket = "mdn-db-storage-production"
+    target_bucket = "${local.db_storage}"
     target_prefix = "logs/"
   }
 
@@ -51,23 +67,32 @@ resource "aws_s3_bucket" "mdn-db-storage-production" {
   }
 
   tags {
-     Stack = "MDN-prod"
+    Name        = "${local.db_storage}"
+    Stack       = "MDN-${var.environment}"
+    Environment = "${var.environment}"
+    Purpose     = "db-storage"
   }
 }
 
 resource "aws_s3_bucket" "mdn-elb-logs" {
-  bucket              = "mdn-elb-logs"
-  region              = "${var.region}"
+  count = "${var.enabled}"
+
+  bucket = "${local.elb_logs}"
+  region = "${var.region}"
   acl    = "log-delivery-write"
-  policy = "${file("mdn-elb-logs.json")}"
+  policy = "${file("${path.module}/mdn-elb-logs.json")}"
 
   tags {
-     Stack = "MDN-prod"
+    Name        = "${local.elb_logs}"
+    Stack       = "MDN-${var.environment}"
+    Environment = "${var.environment}"
+    Purpose     = "elb-logs"
   }
 }
 
 resource "aws_s3_bucket" "mdn-downloads" {
-  bucket        = "mdn-downloads"
+  count         = "${var.enabled}"
+  bucket        = "${local.downloads}"
   region        = "${var.region}"
   acl           = ""
   force_destroy = ""
@@ -82,7 +107,7 @@ resource "aws_s3_bucket" "mdn-downloads" {
   hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
 
   logging {
-    target_bucket = "mdn-downloads"
+    target_bucket = "${local.downloads}"
     target_prefix = "logs/"
   }
 
@@ -91,7 +116,7 @@ resource "aws_s3_bucket" "mdn-downloads" {
   }
 
   website_domain   = "s3-website-${var.region}.amazonaws.com"
-  website_endpoint = "mdn-downloads.s3-website-${var.region}.amazonaws.com"
+  website_endpoint = "${local.downloads}.s3-website-${var.region}.amazonaws.com"
 
   policy = <<EOF
 {
@@ -151,21 +176,22 @@ resource "aws_s3_bucket" "mdn-downloads" {
 }
 EOF
 
-
   tags {
-     Stack = "MDN-prod"
+    Name        = "${local.downloads}"
+    Stack       = "MDN-${var.environment}"
+    Environment = "${var.environment}"
   }
-
 }
 
 # backup EFS to this
 resource "aws_s3_bucket" "mdn-shared-backup" {
-  bucket              = "mdn-shared-backup"
-  region              = "${var.region}"
-  acl = "log-delivery-write"
+  count  = "${var.enabled}"
+  bucket = "${local.shared_backup}"
+  region = "${var.region}"
+  acl    = "log-delivery-write"
 
   logging {
-    target_bucket = "mdn-shared-backup"
+    target_bucket = "${local.shared_backup}"
     target_prefix = "logs/"
   }
 
@@ -174,7 +200,8 @@ resource "aws_s3_bucket" "mdn-shared-backup" {
   }
 
   tags {
-     Stack = "MDN-prod"
+    Name        = "${local.shared_backup}"
+    Stack       = "MDN-${var.environment}"
+    Environment = "${var.environment}"
   }
-
 }
