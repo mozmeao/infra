@@ -80,7 +80,23 @@ resource "aws_s3_bucket" "mdn-elb-logs" {
   bucket = "${local.elb_logs}"
   region = "${var.region}"
   acl    = "log-delivery-write"
-  policy = "${file("${path.module}/mdn-elb-logs.json")}"
+  policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Id": "AWSConsole-AccessLogs-Policy-1503002510675",
+    "Statement": [
+        {
+            "Sid": "AWSConsoleStmt-1503002510675",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::797873946194:root"
+            },
+            "Action": "s3:PutObject",
+            "Resource": "arn:aws:s3:::${local.elb_logs}/*"
+        }
+    ]
+}
+EOF
 
   tags {
     Name        = "${local.elb_logs}"

@@ -3,7 +3,18 @@ variable "efs_name" {}
 variable "subnets" {}
 variable "nodes_security_group" {}
 
+variable "enabled" {}
+variable "environment" {}
+variable "region" {}
+
+provider "aws" {
+  version = "~> 0.1"
+  region  = "${var.region}"
+}
+
 resource "aws_efs_file_system" "mdn-shared-efs" {
+  count = "${var.enabled}"
+
   performance_mode = "generalPurpose"
   tags {
     Name = "mdn-shared-${var.efs_name}"
@@ -12,6 +23,8 @@ resource "aws_efs_file_system" "mdn-shared-efs" {
 }
 
 resource "aws_efs_mount_target" "mdn-shared-mt" {
+  count = "${var.enabled}"
+
   # split the subnet variable into a list, then take the length of the list
   count           = "${length(split(",", var.subnets))}"
   # use the EFS filesystem we created above

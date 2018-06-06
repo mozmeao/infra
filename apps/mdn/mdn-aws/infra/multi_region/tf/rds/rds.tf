@@ -71,7 +71,20 @@ variable "vpc_id" { }
 
 variable "vpc_cidr" { }
 
+variable "enabled" {}
+
+variable "environment" {}
+
+variable "region" {}
+
+provider "aws" {
+  version = "~> 0.1"
+  region  = "${var.region}"
+}
+
 resource "aws_db_parameter_group" "mdn-params" {
+  count       = "${var.enabled}"
+
   name        = "${var.mysql_identifier}-params"
   family      = "mysql5.6"
   description = "Paramter group for ${var.mysql_identifier}"
@@ -84,6 +97,8 @@ resource "aws_db_parameter_group" "mdn-params" {
 }
 
 resource "aws_db_instance" "mdn_rds" {
+  count = "${var.enabled}"
+
   allocated_storage           = "${var.mysql_storage_gb}"
   allow_major_version_upgrade = "${var.mysql_allow_major_version_upgrade}"
   auto_minor_version_upgrade  = "${var.mysql_auto_minor_version_upgrade}"
@@ -113,6 +128,8 @@ resource "aws_db_instance" "mdn_rds" {
 }
 
 resource "aws_security_group" "mdn_rds_sg" {
+  count = "${var.enabled}"
+
   name        = "${var.mysql_security_group_name}"
   description = "Allow all inbound traffic"
   vpc_id      = "${var.vpc_id}"

@@ -21,13 +21,28 @@ variable "memcached_engine_version" {
 variable "subnets" {}
 variable "nodes_security_group" {}
 
+variable "enabled" {}
+
+variable "environment" {}
+
+variable "region" {}
+
+provider "aws" {
+  version = "~> 0.1"
+  region  = "${var.region}"
+}
+
 resource "aws_elasticache_subnet_group" "mdn-memcached-subnet-group" {
+  count = "${var.enabled}"
+
   name       = "mdn-memcached-${var.memcached_name}-subnet-group"
   # https://github.com/hashicorp/terraform/issues/57#issuecomment-100372002
   subnet_ids = ["${split(",", var.subnets)}"]
 }
 
 resource "aws_elasticache_cluster" "mdn-memcached" {
+  count = "${var.enabled}"
+
   cluster_id           = "mdn-memcached-${var.memcached_name}"
   engine               = "memcached"
   node_type            = "${var.memcached_node_size}"
