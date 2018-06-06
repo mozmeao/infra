@@ -19,7 +19,9 @@ variable "memcached_engine_version" {
 }
 
 variable "subnets" {}
-variable "nodes_security_group" {}
+variable "nodes_security_group" {
+  type = "list"
+}
 
 variable "enabled" {}
 
@@ -51,10 +53,11 @@ resource "aws_elasticache_cluster" "mdn-memcached" {
   parameter_group_name = "${var.memcached_param_group}"
   engine_version       = "${var.memcached_engine_version}"
   subnet_group_name    = "${aws_elasticache_subnet_group.mdn-memcached-subnet-group.name}"
-  security_group_ids   = ["${var.nodes_security_group}"]
+  security_group_ids   = [ "${var.nodes_security_group}" ]
 
   tags {
-    Stack = "MDN-${var.memcached_name}"
+    Stack       = "MDN-${var.memcached_name}"
+    Environment = "${var.environment}"
   }
 }
 

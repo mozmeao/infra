@@ -1,7 +1,9 @@
 
 variable "efs_name" {}
 variable "subnets" {}
-variable "nodes_security_group" {}
+variable "nodes_security_group" {
+  type = "list"
+}
 
 variable "enabled" {}
 variable "environment" {}
@@ -17,13 +19,14 @@ resource "aws_efs_file_system" "mdn-shared-efs" {
 
   performance_mode = "generalPurpose"
   tags {
-    Name = "mdn-shared-${var.efs_name}"
-    Stack = "MDN-${var.efs_name}"
+    Name        = "mdn-shared-${var.efs_name}"
+    Stack       = "MDN-${var.efs_name}"
+    Environment = "${var.environment}"
   }
 }
 
 resource "aws_efs_mount_target" "mdn-shared-mt" {
-  count = "${var.enabled}"
+  count = "${var.enabled * length(split(",", var.subnets))}"
 
   # split the subnet variable into a list, then take the length of the list
   count           = "${length(split(",", var.subnets))}"
@@ -31,11 +34,15 @@ resource "aws_efs_mount_target" "mdn-shared-mt" {
   file_system_id = "${aws_efs_file_system.mdn-shared-efs.id}"
   # split the subnet variable into a list, then get the count.index subnet id
   subnet_id      = "${element(split(",", var.subnets), count.index)}"
-  security_groups = ["${var.nodes_security_group}"]
+  security_groups = [ "${var.nodes_security_group}" ]
 }
 
 
+#output "efs_dns" {
+#  # all AZ's return the same dns name, just use the first
+#  value = "${element(concat(aws_efs_mount_target.mdn-shared-mt.*.dns_name, list("")), 0)}"
+#}
+
 output "efs_dns" {
-  # all AZ's return the same dns name, just use the first
-  value = "${aws_efs_mount_target.mdn-shared-mt.0.dns_name}"
+  value = "${element(concat(aws_efs_file_system.mdn-shared-efs.*.id, list("")),0)}.${var.region}.amazonaws.com"
 }

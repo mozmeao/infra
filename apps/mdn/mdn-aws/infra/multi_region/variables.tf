@@ -1,16 +1,18 @@
 variable "enabled" {}
 
+variable "account" {}
+
 variable "region" {}
+
+variable "regions" {}
 
 variable "environment" {}
 
-variable "account" {}
-
-variable "enable_memcached" {}
+variable "enable_efs" {}
 
 variable "enable_rds" {}
 
-variable "enable_efs" {}
+variable "enable_memcached" {}
 
 variable "enable_redis" {}
 

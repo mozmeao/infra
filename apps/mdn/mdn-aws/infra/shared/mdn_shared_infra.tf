@@ -47,6 +47,12 @@ resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
   }
 }
 
+resource "aws_s3_bucket" "mdn-db-storage-logs" {
+  count  = "${var.enabled}"
+  bucket = "${local.db_storage}-logs"
+  acl    = "log-delivery-write"
+}
+
 # access is controlled via private IAM policy
 # do NOT enable public access to this bucket
 resource "aws_s3_bucket" "mdn-db-storage" {
@@ -58,7 +64,7 @@ resource "aws_s3_bucket" "mdn-db-storage" {
   acl                 = "private"
 
   logging {
-    target_bucket = "${local.db_storage}"
+    target_bucket = "${aws_s3_bucket.mdn-db-storage-logs.id}"
     target_prefix = "logs/"
   }
 
@@ -106,6 +112,12 @@ EOF
   }
 }
 
+resource "aws_s3_bucket" "mdn-downloads-logs" {
+  count  = "${var.enabled}"
+  bucket = "${local.downloads}-logs"
+  acl    = "log-delivery-write"
+}
+
 resource "aws_s3_bucket" "mdn-downloads" {
   count         = "${var.enabled}"
   bucket        = "${local.downloads}"
@@ -123,7 +135,7 @@ resource "aws_s3_bucket" "mdn-downloads" {
   hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
 
   logging {
-    target_bucket = "${local.downloads}"
+    target_bucket = "${aws_s3_bucket.mdn-downloads-logs.id}"
     target_prefix = "logs/"
   }
 
