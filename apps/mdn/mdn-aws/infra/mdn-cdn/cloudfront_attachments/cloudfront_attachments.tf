@@ -7,7 +7,10 @@ variable "aliases" {
   type = "list"
 }
 
+variable "enabled" {}
+
 resource "aws_cloudfront_distribution" "mdn-attachments-cf-dist" {
+  count           = "${var.enabled}"
   aliases         = "${var.aliases}"
   comment         = "${var.comment}"
   enabled         = true
