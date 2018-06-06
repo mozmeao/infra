@@ -9,7 +9,7 @@
                 "AWS": "arn:aws:iam::797873946194:root"
             },
             "Action": "s3:PutObject",
-            "Resource": "arn:aws:s3:::mdn-elb-logs/*"
+            "Resource": "arn:aws:s3:::${local.elb_logs}/*"
         }
     ]
 }

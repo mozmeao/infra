@@ -128,49 +128,49 @@ resource "aws_s3_bucket" "mdn-downloads" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::mdn-downloads"
+      "Resource": "arn:aws:s3:::${local.downloads}"
     },
     {
       "Sid": "MDNDownloadAllowSampledbStar",
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::mdn-downloads/sampledb/*"
+      "Resource": "arn:aws:s3:::${local.downloads}/sampledb/*"
     },
     {
       "Sid": "MDNDownloadAllowIndexDotHTML",
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::mdn-downloads/index.html"
+      "Resource": "arn:aws:s3:::${local.downloads}/index.html"
     },
     {
       "Sid": "MDNDownloadAllowListDotHTML",
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::mdn-downloads/list.html"
+      "Resource": "arn:aws:s3:::${local.downloads}/list.html"
     },
     {
       "Sid": "MDNDownloadAllowTarball",
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::mdn-downloads/developer.mozilla.org.tar.gz"
+      "Resource": "arn:aws:s3:::${local.downloads}/developer.mozilla.org.tar.gz"
     },
     {
       "Sid": "MDNDownloadAllowSampleDB",
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::mdn-downloads/mdn_sample_db.sql.gz"
+      "Resource": "arn:aws:s3:::${local.downloads}/mdn_sample_db.sql.gz"
     },
     {
       "Sid": "MDNDownloadAllowAssetsSlashStar",
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::mdn-downloads/assets/*"
+      "Resource": "arn:aws:s3:::${local.downloads}/assets/*"
     }
   ]
 }
