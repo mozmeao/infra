@@ -77,6 +77,8 @@ variable "environment" {}
 
 variable "region" {}
 
+variable "subnets" {}
+
 provider "aws" {
   version = "~> 0.1"
   region  = "${var.region}"
@@ -96,6 +98,22 @@ resource "aws_db_parameter_group" "mdn-params" {
   }
 }
 
+resource "aws_db_subnet_group" "rds" {
+  count = "${var.enabled}"
+
+  name        = "mdn-${var.environment}-rds-subnet-group"
+  description = "mdn-${var.environment}-rds-subnet-group"
+
+  subnet_ids = [ "${split(",", var.subnets)}" ]
+
+  tags {
+    Name        = "mdn-${var.environment}-rds-subnet-group"
+    Environment = "${var.environment}"
+    Stack       = "mdn-rds-${var.environment}"
+    Region      = "${var.region}"
+  }
+}
+
 resource "aws_db_instance" "mdn_rds" {
   count = "${var.enabled}"
 
@@ -106,7 +124,8 @@ resource "aws_db_instance" "mdn_rds" {
   backup_window               = "${var.mysql_backup_window}"
   # note: this resource already existed at time of provisioning from
   # our k8s install automation
-  db_subnet_group_name        = "main_subnet_group"
+  #db_subnet_group_name        = "main_subnet_group"
+  db_subnet_group_name        = "${element(aws_db_subnet_group.rds.*.name, count.index)}"
   depends_on                  = ["aws_security_group.mdn_rds_sg"]
   engine                      = "${var.mysql_engine}"
   engine_version              = "${lookup(var.mysql_engine_version, var.mysql_engine)}"
@@ -124,6 +143,7 @@ resource "aws_db_instance" "mdn_rds" {
   vpc_security_group_ids      = ["${aws_security_group.mdn_rds_sg.id}"]
   tags {
     "Stack"                   = "MDN-${var.mysql_env}"
+    "Environment"             = "${var.environment}"
   }
 }
 

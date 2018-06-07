@@ -16,8 +16,6 @@ module "us-west-2" {
   account     = "${var.account}"
 
   enable_efs      = "${var.enable_efs}"
-  enable_redis    = "${var.enable_redis}"
-  enable_rds      = "${var.enable_rds}"
 
   # memcached
   enable_memcached    = "${var.enable_memcached}"
@@ -28,6 +26,15 @@ module "us-west-2" {
   enable_redis    = "${var.enable_redis}"
   redis_node_size = "${var.redis_node_size}"
   redis_num_nodes = "${var.redis_num_nodes}"
+
+  # rds
+  enable_rds                  = "${var.enable_rds}"
+  mysql_db_name               = "${var.mysql_db_name}"
+  mysql_username              = "${var.mysql_username}"
+  mysql_password              = "${var.mysql_password}"
+  mysql_instance_class        = "${var.mysql_instance_class}"
+  mysql_backup_retention_days = "${var.mysql_backup_retention_days}"
+  mysql_storage_gb            = "${var.mysql_storage_gb}"
 }
 
 module "us-east-1" {
@@ -61,4 +68,12 @@ module "us-east-1" {
   redis_node_size = "${var.redis_node_size}"
   redis_num_nodes = "${var.redis_num_nodes}"
 
+  # rds
+  enable_rds                  = "${var.enable_rds}"
+  mysql_db_name               = "${var.mysql_db_name}"
+  mysql_username              = "${var.mysql_username}"
+  mysql_password              = "${var.mysql_password}"
+  mysql_instance_class        = "${var.mysql_instance_class}"
+  mysql_backup_retention_days = "${var.mysql_backup_retention_days}"
+  mysql_storage_gb            = "${var.mysql_storage_gb}"
 }

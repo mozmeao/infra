@@ -138,6 +138,27 @@ module "memcached" {
 # MySQL
 #########################################
 
+module "mysql" {
+  source = "./rds"
+
+  enabled                     = "${var.enabled * var.enable_rds}"
+  region                      = "${var.region}"
+  environment                 = "${var.environment}"
+  mysql_env                   = "${var.environment}"
+  mysql_db_name               = "${var.mysql_db_name}"
+  mysql_username              = "${var.mysql_username}"
+  mysql_password              = "${var.mysql_password}"
+  mysql_identifier            = "mdn-${var.environment}"
+  mysql_instance_class        = "${var.mysql_instance_class}"
+  mysql_backup_retention_days = "${var.mysql_backup_retention_days}"
+  mysql_security_group_name   = "${var.mysql_security_group_name}_${var.environment}"
+  mysql_storage_gb            = "${var.mysql_storage_gb}"
+  mysql_storage_type          = "${var.mysql_storage_type}"
+  vpc_id                      = "${module.info.vpc_id}"
+  vpc_cidr                    = "${module.info.network_cidr}"
+  subnets                     = "${module.info.private_subnets}"
+}
+
 #module "mysql-stage" {
 #    source = "rds"
 #    # DBName must begin with a letter and contain only alphanumeric characters
