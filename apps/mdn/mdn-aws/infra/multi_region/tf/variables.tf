@@ -14,13 +14,21 @@ variable "enable_efs" {}
 
 variable "enable_redis" {}
 
-variable "memcached_node_size" {}
+variable "memcached_node_size" {
+  default = "cache.t2.small"
+}
 
-variable "memcached_num_nodes" {}
+variable "memcached_num_nodes" {
+  default = "3"
+}
 
-variable "redis_node_size" {}
+variable "redis_node_size" {
+  default = "cache.t2.small"
+}
 
-variable "redis_num_nodes" {}
+variable "redis_num_nodes" {
+  default = "3"
+}
 
 variable "mysql_db_name" {}
 

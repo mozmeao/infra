@@ -30,24 +30,10 @@ module "efs" {
 #    nodes_security_group = "${var.nodes_security_group}"
 #}
 
-#module "efs-stage" {
-#    source = "efs"
-#    efs_name = "stage"
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-
-#module "efs-prod" {
-#    source = "efs"
-#    efs_name = "prod"
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-
-
 #########################################
 # Redis
 #########################################
+
 module "redis" {
   source = "./redis"
 
@@ -69,25 +55,6 @@ module "redis" {
 #    subnets = "${var.subnets}"
 #    nodes_security_group = "${var.nodes_security_group}"
 #}
-
-#module "redis-stage" {
-#    source = "redis"
-#    redis_name = "stage"
-#    redis_node_size = "cache.t2.small"
-#    redis_num_nodes = 3
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-
-#module "redis-prod" {
-#    source = "redis"
-#    redis_name = "prod"
-#    redis_node_size = "cache.m3.xlarge"
-#    redis_num_nodes = 3
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-
 
 #########################################
 # Memcached
@@ -114,25 +81,6 @@ module "memcached" {
 #    subnets = "${var.subnets}"
 #    nodes_security_group = "${var.nodes_security_group}"
 #}
-
-#module "memcached-stage" {
-#    source = "memcached"
-#    memcached_name = "stage"
-#    memcached_node_size = "cache.t2.small"
-#    memcached_num_nodes = 3
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-
-#module "memcached-prod" {
-#    source = "memcached"
-#    memcached_name = "prod"
-#    memcached_node_size = "cache.m3.xlarge"
-#    memcached_num_nodes = 3
-#    subnets = "${var.subnets}"
-#    nodes_security_group = "${var.nodes_security_group}"
-#}
-
 
 #########################################
 # MySQL

@@ -22,6 +22,7 @@ resource "aws_efs_file_system" "mdn-shared-efs" {
     Name        = "mdn-shared-${var.efs_name}"
     Stack       = "MDN-${var.efs_name}"
     Environment = "${var.environment}"
+    Region      = "${var.region}"
   }
 }
 
@@ -36,12 +37,6 @@ resource "aws_efs_mount_target" "mdn-shared-mt" {
   subnet_id      = "${element(split(",", var.subnets), count.index)}"
   security_groups = [ "${var.nodes_security_group}" ]
 }
-
-
-#output "efs_dns" {
-#  # all AZ's return the same dns name, just use the first
-#  value = "${element(concat(aws_efs_mount_target.mdn-shared-mt.*.dns_name, list("")), 0)}"
-#}
 
 output "efs_dns" {
   value = "${element(concat(aws_efs_file_system.mdn-shared-efs.*.id, list("")),0)}.${var.region}.amazonaws.com"

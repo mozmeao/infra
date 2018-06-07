@@ -56,8 +56,13 @@ resource "aws_elasticache_cluster" "mdn-memcached" {
   security_group_ids   = [ "${var.nodes_security_group}" ]
 
   tags {
+    Name        = "MDN-${var.memcached_name}-${var.environment}"
     Stack       = "MDN-${var.memcached_name}"
     Environment = "${var.environment}"
+    Region      = "${var.region}"
   }
 }
 
+output memcached_endpoint {
+  value = "${element(concat(aws_elasticache_cluster.mdn-memcached.*.configuration_endpoint, list("")), 0)}"
+}

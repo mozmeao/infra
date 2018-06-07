@@ -141,9 +141,12 @@ resource "aws_db_instance" "mdn_rds" {
   storage_type                = "${var.mysql_storage_type}"
   username                    = "${var.mysql_username}"
   vpc_security_group_ids      = ["${aws_security_group.mdn_rds_sg.id}"]
+
   tags {
-    "Stack"                   = "MDN-${var.mysql_env}"
-    "Environment"             = "${var.environment}"
+    Name        = "MDN-rds-${var.environment}"
+    Stack       = "MDN-rds-${var.mysql_env}"
+    Environment = "${var.environment}"
+    Region      = "${var.region}"
   }
 }
 
@@ -169,6 +172,21 @@ resource "aws_security_group" "mdn_rds_sg" {
   }
 
   tags {
-    Name = "mdn_rds_sg"
+    Name        = "mdn_rds_sg-${var.environment}"
+    Stack       = "MDN-rds-${var.environment}"
+    Environment = "${var.environment}"
+    Region      = "${var.region}"
   }
+}
+
+output "rds_address" {
+  value = "${element(concat(aws_db_instance.mdn_rds.*.address, list("")), 0)}"
+}
+
+output "rds_endpoint" {
+  value = "${element(concat(aws_db_instance.mdn_rds.*.endpoint, list("")), 0)}"
+}
+
+output "rds_id" {
+  value = "${element(concat(aws_db_instance.mdn_rds.*.id, list("")), 0)}"
 }

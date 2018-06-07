@@ -55,7 +55,13 @@ resource "aws_elasticache_replication_group" "mdn-redis-rg" {
   security_group_ids            = [ "${var.nodes_security_group}" ]
 
   tags {
-    Stack = "MDN-${var.redis_name}"
+    Name        = "MDN-${var.redis_name}-${var.environment}"
+    Stack       = "MDN-${var.redis_name}"
+    Environment = "${var.environment}"
+    Region      = "${var.region}"
   }
 }
 
+output "redis_endpoint" {
+  value = "${element(concat(aws_elasticache_replication_group.mdn-redis-rg.*.primary_endpoint_address, list("")), 0)}"
+}

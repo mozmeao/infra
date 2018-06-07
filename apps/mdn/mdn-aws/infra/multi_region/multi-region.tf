@@ -1,7 +1,7 @@
 module "us-west-2" {
   source = "./tf"
 
-	region = "us-west-2"
+  region = "us-west-2"
 
   # Okay, somewhat nasty
   #  - take the list of regions, look for the one we care about and make it XXX
@@ -12,10 +12,10 @@ module "us-west-2" {
   #  Result, 1 if the region is found, 0 otherwise
   enabled = "${var.enabled * replace(replace(replace(replace(var.regions, "/.*,?us-west-2,?.*/", "XXX"), "/[^X]+/", "Y" ), "XXX", "1"),"/Y+/","0")}"
 
-	environment = "${var.environment}"
+  environment = "${var.environment}"
   account     = "${var.account}"
 
-  enable_efs      = "${var.enable_efs}"
+  enable_efs = "${var.enable_efs}"
 
   # memcached
   enable_memcached    = "${var.enable_memcached}"
@@ -40,7 +40,7 @@ module "us-west-2" {
 module "us-east-1" {
   source = "./tf"
 
-	region = "us-east-1"
+  region = "us-east-1"
 
   # Okay, somewhat nasty
   #  - take the list of regions, look for the one we care about and make it XXX
@@ -51,12 +51,12 @@ module "us-east-1" {
   #  Result, 1 if the region is found, 0 otherwise
   enabled = "${var.enabled * replace(replace(replace(replace(var.regions, "/.*,?us-east-1,?.*/", "XXX"), "/[^X]+/", "Y" ), "XXX", "1"),"/Y+/","0")}"
 
-	environment = "${var.environment}"
+  environment = "${var.environment}"
   account     = "${var.account}"
 
-  enable_efs      = "${var.enable_efs}"
-  enable_redis    = "${var.enable_redis}"
-  enable_rds      = "${var.enable_rds}"
+  enable_efs   = "${var.enable_efs}"
+  enable_redis = "${var.enable_redis}"
+  enable_rds   = "${var.enable_rds}"
 
   # memcached
   enable_memcached    = "${var.enable_memcached}"
