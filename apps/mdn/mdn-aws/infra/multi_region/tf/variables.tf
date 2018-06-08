@@ -53,3 +53,7 @@ variable "mysql_storage_gb" {
 variable "mysql_storage_type" {
   default = "gp2"
 }
+
+variable "kube_cluster_name" {
+  default = "kubernetes"
+}

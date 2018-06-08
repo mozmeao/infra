@@ -9,6 +9,34 @@ module "info" {
   account     = "${var.account}"
 }
 
+data "aws_security_group" "kube_master" {
+  count = "${var.enabled}"
+
+  filter {
+    name   = "group-name"
+    values = [
+      "masters.kubernetes.*"
+    ]
+  }
+}
+
+data "aws_security_group" "kube_nodes" {
+  count = "${var.enabled}"
+
+  filter {
+    name   = "group-name"
+    values = [
+      "nodes.kubernetes.*"
+    ]
+  }
+}
+
+locals {
+  kube_master_sg  = "${list(element(concat(data.aws_security_group.kube_master.*.id, list("")),0))}"
+  kube_node_sg    = "${list(element(concat(data.aws_security_group.kube_nodes.*.id, list("")),0))}"
+  security_groups = "${compact(concat(split(",", module.info.instance_security_groups), local.kube_node_sg, local.kube_master_sg))}"
+}
+
 #########################################
 # EFS
 #########################################
@@ -20,7 +48,7 @@ module "efs" {
   region                = "${var.region}"
   efs_name              = "${var.environment}"
   subnets               = "${module.info.private_subnets}"
-  nodes_security_group  = "${split(",", module.info.instance_security_groups)}"
+  nodes_security_group  = "${local.security_groups}"
 }
 
 #module "efs-dev" {
@@ -45,6 +73,8 @@ module "redis" {
   redis_num_nodes       = "${var.redis_num_nodes}"
   subnets               = "${module.info.private_subnets}"
   nodes_security_group  = "${split(",",module.info.instance_security_groups)}"
+  nodes_security_group  = "${local.security_groups}"
+
 }
 
 #module "redis-dev" {
@@ -70,7 +100,8 @@ module "memcached" {
   memcached_node_size   = "${var.memcached_node_size}"
   memcached_num_nodes   = "${var.memcached_num_nodes}"
   subnets               = "${module.info.private_subnets}"
-  nodes_security_group  = "${split(",", module.info.instance_security_groups)}"
+  nodes_security_group  = "${local.security_groups}"
+
 }
 
 #module "memcached-dev" {
