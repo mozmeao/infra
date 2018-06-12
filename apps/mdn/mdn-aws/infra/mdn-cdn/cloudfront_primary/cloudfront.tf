@@ -458,7 +458,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 18
   ordered_cache_behavior {
-    path_pattern = "*/users/*"
+    path_pattern = "users/*"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
