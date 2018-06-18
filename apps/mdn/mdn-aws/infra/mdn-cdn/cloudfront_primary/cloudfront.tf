@@ -481,7 +481,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 19
   ordered_cache_behavior {
-    path_pattern = "*/profile/*"
+    path_pattern = "*/users/*"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -504,7 +504,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 20
   ordered_cache_behavior {
-    path_pattern = "*/profiles/*"
+    path_pattern = "*/profile/*"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -527,7 +527,7 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   # 21
   ordered_cache_behavior {
-    path_pattern = "*/unsubscribe/*"
+    path_pattern = "*/profiles/*"
 
     allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
     cached_methods         = ["GET", "HEAD"]
@@ -549,6 +549,29 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
   }
 
   # 22
+  ordered_cache_behavior {
+    path_pattern = "*/unsubscribe/*"
+
+    allowed_methods        = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
+    cached_methods         = ["GET", "HEAD"]
+    compress               = true
+    default_ttl            = 86400
+    max_ttl                = 31536000
+    min_ttl                = 0
+    smooth_streaming       = false
+    target_origin_id       = "${var.distribution_name}"
+    viewer_protocol_policy = "redirect-to-https"
+
+    forwarded_values {
+      query_string = true
+      headers = ["*"]
+      cookies {
+        forward = "all"
+      }
+    }
+  }
+
+  # 23
   ordered_cache_behavior {
     path_pattern = "admin/*"
 
