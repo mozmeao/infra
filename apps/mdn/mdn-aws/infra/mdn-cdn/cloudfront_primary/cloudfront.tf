@@ -1,3 +1,4 @@
+variable "enabled" {}
 variable "distribution_name" {}
 variable "comment" {}
 variable "domain_name" {}
@@ -8,6 +9,8 @@ variable "aliases" {
 }
 
 resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
+  count           = "${var.enabled}"
+
   aliases         = "${var.aliases}"
   comment         = "${var.comment}"
   enabled         = true

@@ -71,7 +71,21 @@ variable "vpc_id" { }
 
 variable "vpc_cidr" { }
 
+variable "enabled" {}
+
+variable "environment" {}
+
+variable "region" {}
+
+variable "subnets" {}
+
+provider "aws" {
+  region  = "${var.region}"
+}
+
 resource "aws_db_parameter_group" "mdn-params" {
+  count       = "${var.enabled}"
+
   name        = "${var.mysql_identifier}-params"
   family      = "mysql5.6"
   description = "Paramter group for ${var.mysql_identifier}"
@@ -83,7 +97,25 @@ resource "aws_db_parameter_group" "mdn-params" {
   }
 }
 
+resource "aws_db_subnet_group" "rds" {
+  count = "${var.enabled}"
+
+  name        = "mdn-${var.environment}-rds-subnet-group"
+  description = "mdn-${var.environment}-rds-subnet-group"
+
+  subnet_ids = [ "${split(",", var.subnets)}" ]
+
+  tags {
+    Name        = "mdn-${var.environment}-rds-subnet-group"
+    Environment = "${var.environment}"
+    Stack       = "mdn-rds-${var.environment}"
+    Region      = "${var.region}"
+  }
+}
+
 resource "aws_db_instance" "mdn_rds" {
+  count = "${var.enabled}"
+
   allocated_storage           = "${var.mysql_storage_gb}"
   allow_major_version_upgrade = "${var.mysql_allow_major_version_upgrade}"
   auto_minor_version_upgrade  = "${var.mysql_auto_minor_version_upgrade}"
@@ -91,7 +123,8 @@ resource "aws_db_instance" "mdn_rds" {
   backup_window               = "${var.mysql_backup_window}"
   # note: this resource already existed at time of provisioning from
   # our k8s install automation
-  db_subnet_group_name        = "main_subnet_group"
+  #db_subnet_group_name        = "main_subnet_group"
+  db_subnet_group_name        = "${element(aws_db_subnet_group.rds.*.name, count.index)}"
   depends_on                  = ["aws_security_group.mdn_rds_sg"]
   engine                      = "${var.mysql_engine}"
   engine_version              = "${lookup(var.mysql_engine_version, var.mysql_engine)}"
@@ -107,12 +140,18 @@ resource "aws_db_instance" "mdn_rds" {
   storage_type                = "${var.mysql_storage_type}"
   username                    = "${var.mysql_username}"
   vpc_security_group_ids      = ["${aws_security_group.mdn_rds_sg.id}"]
+
   tags {
-    "Stack"                   = "MDN-${var.mysql_env}"
+    Name        = "MDN-rds-${var.environment}"
+    Stack       = "MDN-rds-${var.mysql_env}"
+    Environment = "${var.environment}"
+    Region      = "${var.region}"
   }
 }
 
 resource "aws_security_group" "mdn_rds_sg" {
+  count = "${var.enabled}"
+
   name        = "${var.mysql_security_group_name}"
   description = "Allow all inbound traffic"
   vpc_id      = "${var.vpc_id}"
@@ -132,6 +171,21 @@ resource "aws_security_group" "mdn_rds_sg" {
   }
 
   tags {
-    Name = "mdn_rds_sg"
+    Name        = "mdn_rds_sg-${var.environment}"
+    Stack       = "MDN-rds-${var.environment}"
+    Environment = "${var.environment}"
+    Region      = "${var.region}"
   }
+}
+
+output "rds_address" {
+  value = "${element(concat(aws_db_instance.mdn_rds.*.address, list("")), 0)}"
+}
+
+output "rds_endpoint" {
+  value = "${element(concat(aws_db_instance.mdn_rds.*.endpoint, list("")), 0)}"
+}
+
+output "rds_id" {
+  value = "${element(concat(aws_db_instance.mdn_rds.*.id, list("")), 0)}"
 }
