@@ -39,6 +39,7 @@ def check_region(region_name):
 writer = csv.DictWriter(sys.stdout, fieldnames=FIELDS, dialect='excel-tab')
 writer.writeheader()
 
+check_region('us-east-1')
 check_region('us-west-2')
 check_region('eu-central-1')
 check_region('ap-northeast-1')
