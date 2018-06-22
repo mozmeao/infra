@@ -1,7 +1,10 @@
 # MDN AWS
 
+The Kubernetes configuration has moved to
+[mdn/infra](https://github.com/mdn/infra/tree/master/apps/mdn/mdn-aws/k8s).
+
 - [Support documentation](https://github.com/mozmeao/infra/blob/master/apps/mdn/mdn-aws/docs/mdn-support.md)
-- [Deployment documentation](https://github.com/mozmeao/infra/blob/master/apps/mdn/mdn-aws/k8s/README.md)
+- [Deployment documentation](https://github.com/mdn/infra/blob/master/apps/mdn/mdn-aws/k8s/README.md)
 
 ## MDN AWS provisioning
 
