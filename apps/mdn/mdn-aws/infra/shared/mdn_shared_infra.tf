@@ -15,11 +15,11 @@ resource "random_id" "rand-var" {
 }
 
 locals {
-  db_storage            = "${var.db_storage_bucket_name}-${var.environment}-${random_id.rand-var.hex}"
-  db_storage_anonymized = "${var.db_storage_bucket_name}-anonymized-${var.environment}-${random_id.rand-var.hex}"
-  elb_logs              = "${var.elb_logs_bucket_name}-${var.environment}-${random_id.rand-var.hex}"
-  downloads             = "${var.downloads_bucket_name}-${var.environment}-${random_id.rand-var.hex}"
-  shared_backup         = "${var.shared_backup_bucket_name}-${var.environment}-${random_id.rand-var.hex}"
+  db_storage            = "${var.db_storage_bucket_name}-${random_id.rand-var.hex}"
+  db_storage_anonymized = "${var.db_storage_bucket_name}-anonymized-${random_id.rand-var.hex}"
+  elb_logs              = "${var.elb_logs_bucket_name}-${random_id.rand-var.hex}"
+  downloads             = "${var.downloads_bucket_name}-${random_id.rand-var.hex}"
+  shared_backup         = "${var.shared_backup_bucket_name}-${random_id.rand-var.hex}"
 }
 
 # access is controlled via private IAM policy
@@ -41,8 +41,8 @@ resource "aws_s3_bucket" "mdn-db-storage-anonymized" {
 
   tags {
     Name        = "${local.db_storage_anonymized}"
-    Stack       = "MDN-${var.environment}"
-    Environment = "${var.environment}"
+    Stack       = "MDN"
+    Environment = "shared"
     Purpose     = "db-storage"
   }
 }
@@ -74,8 +74,8 @@ resource "aws_s3_bucket" "mdn-db-storage" {
 
   tags {
     Name        = "${local.db_storage}"
-    Stack       = "MDN-${var.environment}"
-    Environment = "${var.environment}"
+    Stack       = "MDN"
+    Environment = "shared"
     Purpose     = "db-storage"
   }
 }
@@ -106,8 +106,8 @@ EOF
 
   tags {
     Name        = "${local.elb_logs}"
-    Stack       = "MDN-${var.environment}"
-    Environment = "${var.environment}"
+    Stack       = "MDN"
+    Environment = "shared"
     Purpose     = "elb-logs"
   }
 }
@@ -206,8 +206,8 @@ EOF
 
   tags {
     Name        = "${local.downloads}"
-    Stack       = "MDN-${var.environment}"
-    Environment = "${var.environment}"
+    Stack       = "MDN"
+    Environment = "shared"
   }
 }
 
@@ -229,7 +229,7 @@ resource "aws_s3_bucket" "mdn-shared-backup" {
 
   tags {
     Name        = "${local.shared_backup}"
-    Stack       = "MDN-${var.environment}"
-    Environment = "${var.environment}"
+    Stack       = "MDN"
+    Environment = "shared"
   }
 }

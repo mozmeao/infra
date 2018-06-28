@@ -4,8 +4,6 @@ variable "region" {
 
 variable enabled {}
 
-variable environment {}
-
 variable db_storage_bucket_name {
   default = "mdn-db-storage"
 }
