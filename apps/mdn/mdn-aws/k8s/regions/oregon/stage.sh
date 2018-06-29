@@ -130,9 +130,5 @@ export KUMA_SESSION_COOKIE_SECURE=True
 export KUMA_STATIC_URL=https://developer.mozilla-mdn.nubis.allizom.org/static/
 export KUMA_WEB_CONCURRENCY=4
 
-export SYNC_BUCKET=s3://mdn-shared-backup-stage-8c8641b943fc3a0f
-export BACKUP_BUCKET=s3://mdn-shared-backup-stage-8c8641b943fc3a0f
-
-export REDIRECTOR_PORT=31134
-
-export ELB_S3_LOGGING_BUCKET=mdn-elb-logs-stage-8c8641b943fc3a0f
+export SYNC_BUCKET=s3://mdn-shared-backup-8c8641b943fc3a0f
+export BACKUP_BUCKET=s3://mdn-shared-backup-8c8641b943fc3a0f

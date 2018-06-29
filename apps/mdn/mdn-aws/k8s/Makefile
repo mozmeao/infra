@@ -37,8 +37,6 @@ export KUMASCRIPT_SERVICE_PROTOCOL ?= TCP
 export WEB_NAME ?= web
 export WEB_REPLICAS ?= 1
 export WEB_GUNICORN_WORKERS ?= 4
-# NOTE: changing WEB_GUNICORN_TIMEOUT requires updating ELB timeouts
-#       See the function configure_elb_timeout() in configure_elb.sh
 export WEB_GUNICORN_TIMEOUT ?= 120
 export WEB_CPU_LIMIT ?= 2
 export WEB_CPU_REQUEST ?= 100m
@@ -171,18 +169,15 @@ export BACKUP_DEADMANSSNITCH_URL_BASE64 ?= $(shell echo -n "${BACKUP_DEADMANSSNI
 
 export ADMIN_NODE_NAME ?= mdn-admin
 
-# HTTP -> HTTPS redirector service port
-export REDIRECTOR_PORT ?= $(shell  ${KUBECTL} -n redirector get service redirector -o json \
-                             | jq ".spec.ports[] | select(.name == \"http\") | .nodePort")
-
-# is logging enabled for this ELB? true | false
-export ELB_S3_LOGGING_ENABLED ?= true
-# intervals specified in minutes, 5 or 60 seem to be the acceptable values in the console
+export ELB_S3_LOGGING_ENABLED ?= false
+# Logging interval specified in minutes.
 export ELB_S3_LOGGING_INTERVAL ?= 60
-# bucket name without the s3:// prefix
+# S3 bucket name without the s3:// prefix.
 export ELB_S3_LOGGING_BUCKET ?= mdn-elb-logs
 # ELB_S3_LOGGING_PREFIX can't end with a slash!
 export ELB_S3_LOGGING_PREFIX ?= ${TARGET_ENVIRONMENT}
+# Connection-idle timeout specified in seconds.
+export ELB_CONNECTION_IDLE_TIMEOUT ?= 60
 
 ### New Relic configuration
 export NEW_RELIC_SECRETS_NAME ?= newrelic-secrets
@@ -326,8 +321,9 @@ k8s-web-svc: check-service-env
 		SERVICE_PROTOCOL=${WEB_SERVICE_PROTOCOL} \
 		SERVICE_CERT_ARN=${WEB_SERVICE_CERT_ARN} \
 		TARGET_ENVIRONMENT=${TARGET_ENVIRONMENT} \
+		ELB_S3_LOGGING_ENABLED=false \
+		ELB_CONNECTION_IDLE_TIMEOUT=${WEB_GUNICORN_TIMEOUT} \
 		j2 cert.svc.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
-	./configure_elb.sh
 
 k8s-delete-web-svc: check-service-env
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found \
