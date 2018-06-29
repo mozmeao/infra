@@ -15,7 +15,7 @@ data "aws_security_group" "kube_master" {
   filter {
     name   = "group-name"
     values = [
-      "masters.kubernetes.*"
+      "masters.k8s.*"
     ]
   }
 }
@@ -26,7 +26,7 @@ data "aws_security_group" "kube_nodes" {
   filter {
     name   = "group-name"
     values = [
-      "nodes.kubernetes.*"
+      "nodes.k8s.*"
     ]
   }
 }
