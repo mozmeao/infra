@@ -8,7 +8,7 @@ The `build.sh` script in the current directory will build a Docker image and pus
 
 ## Installing
 
-The `block-aws-cron.yaml` file creates a `meaocron` namespace, `blockaws` ServiceAccount, ClusterRole and a ClusterRoleBinding  resource containing a [Deadmanssnitch](http://deadmanssnitch.com/) URL to ping.
+The `block-aws-cron.yaml` file creates a `meaocron` namespace, `blockaws` ServiceAccount, ClusterRole and a ClusterRoleBinding resource containing a [Deadmanssnitch](http://deadmanssnitch.com/) URL to ping.
 
 ```shell
     kubectl -n meaocron apply -f ./block-aws-cron.yaml
