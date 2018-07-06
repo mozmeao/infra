@@ -58,7 +58,7 @@ def define_deis_router():
         load_balancer_port=443,
         instance_protocol='TCP',
         instance_port=https_nodeport,
-        ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/b36619b5-599a-44df-91c9-6063c6e1c238')
+        ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/79885752-992b-48a4-8170-22475cac599e')
     listeners[2222] = \
         ELBListenerConfig(protocol='TCP',
                           load_balancer_port=2222,
@@ -338,7 +338,7 @@ def define_bedrock_prod():
         load_balancer_port=443,
         instance_protocol='HTTP',
         instance_port=nodeport,
-        ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/640c6dd9-55e7-4b29-9c82-35f0a630b3f9')
+        ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/79885752-992b-48a4-8170-22475cac599e')
     # Attributes
 
     att_czlb = ELBAttCrossZoneLoadBalancing(enabled=True)
@@ -391,7 +391,7 @@ def define_bedrock_stage():
         load_balancer_port=443,
         instance_protocol='HTTP',
         instance_port=nodeport,
-        ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/bd00d1ef-57a9-4e65-8bff-7db5c95d477d')
+        ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/79885752-992b-48a4-8170-22475cac599e')
     # Attributes
 
     att_czlb = ELBAttCrossZoneLoadBalancing(enabled=True)
