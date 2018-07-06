@@ -1,5 +1,7 @@
 # MozMEAO Block AWS K8s cron
 
+Block AWS metadata server access using K8s network policies.
+
 ## Building
 
 The `build.sh` script in the current directory will build a Docker image and push it to [quay.io](https://quay.io/repository/mozmar/blockaws).
