@@ -16,7 +16,7 @@ terraform {
 module "mdn-primary-cloudfront-stage" {
     source = "./cloudfront_primary"
     # *.allizom.org
-    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/bb01357f-b5b5-4e0b-91bb-ccf16c2a49ab"
+    acm_cert_arn = "arn:aws:acm:us-east-1:236517346949:certificate/fc2f09d3-8caa-4aff-944a-209758821952"
     aliases = ["developer.allizom.org"]
     comment = "Primary Stage CDN for AWS-hosted MDN"
     distribution_name = "MDNPrimaryStageCDN"
