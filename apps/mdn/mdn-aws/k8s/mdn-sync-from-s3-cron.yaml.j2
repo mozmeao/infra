@@ -1,4 +1,4 @@
-apiVersion: batch/v2alpha1
+apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: {{ SYNC_FROM_S3_SERVICE_NAME }}
@@ -46,4 +46,3 @@ spec:
               persistentVolumeClaim:
                 claimName: {{ SHARED_PVC_NAME }}
           restartPolicy: OnFailure
-
