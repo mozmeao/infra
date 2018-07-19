@@ -12,21 +12,22 @@ terraform {
 
 ####
 
+
+#####################################################################
+# S3 buckets for user media
+#####################################################################
 resource "aws_s3_bucket" "logs" {
   bucket = "sumo-user-media-logs"
   acl    = "log-delivery-write"
 }
 
-#####################################################################
-# S3 buckets for user media
-#####################################################################
 module "sumo-user-media-dev-bucket" {
     bucket_name = "sumo-user-media-dev"
     iam_policy_name = "SUMOUserMediaDev"
     logging_bucket_id = "${aws_s3_bucket.logs.id}"
     logging_prefix = "dev-logs/"
     region = "${var.region}"
-    source = "./s3"
+    source = "./user_media_s3"
 }
 
 module "sumo-user-media-stage-bucket" {
@@ -35,7 +36,7 @@ module "sumo-user-media-stage-bucket" {
     logging_bucket_id = "${aws_s3_bucket.logs.id}"
     logging_prefix = "stage-logs/"
     region = "${var.region}"
-    source = "./s3"
+    source = "./user_media_s3"
 }
 
 module "sumo-user-media-prod-bucket" {
@@ -44,7 +45,34 @@ module "sumo-user-media-prod-bucket" {
     logging_bucket_id = "${aws_s3_bucket.logs.id}"
     logging_prefix = "prod-logs/"
     region = "${var.region}"
-    source = "./s3"
+    source = "./user_media_s3"
+}
+
+#####################################################################
+# S3 buckets for static media
+#####################################################################
+
+resource "aws_s3_bucket" "static-media-logs" {
+  bucket = "sumo-static-media-logs"
+  acl    = "log-delivery-write"
+}
+
+module "sumo-static-media-stage-bucket" {
+    bucket_name = "sumo-stage-media"
+    iam_policy_name = "SUMOStaticMediaStage"
+    logging_bucket_id = "${aws_s3_bucket.static-media-logs.id}"
+    logging_prefix = "stage-logs/"
+    region = "${var.region}"
+    source = "./static_media_s3"
+}
+
+module "sumo-static-media-prod-bucket" {
+    bucket_name = "sumo-prod-media"
+    iam_policy_name = "SUMOStaticMediaProd"
+    logging_bucket_id = "${aws_s3_bucket.static-media-logs.id}"
+    logging_prefix = "prod-logs/"
+    region = "${var.region}"
+    source = "./static_media_s3"
 }
 
 #####################################################################
