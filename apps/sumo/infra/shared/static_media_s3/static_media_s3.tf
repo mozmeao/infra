@@ -14,7 +14,7 @@ variable "hosted-zone-id-defs" {
 }
 
 
-resource "aws_s3_bucket" "sumo-prod-media" {
+resource "aws_s3_bucket" "sumo-static-media" {
   bucket = "${var.bucket_name}"
   region = "${var.region}"
   acl    = "log-delivery-write"
