@@ -58,7 +58,7 @@ The [Ark Use Cases](https://heptio.github.io/ark/v0.9.0/use-cases) page walks th
 
 Install Ark using [these](https://heptio.github.io/ark/v0.9.0/aws-config) docs for AWS. 
 
-> The Ark user and bucket names have been renamed from the install doc examples to be cluster-specific. 
+> The Ark user and bucket names have been renamed from the install doc examples to be cluster-specific (recommended in the [FAQ](https://heptio.github.io/ark/v0.9.0/faq)).
 
 - Setup an S3 bucket and IAM user:
 
