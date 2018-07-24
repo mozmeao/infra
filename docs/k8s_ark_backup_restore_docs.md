@@ -45,7 +45,7 @@ ark schedule create oregon-a-daily --schedule "0 7 * * *"
 
 ## Restoring a backup
 
-```
+```bash
  ark restore create --from-backup my-backup
 ```
 The [Ark Use Cases](https://heptio.github.io/ark/v0.9.0/use-cases) page walks through a disaster recovery scenario.
@@ -133,6 +133,14 @@ aws iam create-access-key --user-name ${ARK_USER}
  aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
 ```
 
+- Setup Ark prereqs
+
+```bash
+kubectl apply -f 00-prereqs.yaml
+```
+
+> No customizations are needed in this file.
+
 - Create a secret:
 
 ```bash
@@ -148,8 +156,7 @@ Modify the `ark-config.yaml` file and change the `region` and `bucket` values.
 
 - Install Ark
 
-```
-kubectl apply -f 00-prereqs.yaml
+```bash
 kubectl apply -f 00-ark-config.yaml
 kubectl apply -f 10-deployment.yaml
 ```
@@ -175,6 +182,12 @@ Once your test backup works, setup a backup schedule:
 ark schedule create frankfurt-daily --schedule "0 9 * * *"
 ```
 
+### 1.7.x cluster install notes
+
+Ark >= 1.9 fails to work with 1.7.x clusters. To use Ark on a 1.7 cluster, update the Ark deployment to use image `v0.8.3`, and download the `v0.8.3` client.
+
+- https://github.com/heptio/ark/issues/660
+- https://github.com/heptio/ark/issues/674
 
 ## Client installation
 
