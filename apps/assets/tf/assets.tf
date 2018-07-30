@@ -123,7 +123,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/6f34d370-0b81-4a0a-a19c-74f4c3898a4a"
+    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/fb48cb4f-3b1a-40c9-9bd6-6890c6890f55"
     ssl_support_method  = "sni-only"
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
