@@ -47,6 +47,9 @@ tf_main() {
     # import local modules
     terraform get
 
+
+    terraform refresh
+
     PLAN=$(mktemp)
     terraform plan --out $PLAN
 
