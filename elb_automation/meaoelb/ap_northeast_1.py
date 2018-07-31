@@ -174,7 +174,8 @@ def define_careers():
         load_balancer_port=443,
         instance_protocol='TCP',
         instance_port=nodeport,
-        ssl_arn='arn:aws:acm:ap-northeast-1:236517346949:certificate/3a125abd-c6a2-4243-8459-3d714219ea7e')
+        ssl_arn='arn:aws:acm:ap-northeast-1:236517346949:certificate/1063b46f-9755-47a1-9c26-ede6c66d810d')
+
     # Attributes
 
     att_czlb = ELBAttCrossZoneLoadBalancing(enabled=True)
