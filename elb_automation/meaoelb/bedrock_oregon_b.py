@@ -1,6 +1,12 @@
 from meaoelb.oregon_b import elb_tool
 
 
+bedrock_dev = elb_tool.define_elb(
+    service_namespace='bedrock-dev',
+    service_name='bedrock-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/21a09f64-2eb3-438c-b6d2-080b07df93d4')
+bedrock_dev.elb_config.health_check.target_path = '/healthz/'
+
 bedrock_stage = elb_tool.define_elb(
     service_namespace='bedrock-stage',
     service_name='bedrock-nodeport',
