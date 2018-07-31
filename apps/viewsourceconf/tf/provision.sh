@@ -48,8 +48,6 @@ tf_main() {
     terraform get
 
 
-    terraform refresh
-
     PLAN=$(mktemp)
     terraform plan --out $PLAN
 
