@@ -286,11 +286,31 @@ k8s-db-migration-job: k8s-delete-db-migration-job
 		KUMA_ALLOWED_HOSTS=${WEB_ALLOWED_HOSTS} \
 		KUMA_RATELIMIT_ENABLE=False \
 		NEW_RELIC_APP_NAME=${NEW_RELIC_WEB_NAME} \
-	j2 mdn-db-migration-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+		j2 mdn-db-migration-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
 	env JOB_NAME=mdn-db-migration ./wait_for_job.sh
 
 k8s-delete-db-migration-job:
 	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-db-migration
+
+k8s-kuma-record-deployment-job: k8s-kuma-delete-record-deployment-job
+	env APP_NAME=kuma \
+		FROM_REVISION_HASH=${FROM_REVISION_HASH} \
+		TO_REVISION_HASH=$(shell make k8s-get-kuma-revision-hash) \
+		j2 mdn-record-deployment-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+	env JOB_NAME=mdn-kuma-record-deployment ./wait_for_job.sh
+
+k8s-kuma-delete-record-deployment-job:
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-kuma-record-deployment
+
+k8s-kumascript-record-deployment-job: k8s-kumascript-delete-record-deployment-job
+	env APP_NAME=kumascript \
+		FROM_REVISION_HASH=${FROM_REVISION_HASH} \
+		TO_REVISION_HASH=$(shell make k8s-get-kumascript-revision-hash) \
+		j2 mdn-record-deployment-job.yaml.j2 | ${KUBECTL} apply -n ${K8S_NAMESPACE} -f -
+	env JOB_NAME=mdn-kumascript-record-deployment ./wait_for_job.sh
+
+k8s-kumascript-delete-record-deployment-job:
+	${KUBECTL} delete -n ${K8S_NAMESPACE} --ignore-not-found job mdn-kumascript-record-deployment
 
 ### end core tasks
 ###############################
@@ -526,6 +546,12 @@ k8s-delete-celery-cam:
 check-service-env:
 	./check_infra_lock.sh
 
+k8s-get-kuma-revision-hash:
+	@ ${KUBECTL} -n ${K8S_NAMESPACE} exec $(shell ${KUBECTL} -n ${K8S_NAMESPACE} get pods --selector app=${WEB_SERVICE_NAME} -o jsonpath='{.items[0].metadata.name}') -- printenv REVISION_HASH
+
+k8s-get-kumascript-revision-hash:
+	@ ${KUBECTL} -n ${K8S_NAMESPACE} exec $(shell ${KUBECTL} -n ${K8S_NAMESPACE} get pods --selector app=${KUMASCRIPT_SERVICE_NAME} -o jsonpath='{.items[0].metadata.name}') -- printenv REVISION_HASH
+
 # These tasks don't have file targets
 .PHONY: k8s-services k8s-delete-services k8s-ns k8s-delete-ns k8s-pv-shared \
 		k8s-delete-pv-shared k8s-pvc-shared k8s-delete-pvc-shared \
@@ -540,4 +566,8 @@ check-service-env:
 		k8s-delete-kuma-deployments k8s-kumascript-deployments \
 		k8s-delete-kumascript-deployments k8s-rollout-status \
 		k8s-kuma-rollout-status k8s-kumascript-rollout-status \
+		k8s-kuma-record-deployment-job k8s-kumascript-record-deployment-job \
+		k8s-kuma-delete-record-deployment-job \
+		k8s-kumascript-delete-record-deployment-job \
+		k8s-get-kuma-revision-hash k8s-get-kumascript-revision-hash \
 		check-service-env
