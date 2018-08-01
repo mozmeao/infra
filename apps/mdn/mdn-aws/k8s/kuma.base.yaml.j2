@@ -125,6 +125,16 @@
               value: {{ KUMA_PROTOCOL }}
             - name: RATELIMIT_ENABLE
               value: "{{ KUMA_RATELIMIT_ENABLE }}"
+            - name: REDIS_BASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: redis-base-url
+            - name: REDIS_CACHE_SERVER
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: redis-url-2
             - name: SECURE_HSTS_SECONDS
               value: "{{ KUMA_SECURE_HSTS_SECONDS }}"
             - name: SENTRY_DSN
