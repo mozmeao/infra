@@ -1,5 +1,6 @@
 **/__pycache__
 **/.terraform/environment
+**/.terraform
 elbs/**/*.tfvars
 apps/**/Procfile
 /elb_automation/meaoelb/__pycache__/__init__.cpython-36.pyc
