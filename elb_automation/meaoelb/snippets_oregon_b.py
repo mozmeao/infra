@@ -1,6 +1,13 @@
 from meaoelb.oregon_b import elb_tool
 
 
+snippets_dev = elb_tool.define_elb_http(
+    service_namespace='snippets-dev',
+    service_name='snippets-nodeport',
+    ssl_arn='arn:aws:acm:us-west-2:236517346949:certificate/34e80874-09dd-4baa-b544-72d0aa630794')
+snippets_dev.elb_config.elb_atts.connection_settings.idle_timeout = 60
+snippets_dev.elb_config.health_check.target_path = '/healthz/'
+
 snippets_stage = elb_tool.define_elb_http(
     service_namespace='snippets-stage',
     service_name='snippets-nodeport',
