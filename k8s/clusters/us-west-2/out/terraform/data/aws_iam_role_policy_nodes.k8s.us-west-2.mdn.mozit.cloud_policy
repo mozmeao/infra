@@ -1,0 +1,69 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "kopsK8sEC2NodePerms",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:DescribeInstances",
+        "ec2:DescribeRegions"
+      ],
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Sid": "kopsK8sS3GetListBucket",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetBucketLocation",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288"
+      ]
+    },
+    {
+      "Sid": "kopsK8sS3NodeBucketSelectiveGet",
+      "Effect": "Allow",
+      "Action": [
+        "s3:Get*"
+      ],
+      "Resource": [
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/addons/*",
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/cluster.spec",
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/config",
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/instancegroup/*",
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/pki/issued/*",
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/pki/private/kube-proxy/*",
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/pki/private/kubelet/*",
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/pki/ssh/*",
+        "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/secrets/dockerconfig"
+      ]
+    },
+    {
+      "Sid": "kopsK8sS3NodeBucketGetCalicoClient",
+      "Effect": "Allow",
+      "Action": [
+        "s3:Get*"
+      ],
+      "Resource": "arn:aws:s3:::kops-state-4e366a3ac64d1b4022c8b5e35efbd288/k8s.us-west-2.mdn.mozit.cloud/pki/private/calico-client/*"
+    },
+    {
+      "Sid": "kopsK8sECR",
+      "Effect": "Allow",
+      "Action": [
+        "ecr:GetAuthorizationToken",
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:GetRepositoryPolicy",
+        "ecr:DescribeRepositories",
+        "ecr:ListImages",
+        "ecr:BatchGetImage"
+      ],
+      "Resource": [
+        "*"
+      ]
+    }
+  ]
+}
