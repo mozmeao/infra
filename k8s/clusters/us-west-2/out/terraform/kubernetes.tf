@@ -314,16 +314,16 @@ resource "aws_internet_gateway" "k8s-us-west-2-mdn-mozit-cloud" {
   }
 }
 
-resource "aws_key_pair" "kubernetes-k8s-us-west-2-mdn-mozit-cloud-b20cd59d505612f441c090ed414f475a" {
-  key_name   = "kubernetes.k8s.us-west-2.mdn.mozit.cloud-b2:0c:d5:9d:50:56:12:f4:41:c0:90:ed:41:4f:47:5a"
-  public_key = "${file("${path.module}/data/aws_key_pair_kubernetes.k8s.us-west-2.mdn.mozit.cloud-b20cd59d505612f441c090ed414f475a_public_key")}"
+resource "aws_key_pair" "kubernetes-k8s-us-west-2-mdn-mozit-cloud-44ff04d0bf8934c5c30d253bd7df3bef" {
+  key_name   = "kubernetes.k8s.us-west-2.mdn.mozit.cloud-44:ff:04:d0:bf:89:34:c5:c3:0d:25:3b:d7:df:3b:ef"
+  public_key = "${file("${path.module}/data/aws_key_pair_kubernetes.k8s.us-west-2.mdn.mozit.cloud-44ff04d0bf8934c5c30d253bd7df3bef_public_key")}"
 }
 
 resource "aws_launch_configuration" "master-us-west-2a-masters-k8s-us-west-2-mdn-mozit-cloud" {
   name_prefix                 = "master-us-west-2a.masters.k8s.us-west-2.mdn.mozit.cloud-"
   image_id                    = "ami-4bfe6f33"
   instance_type               = "m4.large"
-  key_name                    = "${aws_key_pair.kubernetes-k8s-us-west-2-mdn-mozit-cloud-b20cd59d505612f441c090ed414f475a.id}"
+  key_name                    = "${aws_key_pair.kubernetes-k8s-us-west-2-mdn-mozit-cloud-44ff04d0bf8934c5c30d253bd7df3bef.id}"
   iam_instance_profile        = "${aws_iam_instance_profile.masters-k8s-us-west-2-mdn-mozit-cloud.id}"
   security_groups             = ["${aws_security_group.masters-k8s-us-west-2-mdn-mozit-cloud.id}"]
   associate_public_ip_address = true
@@ -346,7 +346,7 @@ resource "aws_launch_configuration" "master-us-west-2b-masters-k8s-us-west-2-mdn
   name_prefix                 = "master-us-west-2b.masters.k8s.us-west-2.mdn.mozit.cloud-"
   image_id                    = "ami-4bfe6f33"
   instance_type               = "m4.large"
-  key_name                    = "${aws_key_pair.kubernetes-k8s-us-west-2-mdn-mozit-cloud-b20cd59d505612f441c090ed414f475a.id}"
+  key_name                    = "${aws_key_pair.kubernetes-k8s-us-west-2-mdn-mozit-cloud-44ff04d0bf8934c5c30d253bd7df3bef.id}"
   iam_instance_profile        = "${aws_iam_instance_profile.masters-k8s-us-west-2-mdn-mozit-cloud.id}"
   security_groups             = ["${aws_security_group.masters-k8s-us-west-2-mdn-mozit-cloud.id}"]
   associate_public_ip_address = true
@@ -369,7 +369,7 @@ resource "aws_launch_configuration" "master-us-west-2c-masters-k8s-us-west-2-mdn
   name_prefix                 = "master-us-west-2c.masters.k8s.us-west-2.mdn.mozit.cloud-"
   image_id                    = "ami-4bfe6f33"
   instance_type               = "m4.large"
-  key_name                    = "${aws_key_pair.kubernetes-k8s-us-west-2-mdn-mozit-cloud-b20cd59d505612f441c090ed414f475a.id}"
+  key_name                    = "${aws_key_pair.kubernetes-k8s-us-west-2-mdn-mozit-cloud-44ff04d0bf8934c5c30d253bd7df3bef.id}"
   iam_instance_profile        = "${aws_iam_instance_profile.masters-k8s-us-west-2-mdn-mozit-cloud.id}"
   security_groups             = ["${aws_security_group.masters-k8s-us-west-2-mdn-mozit-cloud.id}"]
   associate_public_ip_address = true
@@ -392,7 +392,7 @@ resource "aws_launch_configuration" "nodes-k8s-us-west-2-mdn-mozit-cloud" {
   name_prefix                 = "nodes.k8s.us-west-2.mdn.mozit.cloud-"
   image_id                    = "ami-4bfe6f33"
   instance_type               = "m4.xlarge"
-  key_name                    = "${aws_key_pair.kubernetes-k8s-us-west-2-mdn-mozit-cloud-b20cd59d505612f441c090ed414f475a.id}"
+  key_name                    = "${aws_key_pair.kubernetes-k8s-us-west-2-mdn-mozit-cloud-44ff04d0bf8934c5c30d253bd7df3bef.id}"
   iam_instance_profile        = "${aws_iam_instance_profile.nodes-k8s-us-west-2-mdn-mozit-cloud.id}"
   security_groups             = ["${aws_security_group.nodes-k8s-us-west-2-mdn-mozit-cloud.id}"]
   associate_public_ip_address = true

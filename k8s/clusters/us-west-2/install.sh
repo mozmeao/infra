@@ -44,6 +44,7 @@ create-cluster() {
         --node-count=${KOPS_NODE_COUNT} \
         --node-size=${KOPS_NODE_SIZE} \
         --node-volume-size=${KOPS_NODE_VOLUME_SIZE_GB} \
+        --ssh-public-key=${KOPS_SSH_PUB_KEY:-~/.ssh/id_rsa.pub} \
         --zones=${KOPS_ZONE} \
         --target=terraform
 }
