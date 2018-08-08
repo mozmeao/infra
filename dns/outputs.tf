@@ -5,3 +5,7 @@ output "delegation_sets" {
 output "us-west-2-zone-id" {
   value = "${module.us-west-2.hosted_zone_id}"
 }
+
+output "us-west-2a-zone-id" {
+  value = "${module.us-west-2a.hosted_zone_id}"
+}
