@@ -21,3 +21,7 @@ data terraform_remote_state "kubernetes-us-west-2" {
 data aws_vpc "cidr" {
   id = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
 }
+
+data aws_subnet_ids "subnet_id" {
+  vpc_id = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+}

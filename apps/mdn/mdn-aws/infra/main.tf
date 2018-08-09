@@ -108,5 +108,5 @@ module "mysql-us-west-2" {
   mysql_storage_type          = "${lookup(var.rds, "storage_type")}"
   vpc_id                      = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
   vpc_cidr                    = "${data.aws_vpc.cidr.cidr_block}"
-  subnets                     = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
+  subnets                     = "${join(",", data.aws_subnet_ids.subnet_id.ids)}"
 }

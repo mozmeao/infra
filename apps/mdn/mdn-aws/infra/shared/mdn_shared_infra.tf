@@ -86,6 +86,7 @@ resource "aws_s3_bucket" "mdn-elb-logs" {
   bucket = "${local.elb_logs}"
   region = "${var.region}"
   acl    = "log-delivery-write"
+
   policy = <<EOF
 {
     "Version": "2012-10-17",
@@ -232,4 +233,47 @@ resource "aws_s3_bucket" "mdn-shared-backup" {
     Stack       = "MDN"
     Environment = "shared"
   }
+}
+
+# MDN efs backup user
+resource aws_iam_user "mdn-efs-backup-user" {
+  name = "mdn-efs-backup"
+}
+
+resource aws_iam_access_key "mdn-efs-backup-user" {
+  user = "${aws_iam_user.mdn-efs-backup-user.name}"
+}
+
+resource aws_iam_user_policy "backup-user-policy" {
+  name = "mdn-efs-backup"
+  user = "${aws_iam_user.mdn-efs-backup-user.name}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket",
+        "s3:ListAllMyBuckets"
+      ],
+      "Resource": [
+        "${aws_s3_bucket.mdn-shared-backup.arn}"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "${aws_s3_bucket.mdn-shared-backup.arn}/*"
+      ]
+    }
+  ]
+}
+EOF
 }
