@@ -35,5 +35,5 @@ output "us-west-2-redis-endpoint" {
 }
 
 output "us-west-2-rds-endpoint" {
-  value = "${module.rds-us-west-2.rds_endpoint}"
+  value = "${module.mysql-us-west-2.rds_endpoint}"
 }
