@@ -23,7 +23,7 @@ output "db_storage_anonymized_bucket_name" {
 }
 
 output "us-west-2-efs-dns" {
-  value = "${module.efs-us-west-2.efs-dns}"
+  value = "${module.efs-us-west-2.efs_dns}"
 }
 
 output "us-west-2-memcached-endpoint" {
@@ -35,5 +35,5 @@ output "us-west-2-redis-endpoint" {
 }
 
 output "us-west-2-rds-endpoint" {
-  value = "${module.multi_region.us-west-2.rds_endpoint}"
+  value = "${module.rds-us-west-2.rds_endpoint}"
 }
