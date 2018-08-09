@@ -42,3 +42,39 @@ variable cloudfront_attachments {
     domain.prod       = "mdn-demos-origin.moz.works"
   }
 }
+
+variable memcached {
+  default = {
+    node_size.stage = "cache.t2.small"
+    node_size.prod  = "cache.m3.xlarge"
+    num_nodes.stage = "3"
+    num_nodes.prod  = "3"
+  }
+}
+
+variable redis {
+  default = {
+    node_size.stage = "cache.t2.small"
+    node_size.prod  = "cache.m3.xlarge"
+    num_nodes.stage = "3"
+    num_nodes.prod  = "3"
+  }
+}
+
+variable rds {
+  default = {
+    db_name.stage               = "developer_allizom_org"
+    db_name.prod                = "developer_mozilla_org"
+    username.stage              = "root"
+    username.prod               = "root"
+    password.stage              = ""
+    password.prod               = ""
+    instance_class.stage        = "db.t2.large"
+    instance_class.prod         = "db.m4.xlarge"
+    backup_retention_days.stage = "0"
+    backup_retention_days.prod  = "7"
+    storage_gb.stage            = "100"
+    storage_gb.prod             = "200"
+    storage_type                = "gp2"
+  }
+}

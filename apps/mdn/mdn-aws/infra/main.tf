@@ -57,3 +57,56 @@ module "mdn_cdn" {
 
 # Multi region resources
 
+module "efs-us-west-2" {
+  source               = "./multi_region/efs"
+  enabled              = "${lookup(var.features, "efs")}"
+  environment          = "${var.environment}"
+  region               = "us-west-2"
+  efs_name             = "${var.environment}"
+  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
+  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+}
+
+module "redis-us-west-2" {
+  source               = "./multi_region/redis"
+  enabled              = "${lookup(var.features, "redis")}"
+  environment          = "${var.environment}"
+  region               = "us-west-2"
+  redis_name           = "${var.environment}"
+  redis_node_size      = "${lookup(var.redis, "node_size.${var.environment}")}"
+  redis_num_nodes      = "${lookup(var.redis, "num_nodes.${var.environment}")}"
+  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
+  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+}
+
+module "memcached-us-west-2" {
+  source               = "./multi_region/memcached"
+  enabled              = "${lookup(var.features, "memcached")}"
+  environment          = "${var.environment}"
+  region               = "us-west-2"
+  memcached_name       = "${var.environment}"
+  memcached_node_size  = "${lookup(var.memcached, "node_size.${var.environment}")}"
+  memcached_num_nodes  = "${lookup(var.memcached, "num_nodes.${var.environment}")}"
+  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
+  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+}
+
+module "mysql-us-west-2" {
+  source                      = "./multi_region/rds"
+  enabled                     = "${lookup(var.features, "rds")}"
+  environment                 = "${var.environment}"
+  region                      = "us-west-2"
+  mysql_env                   = "${var.environment}"
+  mysql_db_name               = "${lookup(var.rds, "db_name.${var.environment}")}"
+  mysql_username              = "${lookup(var.rds, "username.${var.environment}")}"
+  mysql_password              = "${lookup(var.rds, "password.${var.environment}")}"
+  mysql_identifier            = "mdn-${var.environment}"
+  mysql_instance_class        = "${lookup(var.rds, "instance_class.${var.environment}")}"
+  mysql_backup_retention_days = "${lookup(var.rds, "backup_retention_days.${var.environment}")}"
+  mysql_security_group_name   = "mdn_rds_sg_${var.environment}"
+  mysql_storage_gb            = "${lookup(var.rds, "storage_gb.${var.environment}")}"
+  mysql_storage_type          = "${lookup(var.rds, "storage_type")}"
+  vpc_id                      = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  vpc_cidr                    = "${data.aws_vpc.cidr.cidr_block}"
+  subnets                     = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
+}
