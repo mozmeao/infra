@@ -3,9 +3,13 @@ output "delegation_sets" {
 }
 
 output "master-zone" {
-  value = "${element(concat(aws_route53_zone.master-zone.*.id, list("")), 0)}"
+  value = "${element(concat(aws_route53_zone.master-zone.*.zone_id, list("")), 0)}"
 }
 
 output "us-west-2-zone-id" {
   value = "${module.us-west-2.hosted_zone_id}"
+}
+
+output "us-west-2a-zone-id" {
+  value = "${module.us-west-2a.hosted_zone_id}"
 }
