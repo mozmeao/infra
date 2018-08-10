@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: {{ ADMIN_NODE_NAME }}
-          image: debian
+          image: mysql
           command: [ "/bin/bash", "-c", "--" ]
           args: [ "while true; do sleep 30; done;" ]
           volumeMounts:
