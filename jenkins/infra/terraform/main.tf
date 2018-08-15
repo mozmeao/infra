@@ -218,8 +218,7 @@ resource "aws_launch_configuration" "ci" {
   root_block_device = {
     volume_size = "250"
     volume_type = "gp2"
-
-    #delete_on_termination = true
+    delete_on_termination = false
   }
 }
 
