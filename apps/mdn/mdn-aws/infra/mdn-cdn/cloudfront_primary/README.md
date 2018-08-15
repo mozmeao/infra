@@ -8,16 +8,16 @@ the list and finding the first match between the request path and the
 behavior's path pattern. All of the behaviors will automatically handle
 compression, but GZip only (Brotli compression is not yet supported).
 
-Cloudfront will cache many error responses by default, so we include
-custom error responses that effectively turn-off the caching for:
+CloudFront will
+[cache many error responses by default](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/HTTPStatusCodes.html#HTTPStatusCodes-cached-errors),
+so we include custom error responses that effectively turn-off the caching for:
 * `403 Forbidden`
 * `404 Not Found`
-* `408 Request Timeout`
 * `500 Internal Server Error`
 * `502 Bad Gateway`
 * `504 Gateway Timeout`
 
-Cloudfront ignores the `Vary` header. All desired cache variance must be
+CloudFront ignores the `Vary` header. All desired cache variance must be
 explicitly configured via the header, cookie, and query-parameter configuration
 within each behavior.
 
