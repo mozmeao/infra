@@ -45,3 +45,7 @@ output "us-west-2-redis-endpoint" {
 output "us-west-2-rds-endpoint" {
   value = "${module.mysql-us-west-2.rds_endpoint}"
 }
+
+output "ci_acm_arn" {
+  value = "${module.acm_ci.certificate_arn}"
+}

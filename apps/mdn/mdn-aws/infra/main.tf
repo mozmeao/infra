@@ -34,6 +34,13 @@ module "acm_star_mdn" {
   zone_id     = "${data.terraform_remote_state.dns.master-zone}"
 }
 
+module "acm_ci" {
+  source = "./acm"
+
+  domain_name = "ci.us-west-2.mdn.mozit.cloud"
+  zone_id     = "${data.terraform_remote_state.dns.us-west-2-zone-id}"
+}
+
 module "mdn_cdn" {
   source      = "./mdn-cdn"
   enabled     = "${lookup(var.features, "cdn")}"
