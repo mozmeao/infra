@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-echo '--> Setting environment to STAGE in PORTLAND'
+echo '--> Setting environment to STAGE in OREGON'
 
 export KUBECONFIG=${HOME}/.kube/oregon.config
 
