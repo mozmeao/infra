@@ -30,7 +30,17 @@ resource "aws_cloudfront_distribution" "mdn-primary-cf-dist" {
 
   custom_error_response {
     error_caching_min_ttl = 0
+    error_code            = 408
+  }
+
+  custom_error_response {
+    error_caching_min_ttl = 0
     error_code            = 500
+  }
+
+  custom_error_response {
+    error_caching_min_ttl = 0
+    error_code            = 502
   }
 
   custom_error_response {

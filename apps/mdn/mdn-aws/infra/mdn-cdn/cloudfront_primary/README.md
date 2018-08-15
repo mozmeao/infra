@@ -9,8 +9,13 @@ behavior's path pattern. All of the behaviors will automatically handle
 compression, but GZip only (Brotli compression is not yet supported).
 
 Cloudfront will cache many error responses by default, so we include
-four custom error responses that effectively turn-off the caching of
-`403`'s, `404`'s, `500`'s and `504`'s.
+custom error responses that effectively turn-off the caching for:
+* `403 Forbidden`
+* `404 Not Found`
+* `408 Request Timeout`
+* `500 Internal Server Error`
+* `502 Bad Gateway`
+* `504 Gateway Timeout`
 
 Cloudfront ignores the `Vary` header. All desired cache variance must be
 explicitly configured via the header, cookie, and query-parameter configuration
