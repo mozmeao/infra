@@ -1,22 +1,23 @@
-provider "aws" {
-  region = "${var.region}"
+resource "random_id" "rand-var" {
+  keepers = {
+    mdn-interactive-bucket = "${var.mdn-interactive-bucket}"
+  }
+
+  byte_length = 8
 }
 
-terraform {
-  backend "s3" {
-    bucket = "mdninteractive-provisioning-tf-state"
-    key    = "tf-state"
-    region = "us-west-2"
-  }
+locals {
+  interactive-bucket      = "${var.mdn-interactive-bucket}-${random_id.rand-var.hex}"
+  interactive-bucket-logs = "${var.mdn-interactive-bucket}-${random_id.rand-var.hex}-logs"
 }
 
 resource "aws_s3_bucket" "logs" {
-  bucket = "mdninteractive-logs"
+  bucket = "${local.interactive-bucket-logs}"
   acl    = "log-delivery-write"
 }
 
 resource "aws_s3_bucket" "mdninteractive" {
-  bucket = "mdninteractive"
+  bucket = "${local.interactive-bucket}"
   region = "${var.region}"
   acl    = "log-delivery-write"
 
@@ -42,7 +43,7 @@ resource "aws_s3_bucket" "mdninteractive" {
   }
 
   website_domain   = "s3-website-${var.region}.amazonaws.com"
-  website_endpoint = "mdninteractive.s3-website-${var.region}.amazonaws.com"
+  website_endpoint = "${local.interactive-bucket}.s3-website-${var.region}.amazonaws.com"
 
   versioning {
     enabled = true
@@ -58,14 +59,14 @@ resource "aws_s3_bucket" "mdninteractive" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::mdninteractive"
+      "Resource": "arn:aws:s3:::${local.interactive-bucket}"
     },
     {
       "Sid": "MDNInteractiveAllowIndexDotHTML",
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::mdninteractive/*"
+      "Resource": "arn:aws:s3:::${local.interactive-bucket}/*"
     }
   ]
 }
@@ -74,13 +75,14 @@ EOF
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = "mdninteractive.s3-website-us-west-2.amazonaws.com"
+    domain_name = "${local.interactive-bucket}.s3-website-${var.region}.amazonaws.com"
     origin_id   = "MDNInteractive"
+
     custom_origin_config {
       origin_protocol_policy = "http-only"
-      http_port = "80"
-      https_port = "443"
-      origin_ssl_protocols = ["TLSv1"]
+      http_port              = "80"
+      https_port             = "443"
+      origin_ssl_protocols   = ["TLSv1"]
     }
   }
 
@@ -91,18 +93,22 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = "mdninteractive-logs.s3.amazonaws.com"
+    bucket          = "${local.interactive-bucket-logs}.s3.amazonaws.com"
     prefix          = "cflogs"
   }
 
-  aliases = ["interactive-examples.mdn.mozilla.net",
-             "interactive-examples.mdn.moz.works"]
+  aliases = [
+    # FIXME: Can't use mdn.mozilla.net because its already taken
+    # assuming its from whats running in prod right now
+    #"interactive-examples.mdn.mozilla.net",
+    "interactive-examples.mdn.mozit.cloud",
+  ]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "MDNInteractive"
-    compress = true
+    compress         = true
 
     forwarded_values {
       query_string = false
@@ -125,7 +131,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/5b42afe7-8223-4e91-8c7b-c26c23ffd784"
+    acm_certificate_arn = "${var.acm_certificate_arn}"
     ssl_support_method  = "sni-only"
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
