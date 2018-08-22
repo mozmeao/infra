@@ -16,31 +16,6 @@ module "mdn_shared" {
   region  = "${var.region}"
 }
 
-# ACM certs for cloudfront needs to be created in us-east-1
-# as documented here: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html
-provider "aws" {
-  alias  = "acm"
-  region = "us-east-1"
-}
-
-module "acm_star_mdn" {
-  source = "./acm"
-
-  providers = {
-    aws = "aws.acm"
-  }
-
-  domain_name = "*.mdn.mozit.cloud"
-  zone_id     = "${data.terraform_remote_state.dns.master-zone}"
-}
-
-module "acm_ci" {
-  source = "./acm"
-
-  domain_name = "ci.us-west-2.mdn.mozit.cloud"
-  zone_id     = "${data.terraform_remote_state.dns.us-west-2-zone-id}"
-}
-
 module "mdn_cdn" {
   source      = "./mdn-cdn"
   enabled     = "${lookup(var.features, "cdn")}"
