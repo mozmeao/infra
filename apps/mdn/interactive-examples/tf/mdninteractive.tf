@@ -98,8 +98,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   aliases = [
-    # FIXME: Can't use mdn.mozilla.net because its already taken
-    # assuming its from whats running in prod right now
+    # FIXME: public name is taken by MozMeao account
+    # cloudfront complains about CNAMEAlreadyExists
     #"interactive-examples.mdn.mozilla.net",
     "interactive-examples.mdn.mozit.cloud",
   ]
