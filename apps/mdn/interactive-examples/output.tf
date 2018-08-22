@@ -1,12 +1,12 @@
 
-output "interactive_example_bucket" {
-  value = "${module.interactive-example.interactive_example_bucket}"
+output "interactive-example-bucket" {
+  value = "${module.interactive-example.interactive-example-bucket}"
 }
 
-output "interactive_example_cloudfront_id" {
-  value = "${module.interactive-example.interactive_example_cloudfront_id}"
+output "interactive-example-cloudfront-id" {
+  value = "${module.interactive-example.interactive-example-cloudfront-id}"
 }
 
-output "interactive_example_cloudfront_domain" {
-  value = "${module.interactive-example.interactive_example_cloudfront_domain}"
+output "interactive-example-cloudfront-domain" {
+  value = "${module.interactive-example.interactive-example-cloudfront-domain}"
 }

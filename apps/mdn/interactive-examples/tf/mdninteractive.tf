@@ -1,23 +1,23 @@
 resource "random_id" "rand-var" {
   keepers = {
-    mdn-interactive-bucket = "${var.mdn-interactive-bucket}"
+    interactive-example-bucket = "${var.interactive-example-bucket}"
   }
 
   byte_length = 8
 }
 
 locals {
-  interactive-bucket      = "${var.mdn-interactive-bucket}-${random_id.rand-var.hex}"
-  interactive-bucket-logs = "${var.mdn-interactive-bucket}-${random_id.rand-var.hex}-logs"
+  interactive-example-bucket      = "${var.interactive-example-bucket}-${random_id.rand-var.hex}"
+  interactive-example-bucket-logs = "${var.interactive-example-bucket}-${random_id.rand-var.hex}-logs"
 }
 
-resource "aws_s3_bucket" "logs" {
-  bucket = "${local.interactive-bucket-logs}"
+resource "aws_s3_bucket" "interactive-example-logs" {
+  bucket = "${local.interactive-example-bucket-logs}"
   acl    = "log-delivery-write"
 }
 
-resource "aws_s3_bucket" "mdninteractive" {
-  bucket = "${local.interactive-bucket}"
+resource "aws_s3_bucket" "interactive-example" {
+  bucket = "${local.interactive-example-bucket}"
   region = "${var.region}"
   acl    = "log-delivery-write"
 
@@ -33,7 +33,7 @@ resource "aws_s3_bucket" "mdninteractive" {
   hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
 
   logging {
-    target_bucket = "${aws_s3_bucket.logs.id}"
+    target_bucket = "${aws_s3_bucket.interactive-example-logs.id}"
     target_prefix = "logs/"
   }
 
@@ -43,7 +43,7 @@ resource "aws_s3_bucket" "mdninteractive" {
   }
 
   website_domain   = "s3-website-${var.region}.amazonaws.com"
-  website_endpoint = "${local.interactive-bucket}.s3-website-${var.region}.amazonaws.com"
+  website_endpoint = "${local.interactive-example-bucket}.s3-website-${var.region}.amazonaws.com"
 
   versioning {
     enabled = true
@@ -59,14 +59,14 @@ resource "aws_s3_bucket" "mdninteractive" {
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::${local.interactive-bucket}"
+      "Resource": "arn:aws:s3:::${local.interactive-example-bucket}"
     },
     {
       "Sid": "MDNInteractiveAllowIndexDotHTML",
       "Effect": "Allow",
       "Principal": "*",
       "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::${local.interactive-bucket}/*"
+      "Resource": "arn:aws:s3:::${local.interactive-example-bucket}/*"
     }
   ]
 }
@@ -75,7 +75,7 @@ EOF
 
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name = "${local.interactive-bucket}.s3-website-${var.region}.amazonaws.com"
+    domain_name = "${local.interactive-example-bucket}.s3-website-${var.region}.amazonaws.com"
     origin_id   = "MDNInteractive"
 
     custom_origin_config {
@@ -93,7 +93,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   logging_config {
     include_cookies = false
-    bucket          = "${local.interactive-bucket-logs}.s3.amazonaws.com"
+    bucket          = "${local.interactive-example-bucket-logs}.s3.amazonaws.com"
     prefix          = "cflogs"
   }
 

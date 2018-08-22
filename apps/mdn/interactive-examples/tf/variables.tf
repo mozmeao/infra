@@ -2,7 +2,7 @@ variable "region" {
   default = "us-west-2"
 }
 
-variable "mdn-interactive-bucket" {
+variable "interactive-example-bucket" {
   default = "mdninteractive"
 }
 
