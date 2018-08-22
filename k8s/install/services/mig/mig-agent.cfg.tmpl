@@ -1,0 +1,28 @@
+[agent]
+    isimmortal      = on
+    installservice  = on
+    discoverpublicip = on
+    discoverawsmeta = on
+    checkin         = off
+    relay           = "amqps://${MQUSER}:${MQPASSWORD}@publicrelay.mig.mozilla.org:443/mig"
+    socket          = "127.0.0.1:51664"
+    heartbeatfreq   = "30s"
+    moduletimeout   = "1200s"
+    api             = "https://api.mig.mozilla.org/api/v1/"
+
+[certs]
+    ca  = "/etc/mig/ca.crt"
+    cert= "/etc/mig/agent.crt"
+    key = "/etc/mig/agent.key"
+
+[logging]
+    mode    = "stdout" ; stdout | file | syslog
+    level   = "info"
+
+; for file logging
+;   file = "mig_scheduler.log"
+
+; for syslog, logs go into local3
+;   host   = "localhost"
+;   port   = 514
+;   protocol = "udp"
