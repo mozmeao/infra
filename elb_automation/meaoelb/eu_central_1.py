@@ -230,7 +230,7 @@ def define_snippets():
         load_balancer_port=443,
         instance_protocol='TCP',
         instance_port=nodeport,
-        ssl_arn='arn:aws:iam::236517346949:server-certificate/snippets.mozilla.com')
+        ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/148dc9eb-d026-4c09-89db-41bafd3f2077')
     # Attributes
 
     att_czlb = ELBAttCrossZoneLoadBalancing(enabled=True)
@@ -284,7 +284,7 @@ def define_careers():
         load_balancer_port=443,
         instance_protocol='TCP',
         instance_port=nodeport,
-        ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/c92264e0-d477-417e-ab3b-fc15c65a574e')
+        ssl_arn='arn:aws:acm:eu-central-1:236517346949:certificate/4f35a95e-1e27-4402-94f6-2d6ff49ea7a0')
     # Attributes
 
     att_czlb = ELBAttCrossZoneLoadBalancing(enabled=True)
