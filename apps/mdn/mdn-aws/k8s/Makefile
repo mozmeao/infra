@@ -120,6 +120,7 @@ export KUMA_WEB_CONCURRENCY ?= 4
 # Derived environment variables for both Kuma and Kumascript. These are always set.
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMASCRIPT_SERVICE_PORT}/docs/{path}
 export KUMASCRIPT_DOCUMENT_URL_TEMPLATE=http://${API_SERVICE_NAME}/en-US/docs/{path}?raw=1
+export KUMASCRIPT_LIVE_SAMPLES_BASE_URL=${KUMA_PROTOCOL}${KUMA_ATTACHMENT_HOST}
 
 # MDN backup tool
 export BACKUP_SERVICE_NAME ?= mdn-backup-${TARGET_ENVIRONMENT}
