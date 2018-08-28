@@ -2,7 +2,7 @@ export AUTOSCALER_CPU_LIMIT ?= 100m
 export AUTOSCALER_MEMORY_LIMIT ?= 300Mi
 export AWS_REGION ?= us-west-2
 export RENDER_POD_CMD ?= j2 autoscaler.yaml.j2 | kubectl apply -f -
-export AUTOSCALER_IMAGE ?= k8s.gcr.io/cluster-autoscaler:v1.3.0
+export AUTOSCALER_IMAGE ?= k8s.gcr.io/cluster-autoscaler:v1.1.3
 
 install-autoscaler: check-env
 	${RENDER_POD_CMD}

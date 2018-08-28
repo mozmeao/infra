@@ -122,6 +122,7 @@ install_cluster_autoscaler() {
     (cd ${KOPS_INSTALLER}/services/cluster-autoscaler && make MAX_NODES=${MAX_NODES} KOPS_CLUSTER_NAME=${KOPS_CLUSTER_NAME} AWS_REGION=${KOPS_REGION})
 }
 
+install_cluster_autoscaler
 install_calico_rbac
 install_fluentd
 install_mig
