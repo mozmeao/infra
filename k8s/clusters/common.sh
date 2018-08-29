@@ -3,7 +3,6 @@
 export KUBERNETES_VERSION="v1.9.7"
 
 export KOPS_DOMAIN="mdn.mozit.cloud"
-export KOPS_CLUSTER="k8s.${KOPS_REGION}.${KOPS_DOMAIN}"
 
 export KOPS_MASTER_COUNT=3
 export KOPS_MASTER_SIZE=m4.large
