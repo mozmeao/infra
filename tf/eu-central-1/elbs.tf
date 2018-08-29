@@ -2,7 +2,6 @@ resource "aws_elb" "a82511f724fb611e78dc902859405480" {
     name                        = "a82511f724fb611e78dc902859405480"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-8d1064e6"]
-    instances                   = ["i-0a273ed87242a8a37", "i-08e604f0ed4f2443b", "i-0495287dd7f192062", "i-041848b34692d0a5b", "i-085b0456117c9a6c2", "i-079bcaca8dfe714ea", "i-033f2251049499976", "i-069aa2f73b74f934d", "i-0f8c514e3fd27427f", "i-01625db3a398e98ac", "i-09b5986c54c850181", "i-01eb69aae85d3f944"]
     cross_zone_load_balancing   = false
     idle_timeout                = 1200
     connection_draining         = false
@@ -60,7 +59,6 @@ resource "aws_elb" "basket-prod" {
     name                        = "basket-prod"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-0495287dd7f192062", "i-0a273ed87242a8a37", "i-041848b34692d0a5b", "i-01625db3a398e98ac", "i-085b0456117c9a6c2", "i-069aa2f73b74f934d", "i-033f2251049499976", "i-09b5986c54c850181", "i-0f8c514e3fd27427f", "i-079bcaca8dfe714ea", "i-08e604f0ed4f2443b", "i-01eb69aae85d3f944"]
     cross_zone_load_balancing   = true
     idle_timeout                = 60
     connection_draining         = true
@@ -99,7 +97,6 @@ resource "aws_elb" "basket-stage" {
     name                        = "basket-stage"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-069aa2f73b74f934d", "i-0a273ed87242a8a37", "i-01625db3a398e98ac", "i-085b0456117c9a6c2", "i-0f8c514e3fd27427f", "i-033f2251049499976", "i-0495287dd7f192062", "i-09b5986c54c850181", "i-041848b34692d0a5b", "i-08e604f0ed4f2443b", "i-079bcaca8dfe714ea", "i-01eb69aae85d3f944"]
     cross_zone_load_balancing   = true
     idle_timeout                = 60
     connection_draining         = true
@@ -138,7 +135,6 @@ resource "aws_elb" "snippets" {
     name                        = "snippets"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-0495287dd7f192062", "i-0a273ed87242a8a37", "i-041848b34692d0a5b", "i-079bcaca8dfe714ea", "i-069aa2f73b74f934d", "i-08e604f0ed4f2443b", "i-0f8c514e3fd27427f", "i-085b0456117c9a6c2", "i-01625db3a398e98ac", "i-033f2251049499976", "i-01eb69aae85d3f944", "i-09b5986c54c850181"]
     cross_zone_load_balancing   = true
     idle_timeout                = 60
     connection_draining         = true
@@ -177,7 +173,6 @@ resource "aws_elb" "careers" {
     name                        = "careers"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-0a273ed87242a8a37", "i-085b0456117c9a6c2", "i-08e604f0ed4f2443b", "i-0f8c514e3fd27427f", "i-01625db3a398e98ac", "i-033f2251049499976", "i-09b5986c54c850181", "i-0495287dd7f192062", "i-041848b34692d0a5b", "i-069aa2f73b74f934d", "i-079bcaca8dfe714ea", "i-01eb69aae85d3f944"]
     cross_zone_load_balancing   = true
     idle_timeout                = 60
     connection_draining         = true
@@ -216,7 +211,6 @@ resource "aws_elb" "bedrock-prod" {
     name                        = "bedrock-prod"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-0a273ed87242a8a37", "i-01eb69aae85d3f944", "i-01625db3a398e98ac", "i-0f8c514e3fd27427f", "i-085b0456117c9a6c2", "i-041848b34692d0a5b", "i-033f2251049499976", "i-0495287dd7f192062", "i-09b5986c54c850181", "i-08e604f0ed4f2443b", "i-069aa2f73b74f934d", "i-079bcaca8dfe714ea"]
     cross_zone_load_balancing   = true
     idle_timeout                = 60
     connection_draining         = true
@@ -255,7 +249,6 @@ resource "aws_elb" "bedrock-stage" {
     name                        = "bedrock-stage"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-0a273ed87242a8a37", "i-01eb69aae85d3f944", "i-08e604f0ed4f2443b", "i-0f8c514e3fd27427f", "i-085b0456117c9a6c2", "i-0495287dd7f192062", "i-09b5986c54c850181", "i-041848b34692d0a5b", "i-01625db3a398e98ac", "i-069aa2f73b74f934d", "i-079bcaca8dfe714ea", "i-033f2251049499976"]
     cross_zone_load_balancing   = true
     idle_timeout                = 60
     connection_draining         = true
@@ -294,7 +287,6 @@ resource "aws_elb" "snippets-stats" {
     name                        = "snippets-stats"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-0495287dd7f192062", "i-01eb69aae85d3f944", "i-01625db3a398e98ac", "i-085b0456117c9a6c2", "i-069aa2f73b74f934d", "i-041848b34692d0a5b", "i-033f2251049499976", "i-09b5986c54c850181", "i-0f8c514e3fd27427f", "i-08e604f0ed4f2443b", "i-079bcaca8dfe714ea", "i-0a273ed87242a8a37"]
     cross_zone_load_balancing   = true
     idle_timeout                = 60
     connection_draining         = true
@@ -333,7 +325,6 @@ resource "aws_elb" "nucleus-prod" {
     name                        = "nucleus-prod"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-069aa2f73b74f934d", "i-0a273ed87242a8a37", "i-041848b34692d0a5b", "i-09b5986c54c850181", "i-079bcaca8dfe714ea", "i-01625db3a398e98ac", "i-0f8c514e3fd27427f", "i-085b0456117c9a6c2", "i-033f2251049499976", "i-0495287dd7f192062", "i-08e604f0ed4f2443b", "i-01eb69aae85d3f944"]
     cross_zone_load_balancing   = true
     idle_timeout                = 60
     connection_draining         = true
@@ -372,7 +363,6 @@ resource "aws_elb" "a37e4a92db2a611e78dc902859405480" {
     name                        = "a37e4a92db2a611e78dc902859405480"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-46b6642c"]
-    instances                   = ["i-09b5986c54c850181", "i-0495287dd7f192062", "i-033f2251049499976", "i-079bcaca8dfe714ea", "i-069aa2f73b74f934d", "i-085b0456117c9a6c2", "i-0a273ed87242a8a37", "i-08e604f0ed4f2443b", "i-0f8c514e3fd27427f", "i-01eb69aae85d3f944", "i-01625db3a398e98ac", "i-041848b34692d0a5b"]
     cross_zone_load_balancing   = false
     idle_timeout                = 60
     connection_draining         = false
@@ -406,7 +396,6 @@ resource "aws_elb" "aebf2210abda911e78dc902859405480" {
     name                        = "aebf2210abda911e78dc902859405480"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-82c16be8"]
-    instances                   = ["i-0f8c514e3fd27427f", "i-09b5986c54c850181", "i-033f2251049499976", "i-079bcaca8dfe714ea", "i-0495287dd7f192062", "i-0a273ed87242a8a37", "i-069aa2f73b74f934d", "i-08e604f0ed4f2443b", "i-085b0456117c9a6c2", "i-01625db3a398e98ac", "i-041848b34692d0a5b", "i-01eb69aae85d3f944"]
     cross_zone_load_balancing   = false
     idle_timeout                = 60
     connection_draining         = false
@@ -440,7 +429,6 @@ resource "aws_elb" "sumo-dev" {
     name                        = "sumo-dev"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-069aa2f73b74f934d", "i-0a273ed87242a8a37", "i-08e604f0ed4f2443b", "i-0f8c514e3fd27427f", "i-085b0456117c9a6c2", "i-01625db3a398e98ac", "i-09b5986c54c850181", "i-0495287dd7f192062", "i-041848b34692d0a5b", "i-033f2251049499976", "i-079bcaca8dfe714ea", "i-01eb69aae85d3f944"]
     cross_zone_load_balancing   = false
     idle_timeout                = 120
     connection_draining         = false
@@ -481,7 +469,6 @@ resource "aws_elb" "sumo-stage" {
     name                        = "sumo-stage"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-0495287dd7f192062", "i-041848b34692d0a5b", "i-01eb69aae85d3f944", "i-079bcaca8dfe714ea", "i-01625db3a398e98ac", "i-069aa2f73b74f934d", "i-0f8c514e3fd27427f", "i-085b0456117c9a6c2", "i-033f2251049499976", "i-09b5986c54c850181", "i-08e604f0ed4f2443b", "i-0a273ed87242a8a37"]
     cross_zone_load_balancing   = false
     idle_timeout                = 120
     connection_draining         = false
@@ -522,7 +509,6 @@ resource "aws_elb" "sumo-prod" {
     name                        = "sumo-prod"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-0495287dd7f192062", "i-0a273ed87242a8a37", "i-079bcaca8dfe714ea", "i-01625db3a398e98ac", "i-085b0456117c9a6c2", "i-0f8c514e3fd27427f", "i-033f2251049499976", "i-09b5986c54c850181", "i-08e604f0ed4f2443b", "i-041848b34692d0a5b", "i-069aa2f73b74f934d", "i-01eb69aae85d3f944"]
     cross_zone_load_balancing   = false
     idle_timeout                = 120
     connection_draining         = false
@@ -563,7 +549,6 @@ resource "aws_elb" "bedrock-dev" {
     name                        = "bedrock-dev"
     subnets                     = ["subnet-10685f78"]
     security_groups             = ["sg-02552a69"]
-    instances                   = ["i-01625db3a398e98ac", "i-01eb69aae85d3f944", "i-033f2251049499976", "i-041848b34692d0a5b", "i-0495287dd7f192062", "i-069aa2f73b74f934d", "i-079bcaca8dfe714ea", "i-085b0456117c9a6c2", "i-08e604f0ed4f2443b", "i-09b5986c54c850181", "i-0a273ed87242a8a37", "i-0f8c514e3fd27427f"]
     cross_zone_load_balancing   = false
     idle_timeout                = 60
     connection_draining         = false
