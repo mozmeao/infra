@@ -20,6 +20,10 @@ resource "aws_autoscaling_group" "master-ap-northeast-1a-masters-tokyo-moz-works
     "GroupMaxSize",
   ]
 
+  lifecycle {
+    ignore_changes = ["desired_capacity"]
+  }
+
   tag {
     key                 = "KubernetesCluster"
     value               = "tokyo.moz.works"
@@ -70,6 +74,10 @@ resource "aws_autoscaling_group" "nodes-tokyo-moz-works" {
     "snippets-stats",
     "bedrock-stage",
   ]
+
+  lifecycle {
+    ignore_changes = ["desired_capacity"]
+  }
 
   tag {
     key                 = "KubernetesCluster"

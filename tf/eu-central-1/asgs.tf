@@ -20,6 +20,10 @@ resource "aws_autoscaling_group" "master-eu-central-1a-masters-frankfurt-moz-wor
     "GroupMaxSize",
   ]
 
+  lifecycle {
+    ignore_changes = ["desired_capacity"]
+  }
+
   tag {
     key                 = "KubernetesCluster"
     value               = "frankfurt.moz.works"
@@ -74,6 +78,10 @@ resource "aws_autoscaling_group" "nodes-frankfurt-moz-works" {
     "sumo-stage",
     "sumo-dev",
   ]
+
+  lifecycle {
+    ignore_changes = ["desired_capacity"]
+  }
 
   tag {
     key                 = "KubernetesCluster"

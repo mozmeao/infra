@@ -11,6 +11,14 @@ resource "aws_autoscaling_group" "master-us-west-2a-masters-oregon-a-moz-works" 
   vpc_zone_identifier       = ["subnet-0d89cd37ecec22dd2"]
   wait_for_capacity_timeout = "10m"
 
+  lifecycle {
+    ignore_changes = ["force_delete",
+      "metrics_granularity",
+      "wait_for_capacity_timeout",
+      "desired_capacity",
+    ]
+  }
+
   tag {
     key                 = "KubernetesCluster"
     value               = "oregon-a.moz.works"
@@ -49,6 +57,14 @@ resource "aws_autoscaling_group" "master-us-west-2a-masters-portland-moz-works" 
   vpc_zone_identifier       = ["subnet-1349a175"]
   wait_for_capacity_timeout = "10m"
 
+  lifecycle {
+    ignore_changes = ["force_delete",
+      "metrics_granularity",
+      "wait_for_capacity_timeout",
+      "desired_capacity",
+    ]
+  }
+
   tag {
     key                 = "KubernetesCluster"
     value               = "portland.moz.works"
@@ -80,6 +96,14 @@ resource "aws_autoscaling_group" "master-us-west-2b-masters-oregon-b-moz-works" 
   name                      = "master-us-west-2b.masters.oregon-b.moz.works"
   vpc_zone_identifier       = ["subnet-e290afaa"]
   wait_for_capacity_timeout = "10m"
+
+  lifecycle {
+    ignore_changes = ["force_delete",
+      "metrics_granularity",
+      "wait_for_capacity_timeout",
+      "desired_capacity",
+    ]
+  }
 
   tag {
     key                 = "KubernetesCluster"
@@ -124,6 +148,14 @@ resource "aws_autoscaling_group" "nodes-oregon-a-moz-works" {
     "sumo-stage-a",
     "sumo-prod",
   ]
+
+  lifecycle {
+    ignore_changes = ["force_delete",
+      "metrics_granularity",
+      "wait_for_capacity_timeout",
+      "desired_capacity",
+    ]
+  }
 
   tag {
     key                 = "KubernetesCluster"
@@ -185,6 +217,14 @@ resource "aws_autoscaling_group" "nodes-oregon-b-moz-works" {
     "basket-admin-stage",
   ]
 
+  lifecycle {
+    ignore_changes = ["force_delete",
+      "metrics_granularity",
+      "wait_for_capacity_timeout",
+      "desired_capacity",
+    ]
+  }
+
   tag {
     key                 = "KubernetesCluster"
     value               = "oregon-b.moz.works"
@@ -222,6 +262,14 @@ resource "aws_autoscaling_group" "nodes-portland-moz-works" {
   name                      = "nodes.portland.moz.works"
   vpc_zone_identifier       = ["subnet-1349a175"]
   wait_for_capacity_timeout = "10m"
+
+  lifecycle {
+    ignore_changes = ["force_delete",
+      "metrics_granularity",
+      "wait_for_capacity_timeout",
+      "desired_capacity",
+    ]
+  }
 
   tag {
     key                 = "KubernetesCluster"
