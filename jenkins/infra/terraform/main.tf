@@ -194,14 +194,26 @@ resource "aws_autoscaling_group" "ci" {
   }
 }
 
+data template_file "user_data" {
+  template = "${file("${path.module}/templates/user_data.tpl")}"
+
+  vars = {
+    backup_dir         = "${var.backup_dir}"
+    backup_bucket      = "${aws_s3_bucket.ci-backup-bucket.id}"
+    nginx_password     = "${var.nginx_password}"
+    jenkins_backup_dms = "${var.jenkins_backup_dms}"
+  }
+}
+
 resource "aws_launch_configuration" "ci" {
   name_prefix = "ci-${var.project}-"
 
   image_id = "${data.aws_ami.ubuntu.id}"
 
-  instance_type               = "m5.large"
+  instance_type               = "${var.instance_type}"
   key_name                    = "${aws_key_pair.mdn.key_name}"
   associate_public_ip_address = true
+  user_data                   = "${data.template_file.user_data.rendered}"
 
   lifecycle {
     create_before_destroy = true
@@ -216,8 +228,8 @@ resource "aws_launch_configuration" "ci" {
   enable_monitoring = false
 
   root_block_device = {
-    volume_size = "250"
-    volume_type = "gp2"
+    volume_size           = "250"
+    volume_type           = "gp2"
     delete_on_termination = false
   }
 }
