@@ -12,9 +12,12 @@ die() {
 }
 
 restore-backup-set() {
+    systemctl stop jenkins
     echo "Restoring from backup"
     aws s3 sync --delete --exclude=.initial-sync "s3://$BACKUP_BUCKET/" "$BACKUP_DIR/" --quiet
+    chown -R jenkins:jenkins "$BACKUP_DIR"
     touch "$BACKUP_DIR/.initial-sync"
+    systemctl start jenkins
 }
 
 ci-restore() {
@@ -36,25 +39,37 @@ ci-restore() {
     systemctl start jenkins
 }
 
-# I'm pretty sure that cloud-init doesn't run on reboot
-# but putting here just in case? Willing to remove if can confirm
-if [ -f /.initial-run ]; then
-    echo "We've been already, no need to re-run stuff"
-    exit 0
-fi
+lock() {
+    local prefix=$$1
+    local lock_file="/var/lock/$$prefix.lock"
 
-# Setup git and ansible
-apt-get update
-apt-get install --yes git ansible
+    # create lockfile
+    eval "exec 200>$$lock_file"
+    # acquire the lock
+    flock -n 200 \
+        && return 0 \
+        || return 1
+}
 
-# TODO: ansible arguments can get pretty long here, figure out a way to make this look cleaner
-git clone https://github.com/limed/ansible-jenkins.git /tmp/ansible-jenkins || die "Failed to git clone"
-cd /tmp/ansible-jenkins && ansible-playbook site.yml -e "jenkins_backup_directory=$${BACKUP_DIR} jenkins_backup_bucket=$${BACKUP_BUCKET} jenkins_backup_dms=${jenkins_backup_dms} nginx_htpasswd=${nginx_htpasswd}" || die "Failed to run ansible"
+main() {
+    # Make sure backups dont run when trying to restore
+    lock "backup_jenkins"
 
-echo "Restoring backup sets to $${BACKUP_DIR}"
-restore-backup-set || die "Failed to restore backup set to $${BACKUP_DIR}"
+    # Setup git and ansible
+    apt-get update
+    apt-get install --yes git ansible
 
-echo "Restoring jenkins"
-ci-restore || die "Failed to restore jenkins"
+    # run ansible
+    git clone https://github.com/limed/ansible-jenkins.git /tmp/ansible-jenkins || die "Failed to git clone"
+    cd /tmp/ansible-jenkins && \
+        ansible-playbook site.yml -e "jenkins_backup_directory=$${BACKUP_DIR} jenkins_backup_bucket=$${BACKUP_BUCKET} jenkins_backup_dms=${jenkins_backup_dms} nginx_htpasswd=${nginx_htpasswd}" \
+        || die "Failed to run ansible"
 
-touch /.initial-run
+    echo "Restoring backup sets to $${BACKUP_DIR}"
+    restore-backup-set || die "Failed to restore backup set to $${BACKUP_DIR}"
+
+    echo "Restoring jenkins"
+    ci-restore || die "Failed to restore jenkins"
+}
+
+main

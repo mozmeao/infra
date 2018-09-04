@@ -200,7 +200,7 @@ data template_file "user_data" {
   vars = {
     backup_dir         = "${var.backup_dir}"
     backup_bucket      = "${aws_s3_bucket.ci-backup-bucket.id}"
-    nginx_password     = "${var.nginx_password}"
+    nginx_htpasswd     = "${var.nginx_htpasswd}"
     jenkins_backup_dms = "${var.jenkins_backup_dms}"
   }
 }

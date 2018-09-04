@@ -26,6 +26,6 @@ variable "backup_dir" {
   default = "/data/backups"
 }
 
-variable "nginx_password" {}
+variable "nginx_htpasswd" {}
 
 variable "jenkins_backup_dms" {}
