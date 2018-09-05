@@ -60,7 +60,7 @@ main() {
     apt-get install --yes git ansible
 
     # run ansible
-    git clone https://github.com/limed/ansible-jenkins.git /tmp/ansible-jenkins || die "Failed to git clone"
+    git clone https://github.com/mdn/ansible-jenkins.git /tmp/ansible-jenkins || die "Failed to git clone"
     cd /tmp/ansible-jenkins && \
         ansible-playbook site.yml -e "jenkins_backup_directory=$${BACKUP_DIR} jenkins_backup_bucket=$${BACKUP_BUCKET} jenkins_backup_dms=${jenkins_backup_dms} nginx_htpasswd=${nginx_htpasswd}" \
         || die "Failed to run ansible"
