@@ -58,6 +58,7 @@ module "mdn_cdn_prod" {
   cloudfront_attachments_domain_name       = "${lookup(var.cloudfront_attachments, "domain.prod")}"
 }
 
+# TODO: Split this up into multiple files other stuff can get messy quick
 # Multi region resources
 
 module "efs-us-west-2" {
