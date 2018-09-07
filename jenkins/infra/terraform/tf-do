@@ -1,0 +1,83 @@
+#!/bin/bash
+
+if [ ! -f ./config.sh ]; then
+	echo "Config file not found"
+	exit 1
+fi
+
+source ./config.sh
+
+if [ -z ${TF_SECRETS_PATH} ]; then
+	echo "Secrets path is not set"
+	exit 1
+fi
+
+show_help() {
+    echo -en "\nUsage: tf-do [options] [command]\n\n"
+    echo -en "Options:\n"
+    echo -en "	--help		    Print usage\n"
+    echo -en " 	--debug		    set -x this script\n"
+    echo -en "  --environment   Sets environment. Defaults to stage\n"
+    echo -en "Commands:\n"
+    echo -en "	init		Terraform init\n"
+    echo -en "	plan		Terraform plan\n"
+    echo -en "	apply		Terraform apply\n"
+}
+
+terraform_do() {
+	declare -a _ACTION; _ACTION=( "${@}" )
+
+	if ! terraform "${_ACTION[@]}" ; then
+		echo -e "\033[1;31mERROR: Failed running 'terraform ${_ACTION[*]}'\033[0m"
+		exit 1
+	fi
+}
+
+init() {
+    terraform init -input=false -upgrade=true
+}
+
+plan() {
+    local environment=$1
+    terraform plan -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars -var "environment=${environment}"
+}
+
+apply() {
+    local environment=$1
+    terraform apply -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars -var "environment=${environment}"
+}
+
+while [ "$1" != "" ]; do
+	case "$1" in
+		-x | --debug | --setx )
+			set -x
+		;;
+		-h | --help | help )
+			show_help
+			exit 0
+		;;
+        -e | --environment )
+            export MY_ENVIRONMENT=${2:-stage}
+            shift
+        ;;
+		init )
+			init
+			GOT_COMMAND=1
+		;;
+		plan )
+			plan "${MY_ENVIRONMENT:-stage}"
+			GOT_COMMAND=1
+		;;
+		apply )
+            apply "${MY_ENVIRONMENT:-stage}"
+			GOT_COMMAND=1
+		;;
+	esac
+	shift
+done
+
+# If we did not get a valid command print the help message
+if [ "${GOT_COMMAND:-0}" == 0 ]; then
+    show_help
+    exit 1
+fi

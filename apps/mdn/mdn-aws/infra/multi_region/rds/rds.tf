@@ -140,6 +140,9 @@ resource "aws_db_instance" "mdn_rds" {
   storage_type                = "${var.mysql_storage_type}"
   username                    = "${var.mysql_username}"
   vpc_security_group_ids      = ["${aws_security_group.mdn_rds_sg.id}"]
+  skip_final_snapshot         = true
+  apply_immediately           = true
+
 
   tags {
     Name        = "MDN-rds-${var.environment}"

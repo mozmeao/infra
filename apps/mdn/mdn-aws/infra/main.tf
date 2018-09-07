@@ -20,21 +20,42 @@ module "mdn_cdn" {
   source      = "./mdn-cdn"
   enabled     = "${lookup(var.features, "cdn")}"
   region      = "${var.region}"
-  environment = "${var.environment}"
+  environment = "stage"
 
   # Primary CDN
   cloudfront_primary_enabled           = "${lookup(var.cloudfront_primary, "enabled")}"
   acm_primary_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
   cloudfront_primary_distribution_name = "${lookup(var.cloudfront_primary, "distribution_name")}"
-  cloudfront_primary_aliases           = "${split(",", lookup(var.cloudfront_primary, "aliases.${var.environment}"))}"
-  cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.${var.environment}")}"
+  cloudfront_primary_aliases           = "${split(",", lookup(var.cloudfront_primary, "aliases.stage"))}"
+  cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.stage")}"
 
   # attachment CDN
   cloudfront_attachments_enabled           = "${(lookup(var.cloudfront_attachments, "enabled")) * (var.environment == "stage" ? 0 : 1)}"
   acm_attachments_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
   cloudfront_attachments_distribution_name = "${lookup(var.cloudfront_attachments, "distribution_name")}"
-  cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.${var.environment}"))}"
-  cloudfront_attachments_domain_name       = "${lookup(var.cloudfront_attachments, "domain.${var.environment}")}"
+  cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.stage"))}"
+  cloudfront_attachments_domain_name       = "${lookup(var.cloudfront_attachments, "domain.stage")}"
+}
+
+module "mdn_cdn_prod" {
+  source      = "./mdn-cdn"
+  enabled     = "${lookup(var.features, "cdn")}"
+  region      = "${var.region}"
+  environment = "prod"
+
+  # Primary CDN
+  cloudfront_primary_enabled           = "${lookup(var.cloudfront_primary, "enabled")}"
+  acm_primary_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
+  cloudfront_primary_distribution_name = "${lookup(var.cloudfront_primary, "distribution_name")}"
+  cloudfront_primary_aliases           = "${split(",", lookup(var.cloudfront_primary, "aliases.prod"))}"
+  cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.prod")}"
+
+  # attachment CDN
+  cloudfront_attachments_enabled           = "${(lookup(var.cloudfront_attachments, "enabled")) * (var.environment == "stage" ? 0 : 1)}"
+  acm_attachments_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
+  cloudfront_attachments_distribution_name = "${lookup(var.cloudfront_attachments, "distribution_name")}"
+  cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.prod"))}"
+  cloudfront_attachments_domain_name       = "${lookup(var.cloudfront_attachments, "domain.prod")}"
 }
 
 # Multi region resources
@@ -49,14 +70,36 @@ module "efs-us-west-2" {
   nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
 }
 
+module "efs-us-west-2-prod" {
+  source               = "./multi_region/efs"
+  enabled              = "${lookup(var.features, "efs")}"
+  environment          = "prod"
+  region               = "us-west-2"
+  efs_name             = "prod"
+  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
+  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+}
+
 module "redis-us-west-2" {
   source               = "./multi_region/redis"
   enabled              = "${lookup(var.features, "redis")}"
-  environment          = "${var.environment}"
+  environment          = "stage"
   region               = "us-west-2"
-  redis_name           = "${var.environment}"
-  redis_node_size      = "${lookup(var.redis, "node_size.${var.environment}")}"
-  redis_num_nodes      = "${lookup(var.redis, "num_nodes.${var.environment}")}"
+  redis_name           = "stage"
+  redis_node_size      = "${lookup(var.redis, "node_size.stage")}"
+  redis_num_nodes      = "${lookup(var.redis, "num_nodes.stage")}"
+  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
+  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+}
+
+module "redis-us-west-2-prod" {
+  source               = "./multi_region/redis"
+  enabled              = "${lookup(var.features, "redis")}"
+  environment          = "prod"
+  region               = "us-west-2"
+  redis_name           = "prod"
+  redis_node_size      = "${lookup(var.redis, "node_size.prod")}"
+  redis_num_nodes      = "${lookup(var.redis, "num_nodes.prod")}"
   subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
   nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
 }
@@ -64,11 +107,23 @@ module "redis-us-west-2" {
 module "memcached-us-west-2" {
   source               = "./multi_region/memcached"
   enabled              = "${lookup(var.features, "memcached")}"
-  environment          = "${var.environment}"
+  environment          = "stage"
   region               = "us-west-2"
-  memcached_name       = "${var.environment}"
-  memcached_node_size  = "${lookup(var.memcached, "node_size.${var.environment}")}"
-  memcached_num_nodes  = "${lookup(var.memcached, "num_nodes.${var.environment}")}"
+  memcached_name       = "stage"
+  memcached_node_size  = "${lookup(var.memcached, "node_size.stage")}"
+  memcached_num_nodes  = "${lookup(var.memcached, "num_nodes.stage")}"
+  subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
+  nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+}
+
+module "memcached-us-west-2-prod" {
+  source               = "./multi_region/memcached"
+  enabled              = "${lookup(var.features, "memcached")}"
+  environment          = "prod"
+  region               = "us-west-2"
+  memcached_name       = "prod"
+  memcached_node_size  = "${lookup(var.memcached, "node_size.prod")}"
+  memcached_num_nodes  = "${lookup(var.memcached, "num_nodes.prod")}"
   subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
   nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
 }
@@ -76,17 +131,37 @@ module "memcached-us-west-2" {
 module "mysql-us-west-2" {
   source                      = "./multi_region/rds"
   enabled                     = "${lookup(var.features, "rds")}"
-  environment                 = "${var.environment}"
+  environment                 = "stage"
   region                      = "us-west-2"
   mysql_env                   = "${var.environment}"
-  mysql_db_name               = "${lookup(var.rds, "db_name.${var.environment}")}"
-  mysql_username              = "${lookup(var.rds, "username.${var.environment}")}"
-  mysql_password              = "${lookup(var.rds, "password.${var.environment}")}"
-  mysql_identifier            = "mdn-${var.environment}"
-  mysql_instance_class        = "${lookup(var.rds, "instance_class.${var.environment}")}"
-  mysql_backup_retention_days = "${lookup(var.rds, "backup_retention_days.${var.environment}")}"
-  mysql_security_group_name   = "mdn_rds_sg_${var.environment}"
-  mysql_storage_gb            = "${lookup(var.rds, "storage_gb.${var.environment}")}"
+  mysql_db_name               = "${lookup(var.rds, "db_name.stage")}"
+  mysql_username              = "${lookup(var.rds, "username.stage")}"
+  mysql_password              = "${lookup(var.rds, "password.stage")}"
+  mysql_identifier            = "mdn-stage"
+  mysql_instance_class        = "${lookup(var.rds, "instance_class.stage")}"
+  mysql_backup_retention_days = "${lookup(var.rds, "backup_retention_days.stage")}"
+  mysql_security_group_name   = "mdn_rds_sg_stage"
+  mysql_storage_gb            = "${lookup(var.rds, "storage_gb.stage")}"
+  mysql_storage_type          = "${lookup(var.rds, "storage_type")}"
+  vpc_id                      = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
+  vpc_cidr                    = "${data.aws_vpc.cidr.cidr_block}"
+  subnets                     = "${join(",", data.aws_subnet_ids.subnet_id.ids)}"
+}
+
+module "mysql-us-west-2-prod" {
+  source                      = "./multi_region/rds"
+  enabled                     = "${lookup(var.features, "rds")}"
+  environment                 = "prod"
+  region                      = "us-west-2"
+  mysql_env                   = "${var.environment}"
+  mysql_db_name               = "${lookup(var.rds, "db_name.prod")}"
+  mysql_username              = "${lookup(var.rds, "username.prod")}"
+  mysql_password              = "${lookup(var.rds, "password.prod")}"
+  mysql_identifier            = "mdn-prod"
+  mysql_instance_class        = "${lookup(var.rds, "instance_class.prod")}"
+  mysql_backup_retention_days = "${lookup(var.rds, "backup_retention_days.prod")}"
+  mysql_security_group_name   = "mdn_rds_sg_prod"
+  mysql_storage_gb            = "${lookup(var.rds, "storage_gb.prod")}"
   mysql_storage_type          = "${lookup(var.rds, "storage_type")}"
   vpc_id                      = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
   vpc_cidr                    = "${data.aws_vpc.cidr.cidr_block}"

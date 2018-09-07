@@ -38,7 +38,7 @@ variable cloudfront_attachments {
     aliases.prod      = "mdn.mozillademos.org,demos.mdn.mozit.cloud"
     acm_arn.stage     = ""
     acm_arn.prod      = "arn:aws:acm:us-west-2:178589013767:certificate/2f399635-126c-4e83-bf43-5ddbd0525719"
-    domain.stage      = ""
+    domain.stage      = "stage.mdn.mozit.cloud"
     domain.prod       = "prod.mdn.mozit.cloud"
   }
 }
