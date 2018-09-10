@@ -35,7 +35,9 @@ variable cloudfront_attachments {
     enabled           = "1"
     distribution_name = "mdn-attachment-cdn"
     aliases.stage     = ""
-    aliases.prod      = "mdn.mozillademos.org,demos.mdn.mozit.cloud"
+    #FIXME: mdn.mozillademos.org is taken
+    #aliases.prod      = "mdn.mozillademos.org,demos.mdn.mozit.cloud"
+    aliases.prod      = "demos.mdn.mozit.cloud"
     acm_arn.stage     = ""
     acm_arn.prod      = "arn:aws:acm:us-west-2:178589013767:certificate/2f399635-126c-4e83-bf43-5ddbd0525719"
     domain.stage      = "stage.mdn.mozit.cloud"

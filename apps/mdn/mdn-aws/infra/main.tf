@@ -51,7 +51,7 @@ module "mdn_cdn_prod" {
   cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.prod")}"
 
   # attachment CDN
-  cloudfront_attachments_enabled           = "${(lookup(var.cloudfront_attachments, "enabled")) * (var.environment == "stage" ? 0 : 1)}"
+  cloudfront_attachments_enabled           = "${lookup(var.cloudfront_attachments, "enabled")}"
   acm_attachments_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
   cloudfront_attachments_distribution_name = "${lookup(var.cloudfront_attachments, "distribution_name")}"
   cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.prod"))}"
