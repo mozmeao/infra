@@ -2,7 +2,7 @@
 
 The RDS backup tool allows us to export a MySQL/MariaDB/Postgres database from a pod running in Kubernetes. The running pod must already have connectivity to the VPC where the database is running. Backups are encrypted and pushed to a directory in an S3 bucket. Our current implemention uses an S3 bucket with lifecycle rules, which expires older backups to AWS Glacier after a certain number of days.
 
-> Note: You must rely on an external scheduler/cron, as this tool is designed to be used in K8s clusters without cronjobs enabled. 
+> Note: You must rely on an external scheduler/cron, as this tool is designed to be used in K8s clusters without cronjobs enabled.
 
 ## <a name="per-region-setup"></a>Per-region setup
 
@@ -59,9 +59,9 @@ data:
 #### Secret values
 
 - `DBHOST ` - raw URL to access the DB, should NOT have a prefix (eq `pgsql://`) or a `:portnumber` suffix.
-- `DBNAME` - the name of the database to export. 
+- `DBNAME` - the name of the database to export.
 - `DBPASSWORD` - definitely the password.
-- `DBPORT` - The port number, this is usually `5432` for Postgres or `3306` for Mysql. 
+- `DBPORT` - The port number, this is usually `5432` for Postgres or `3306` for Mysql.
 - `DBUSER` - The db user used to connect and perform the backup.
 - `DEADMANSSNITCH_URL` - If Deadmanssnitch is being used, populate this value with the URL. Leave empty to skip this type of notification.
 
@@ -90,13 +90,13 @@ backup-frankfurt:
 
 - `DBTYPE` - either `MYSQL` or `PGSQL`, must be in all caps or the universe will implode.
 - `DB_SECRETS_NAME` - the name of the K8s secrets resource to use. This is NOT the filename, but the value obtained from the secrets you created directly above. For example, the `DB_SECRETS_NAME` value would be `rds-backup-bedrock` if the template above was populated with:
-        
+
         apiVersion: v1
         kind: Secret
         metadata:
           name: rds-backup-bedrock
         ...
-        
+
 - `BACKUP_POD_NAME` - the name to give the running pod. Today's date is appended as a suffix.
 
 ### 3. Run the backup
@@ -126,21 +126,36 @@ To see a list of pods that includes pods in `Completed` status, run:
 kubectl -n rds-backups get pods -a
 ```
 
-> The main backup script in the container is called `/usr/bin/rdsbackup.sh`. 
+> The main backup script in the container is called `/usr/bin/rdsbackup.sh`.
 
 > Inspect the environment with the `env` command to see currently set values.
 
 ## Decrypting a database archive
 
-You can download the backup from either the AWS web console, or the AWS cli. 
+You can download the backup from either the AWS web console, or the AWS cli.
 
 ```
 aws s3 cp s3://meao-rds-backups/backups/developer_mozilla_org/developer_mozilla_org.2017-11-17.sql.gz.aes ./some_local_dir
+```
 
-# stream directly to dbms
-openssl aes-256-cbc -in developer_mozilla_org.2017-11-17.sql.gz.aes -d -pass pass:foobar123 | zcat | mysql ...
-# decrypt to a file
-openssl aes-256-cbc -in developer_mozilla_org.2017-11-17.sql.gz.aes -d -pass pass:foobar123 -out developer_mozilla_org.2017-11-17.sql.gz
+Check the version of `openssl` that you're using (`openssl version`).
+
+If you're using `openssl` version 1.1 or later:
+
+```
+# stream directly to dbms (with openssl version >= 1.1)
+openssl aes-256-cbc -d -md md5 -in developer_mozilla_org.2017-11-17.sql.gz.aes -pass pass:foobar123 | zcat | mysql ...
+# decrypt to a file (with openssl version >= 1.1)
+openssl aes-256-cbc -d -md md5 -in developer_mozilla_org.2017-11-17.sql.gz.aes -pass pass:foobar123 -out developer_mozilla_org.2017-11-17.sql.gz
+```
+
+If you're using an `openssl` version prior to 1.1:
+
+```
+# stream directly to dbms (with openssl version < 1.1)
+openssl aes-256-cbc -d -in developer_mozilla_org.2017-11-17.sql.gz.aes -pass pass:foobar123 | zcat | mysql ...
+# decrypt to a file (with openssl version < 1.1)
+openssl aes-256-cbc -d -in developer_mozilla_org.2017-11-17.sql.gz.aes -pass pass:foobar123 -out developer_mozilla_org.2017-11-17.sql.gz
 ```
 
 > The password is stored in `credentials.yml` under the key `backup_gpg_password`.
@@ -158,7 +173,7 @@ You can use whatever S3 bucket you'd like, but these are the configuration param
     - Objects older than 60 days are expired from S3.
 - Create a root level directory named `backups/` in the bucket. This is to separate `logs` from lifecycle rules.
 
-### IAM 
+### IAM
 
 Create a user with API access the following IAM policy:
 
