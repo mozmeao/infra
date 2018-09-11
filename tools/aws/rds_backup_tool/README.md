@@ -143,6 +143,8 @@ openssl aes-256-cbc -in developer_mozilla_org.2017-11-17.sql.gz.aes -d -pass pas
 openssl aes-256-cbc -in developer_mozilla_org.2017-11-17.sql.gz.aes -d -pass pass:foobar123 -out developer_mozilla_org.2017-11-17.sql.gz
 ```
 
+> The password is stored in `credentials.yml` under the key `backup_gpg_password`.
+
 ## Initial setup
 
 ### S3
