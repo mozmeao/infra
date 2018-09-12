@@ -17,7 +17,7 @@ provider "aws" {
 
 data "aws_acm_certificate" "interactive-example" {
   provider = "aws.aws-acm"
-  domain   = "interactive-examples.mdn.mozit.cloud"
+  domain   = "interactive-examples.mdn.mozilla.net"
   statuses = ["ISSUED"]
 }
 
