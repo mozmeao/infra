@@ -88,7 +88,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   enabled             = true
   is_ipv6_enabled     = true
-  comment             = "No comment"
+  comment             = "MDN Interactive-Examples CDN"
   default_root_object = "index.html"
 
   logging_config {
