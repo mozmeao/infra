@@ -117,6 +117,7 @@ export KUMA_ENABLE_CANDIDATE_LANGUAGES=False
 export KUMA_ES_INDEX_PREFIX=mdnprod
 export KUMA_ES_LIVE_INDEX=True
 export KUMA_FOUNDATION_CALLOUT=False
+export KUMA_INTERACTIVE_EXAMPLES_BASE=https://interactive-examples.mdn.mozit.cloud
 export KUMA_LEGACY_HOSTS="cdn.mdn.mozilla.net,developer.mozilla.com,mdn.mozilla.org,developer-new.mozilla.org,developers.mozilla.org"
 export KUMA_LEGACY_ROOT=/mdn/www
 export KUMA_MAINTENANCE_MODE=True
