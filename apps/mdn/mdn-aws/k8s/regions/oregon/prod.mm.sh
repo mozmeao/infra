@@ -29,7 +29,7 @@ export WEB_SERVICE_TYPE=LoadBalancer
 export WEB_SERVICE_PORT=443
 export WEB_SERVICE_TARGET_PORT=8000
 export WEB_SERVICE_PROTOCOL=TCP
-export WEB_SERVICE_CERT_ARN=arn:aws:acm:us-west-2:178589013767:certificate/a750fd1f-44b8-4914-ab4a-bd5400ebf043
+export WEB_SERVICE_CERT_ARN=arn:aws:acm:us-west-2:178589013767:certificate/41ba97c5-04c5-401c-ae6c-776c78fcd4b0
 
 export API_SERVICE_NAME=api
 export API_SERVICE_TYPE=ClusterIP
@@ -51,7 +51,7 @@ export WEB_CPU_LIMIT=4
 export WEB_CPU_REQUEST=500m
 export WEB_MEMORY_LIMIT=8Gi
 export WEB_MEMORY_REQUEST=2Gi
-export WEB_ALLOWED_HOSTS="developer-prod.mdn.mozit.cloud,prod.mdn.mozit.cloud,demos.mdn.mozit.cloud"
+export WEB_ALLOWED_HOSTS="developer.mozilla.org,cdn.mdn.mozilla.net,mdn.mozillademos.org,demos.mdn.mozit.cloud,developer-prod.mdn.mozit.cloud,prod.mdn.mozit.cloud,developer.mozilla.com,mdn.mozilla.org,developer-new.mozilla.org,developers.mozilla.org"
 
 export API_NAME=api
 export API_REPLICAS=2
@@ -127,3 +127,6 @@ export KUMA_SERVE_LEGACY=True
 export KUMA_SESSION_COOKIE_SECURE=True
 export KUMA_STATIC_URL=https://prod.mdn.mozit.cloud/static/
 export KUMA_WEB_CONCURRENCY=4
+
+export SYNC_BUCKET=s3://mdn-shared-backup-c2037ed87dd96008
+export BACKUP_BUCKET=s3://mdn-shared-backup-c2037ed87dd96008
