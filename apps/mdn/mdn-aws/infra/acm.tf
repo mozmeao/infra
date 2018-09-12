@@ -35,3 +35,15 @@ module "acm_ci" {
   domain_name = "ci.us-west-2.mdn.mozit.cloud"
   zone_id     = "${data.terraform_remote_state.dns.us-west-2-zone-id}"
 }
+
+data aws_acm_certificate "prod-primary-cdn-cert" {
+  provider = "aws.acm"
+  domain   = "developer.mozilla.org"
+  statuses = ["ISSUED"]
+}
+
+data aws_acm_certificate "attachment-cdn-cert" {
+  provider = "aws.acm"
+  domain   = "mdn.mozillademos.org"
+  statuses = ["ISSUED"]
+}

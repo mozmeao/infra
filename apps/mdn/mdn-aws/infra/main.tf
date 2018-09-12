@@ -45,14 +45,14 @@ module "mdn_cdn_prod" {
 
   # Primary CDN
   cloudfront_primary_enabled           = "${lookup(var.cloudfront_primary, "enabled")}"
-  acm_primary_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
+  acm_primary_cert_arn                 = "${data.aws_acm_certificate.prod-primary-cdn-cert.arn}"
   cloudfront_primary_distribution_name = "${lookup(var.cloudfront_primary, "distribution_name")}"
   cloudfront_primary_aliases           = "${split(",", lookup(var.cloudfront_primary, "aliases.prod"))}"
   cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.prod")}"
 
   # attachment CDN
   cloudfront_attachments_enabled           = "${lookup(var.cloudfront_attachments, "enabled")}"
-  acm_attachments_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
+  acm_attachments_cert_arn                 = "${data.aws_acm_certificate.attachment-cdn-cert.arn}"
   cloudfront_attachments_distribution_name = "${lookup(var.cloudfront_attachments, "distribution_name")}"
   cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.prod"))}"
   cloudfront_attachments_domain_name       = "${lookup(var.cloudfront_attachments, "domain.prod")}"
