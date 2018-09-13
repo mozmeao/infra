@@ -80,8 +80,8 @@ resource "aws_autoscaling_group" "master-us-west-2a-masters-k8s-us-west-2a-mdn-m
 resource "aws_autoscaling_group" "nodes-k8s-us-west-2a-mdn-mozit-cloud" {
   name                 = "nodes.k8s.us-west-2a.mdn.mozit.cloud"
   launch_configuration = "${aws_launch_configuration.nodes-k8s-us-west-2a-mdn-mozit-cloud.id}"
-  max_size             = 12
-  min_size             = 3
+  max_size             = 15
+  min_size             = 10
   vpc_zone_identifier  = ["${aws_subnet.us-west-2a-k8s-us-west-2a-mdn-mozit-cloud.id}"]
 
   tag = {
