@@ -104,6 +104,8 @@ export KUMA_DEBUG ?= False
 export KUMA_DEBUG_TOOLBAR ?= False
 export KUMA_DOMAIN ?= mdn-dev.moz.works
 export KUMA_EMAIL_BACKEND ?= django.core.mail.backends.smtp.EmailBackend
+export KUMA_ENABLE_CONTRIBUTIONS ?= False
+export KUMA_ENABLE_CONTRIBUTIONS_CONFIRMATION_EMAIL ?= False
 export KUMA_ES_INDEX_PREFIX ?= mdn
 export KUMA_ES_LIVE_INDEX ?= False
 export KUMA_LEGACY_ROOT ?= /mdn/www
@@ -115,6 +117,7 @@ export KUMA_SECURE_HSTS_SECONDS ?= 0
 export KUMA_SERVE_LEGACY ?= True
 export KUMA_SESSION_COOKIE_SECURE ?= True
 export KUMA_STATIC_URL ?= /static/
+export KUMA_STRIPE_PUBLIC_KEY ?= ""
 export KUMA_WEB_CONCURRENCY ?= 4
 
 export INTERACTIVE_EXAMPLES_BASE_URL ?= https://interactive-examples.mdn.mozilla.net

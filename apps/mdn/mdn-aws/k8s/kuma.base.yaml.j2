@@ -97,6 +97,10 @@
               value: "{{ KUMA_LEGACY_ROOT }}"
             - name: MAINTENANCE_MODE
               value: "{{ KUMA_MAINTENANCE_MODE }}"
+            - name: MDN_CONTRIBUTION
+              value: "{{ KUMA_ENABLE_CONTRIBUTIONS }}"
+            - name: MDN_CONTRIBUTION_CONFIRMATION_EMAIL
+              value: "{{ KUMA_ENABLE_CONTRIBUTIONS_CONFIRMATION_EMAIL }}"
             - name: MEDIA_ROOT
               value: {{ KUMA_MEDIA_ROOT }}
             - name: MEDIA_URL
@@ -157,6 +161,13 @@
               value: {{ KUMA_PROTOCOL }}{{ KUMA_DOMAIN }}
             - name: STATIC_URL
               value: {{ KUMA_STATIC_URL }}
+            - name: STRIPE_PUBLIC_KEY
+              value: {{ KUMA_STRIPE_PUBLIC_KEY }}
+            - name: STRIPE_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: mdn-secrets
+                  key: stripe-secret-key
             # Other environment overrides
             - name: PYTHONUNBUFFERED
               value: "True"
