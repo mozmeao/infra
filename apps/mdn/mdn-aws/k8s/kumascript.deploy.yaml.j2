@@ -20,6 +20,8 @@ spec:
           ports:
             - containerPort: {{ KUMASCRIPT_CONTAINER_PORT }}
           env:
+            - name: interactive_examples__base_url
+              value: {{ INTERACTIVE_EXAMPLES_BASE_URL }}
             - name: live_samples__base_url
               value: {{ KUMASCRIPT_LIVE_SAMPLES_BASE_URL }}
             - name: log__console
