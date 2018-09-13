@@ -106,6 +106,7 @@ export KUMA_DOMAIN ?= mdn-dev.moz.works
 export KUMA_EMAIL_BACKEND ?= django.core.mail.backends.smtp.EmailBackend
 export KUMA_ES_INDEX_PREFIX ?= mdn
 export KUMA_ES_LIVE_INDEX ?= False
+export KUMA_INTERACTIVE_EXAMPLES_BASE ?= https://interactive-examples.mdn.mozilla.net
 export KUMA_LEGACY_ROOT ?= /mdn/www
 export KUMA_MAINTENANCE_MODE ?= False
 export KUMA_MEDIA_ROOT ?= /mdn/www
