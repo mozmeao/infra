@@ -106,7 +106,6 @@ export KUMA_DOMAIN ?= mdn-dev.moz.works
 export KUMA_EMAIL_BACKEND ?= django.core.mail.backends.smtp.EmailBackend
 export KUMA_ES_INDEX_PREFIX ?= mdn
 export KUMA_ES_LIVE_INDEX ?= False
-export KUMA_INTERACTIVE_EXAMPLES_BASE ?= https://interactive-examples.mdn.mozilla.net
 export KUMA_LEGACY_ROOT ?= /mdn/www
 export KUMA_MAINTENANCE_MODE ?= False
 export KUMA_MEDIA_ROOT ?= /mdn/www
@@ -117,6 +116,8 @@ export KUMA_SERVE_LEGACY ?= True
 export KUMA_SESSION_COOKIE_SECURE ?= True
 export KUMA_STATIC_URL ?= /static/
 export KUMA_WEB_CONCURRENCY ?= 4
+
+export INTERACTIVE_EXAMPLES_BASE_URL ?= https://interactive-examples.mdn.mozilla.net
 
 # Derived environment variables for both Kuma and Kumascript. These are always set.
 export KUMA_URL_TEMPLATE_FOR_KUMASCRIPT=http://${KUMASCRIPT_SERVICE_NAME}:${KUMASCRIPT_SERVICE_PORT}/docs/{path}

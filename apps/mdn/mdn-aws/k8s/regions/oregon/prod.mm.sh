@@ -116,7 +116,6 @@ export KUMA_ENABLE_CANDIDATE_LANGUAGES=False
 export KUMA_ES_INDEX_PREFIX=mdnprod
 export KUMA_ES_LIVE_INDEX=True
 export KUMA_FOUNDATION_CALLOUT=False
-export KUMA_INTERACTIVE_EXAMPLES_BASE=https://interactive-examples.mdn.mozit.cloud
 export KUMA_LEGACY_HOSTS="cdn.mdn.mozilla.net,developer.mozilla.com,mdn.mozilla.org,developer-new.mozilla.org,developers.mozilla.org"
 export KUMA_LEGACY_ROOT=/mdn/www
 export KUMA_MAINTENANCE_MODE=True
@@ -128,6 +127,8 @@ export KUMA_SERVE_LEGACY=True
 export KUMA_SESSION_COOKIE_SECURE=True
 export KUMA_STATIC_URL=https://developer-prod.mdn.mozit.cloud/static/
 export KUMA_WEB_CONCURRENCY=4
+
+export INTERACTIVE_EXAMPLES_BASE_URL=https://interactive-examples.mdn.mozit.cloud
 
 export SYNC_BUCKET=s3://mdn-shared-backup-c2037ed87dd96008
 export BACKUP_BUCKET=s3://mdn-shared-backup-c2037ed87dd96008
