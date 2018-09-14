@@ -125,9 +125,9 @@ install_cluster_autoscaler() {
 install_datadog() {
     echo "Installing datadog"
     kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog-namespace.yaml"
-    kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog_statsd_svc.yaml"
-    kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog-agent.yaml"
     kubectl apply -f "${SECRETS_PATH}/scm/mdn-k8s-private/k8s/secrets/datadog-cluster.yaml"
+    kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog-agent.yaml"
+    kubectl apply -f "${KOPS_INSTALLER}/services/datadog/datadog_statsd_svc.yaml"
 }
 
 install_services() {
