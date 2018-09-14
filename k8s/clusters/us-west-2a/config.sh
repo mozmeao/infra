@@ -10,7 +10,7 @@ export KOPS_CLUSTER_NAME="${KOPS_CLUSTER}"
 export KOPS_MASTER_ZONE="us-west-2a"
 export KOPS_MASTER_COUNT=1
 export KOPS_ZONE="us-west-2a"
-export KOPS_NODE_COUNT="3"
+export KOPS_NODE_COUNT="10"
 
 # This is the path of of your services manifests
 export KOPS_INSTALLER="../../install"
