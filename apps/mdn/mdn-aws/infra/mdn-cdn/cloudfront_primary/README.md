@@ -28,7 +28,7 @@ files. The responses to these requests are cached for long periods of time
 separate CDN for the static/media assets.
 
 ## Pass-Through Behaviors
-Each of these behaviors, `#2` through `#13` as well as `#18` through `#22`, share the
+Each of these behaviors, `#2` through `#13` as well as `#18` through `#24`, share the
 same configuration except for the path pattern, and are designed to simply
 forward the complete incoming request to the origin (all headers, cookies,
 and query parameters), and perform **no** caching of the response. Most,
