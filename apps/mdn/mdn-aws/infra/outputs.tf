@@ -11,7 +11,7 @@ output "primary_cdn_domain" {
 }
 
 output "attachment_cdn_domain" {
-  value = "${module.mdn_cdn.cdn-attachments-dns}"
+  value = "${module.mdn_cdn_prod.cdn-attachments-dns}"
 }
 
 output "downloads_bucket_name" {

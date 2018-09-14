@@ -42,6 +42,12 @@ data aws_acm_certificate "prod-primary-cdn-cert" {
   statuses = ["ISSUED"]
 }
 
+data aws_acm_certificate "stage-primary-cdn-cert" {
+  provider = "aws.acm"
+  domain   = "developer.allizom.org"
+  statuses = ["ISSUED"]
+
+}
 data aws_acm_certificate "attachment-cdn-cert" {
   provider = "aws.acm"
   domain   = "mdn.mozillademos.org"
