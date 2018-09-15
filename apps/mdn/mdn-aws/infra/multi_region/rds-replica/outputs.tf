@@ -1,4 +1,4 @@
 
 output replica_rds_id {
-  value = "${aws_db_instance.replica.id}"
+  value = "${element(concat(aws_db_instance.replica.*.id, list("")), 0)}"
 }
