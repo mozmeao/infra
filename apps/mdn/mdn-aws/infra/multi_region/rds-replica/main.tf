@@ -22,11 +22,12 @@ resource aws_db_subnet_group "replica" {
 resource aws_db_instance "replica" {
   count = "${var.enabled}"
 
-  identifier          = "${local.name_prefix}"
-  replicate_source_db = "${var.replica_source_db}"
-  instance_class      = "${var.instance_class}"
-  storage_type        = "${var.storage_type}"
-  kms_key_id          = "${var.kms_key_id}"
+  identifier           = "${local.name_prefix}"
+  replicate_source_db  = "${var.replica_source_db}"
+  instance_class       = "${var.instance_class}"
+  storage_type         = "${var.storage_type}"
+  kms_key_id           = "${var.kms_key_id}"
+  db_subnet_group_name = "${aws_db_subnet_group.replica.replica.name}"
 
   vpc_security_group_ids = ["${aws_security_group.replica-sg.id}"]
   multi_az               = "${var.multi_az}"
