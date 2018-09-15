@@ -27,7 +27,7 @@ resource aws_db_instance "replica" {
   instance_class       = "${var.instance_class}"
   storage_type         = "${var.storage_type}"
   kms_key_id           = "${var.kms_key_id}"
-  db_subnet_group_name = "${aws_db_subnet_group.replica.replica.name}"
+  db_subnet_group_name = "${aws_db_subnet_group.replica.name}"
 
   vpc_security_group_ids = ["${aws_security_group.replica-sg.id}"]
   multi_az               = "${var.multi_az}"
