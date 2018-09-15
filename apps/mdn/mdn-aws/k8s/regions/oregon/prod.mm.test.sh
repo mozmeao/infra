@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-echo '--> Setting environment to PROD(MM)(MIN) in OREGON'
+echo '--> Setting environment to PROD(MM)(TEST) in OREGON'
 
 export KUBECONFIG=${HOME}/.kube/oregon.config
 
