@@ -1,6 +1,5 @@
 #!/bin/bash -e
 
-export AWS_REGION=ap-northeast-1
 TF_VERSION=0.11.8
 
 tfenv use $TF_VERSION
