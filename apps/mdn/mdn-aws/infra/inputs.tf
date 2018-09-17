@@ -86,3 +86,5 @@ variable "kms" {
     key_id.us-west-2  = ""
   }
 }
+
+variable "datadog_external_id" {}
