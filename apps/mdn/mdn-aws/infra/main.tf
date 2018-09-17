@@ -10,6 +10,11 @@ terraform {
   }
 }
 
+module "datadog" {
+  source      = "./modules/datadog"
+  external_id = "${var.datadog_external_id}"
+}
+
 module "mdn_shared" {
   source  = "./modules/shared"
   enabled = "${lookup(var.features, "shared-infra")}"
@@ -177,6 +182,6 @@ module "mysql-eu-central-1-replica-prod" {
   subnets           = "${join(",", data.aws_subnet_ids.eu-central-subnet_ids.ids)}"
   replica_source_db = "${module.mysql-us-west-2-prod.rds_arn}"
   vpc_id            = "${data.terraform_remote_state.kubernetes-eu-central-1.vpc_id}"
-  kms_key_id        = "${lookup(var.rds, "key_id.eu-central-1")}" # Less than ideal this key is copied from the console
+  kms_key_id        = "${lookup(var.rds, "key_id.eu-central-1")}"                     # Less than ideal this key is copied from the console
   instance_class    = "${lookup(var.rds, "instance_class.prod")}"
 }
