@@ -80,3 +80,9 @@ variable rds {
     storage_type                = "gp2"
   }
 }
+
+variable "kms" {
+  default = {
+    key_id.us-west-2  = ""
+  }
+}

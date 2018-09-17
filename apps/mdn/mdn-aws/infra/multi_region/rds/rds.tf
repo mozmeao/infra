@@ -181,6 +181,10 @@ resource "aws_security_group" "mdn_rds_sg" {
   }
 }
 
+output "rds_arn" {
+  value = "${element(concat(aws_db_instance.mdn_rds.*.arn, list("")), 0)}"
+}
+
 output "rds_address" {
   value = "${element(concat(aws_db_instance.mdn_rds.*.address, list("")), 0)}"
 }

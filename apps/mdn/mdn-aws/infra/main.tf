@@ -24,7 +24,7 @@ module "mdn_cdn" {
 
   # Primary CDN
   cloudfront_primary_enabled           = "${lookup(var.cloudfront_primary, "enabled")}"
-  acm_primary_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
+  acm_primary_cert_arn                 = "${data.aws_acm_certificate.stage-primary-cdn-cert.arn}"
   cloudfront_primary_distribution_name = "${lookup(var.cloudfront_primary, "distribution_name")}"
   cloudfront_primary_aliases           = "${split(",", lookup(var.cloudfront_primary, "aliases.stage"))}"
   cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.stage")}"
@@ -167,4 +167,16 @@ module "mysql-us-west-2-prod" {
   vpc_id                      = "${data.terraform_remote_state.kubernetes-us-west-2.vpc_id}"
   vpc_cidr                    = "${data.aws_vpc.cidr.cidr_block}"
   subnets                     = "${join(",", data.aws_subnet_ids.subnet_id.ids)}"
+}
+
+# Replica set
+module "mysql-eu-central-1-replica-prod" {
+  source            = "./multi_region/rds-replica"
+  environment       = "prod"
+  region            = "eu-central-1"
+  subnets           = "${join(",", data.aws_subnet_ids.eu-central-subnet_ids.ids)}"
+  replica_source_db = "${module.mysql-us-west-2-prod.rds_arn}"
+  vpc_id            = "${data.terraform_remote_state.kubernetes-eu-central-1.vpc_id}"
+  kms_key_id        = "${lookup(var.rds, "key_id.eu-central-1")}" # Less than ideal this key is copied from the console
+  instance_class    = "${lookup(var.rds, "instance_class.prod")}"
 }

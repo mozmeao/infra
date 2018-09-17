@@ -14,6 +14,15 @@ module "kubernetes" {
   source = "./out/terraform"
 }
 
+data aws_route_table "selected" {
+  vpc_id = "${module.kubernetes.vpc_id}"
+
+  filter = {
+    name   = "tag:Name"
+    values = ["k8s.${var.region}*"]
+  }
+}
+
 # This is added after cluster creation
 resource aws_subnet "eu-central-1b-k8s-eu-central-1a-mdn-mozit-cloud" {
   vpc_id            = "${module.kubernetes.vpc_id}"
@@ -29,6 +38,11 @@ resource aws_subnet "eu-central-1b-k8s-eu-central-1a-mdn-mozit-cloud" {
   }
 }
 
+resource "aws_route_table_association" "eu-central-1b-k8s-eu-central-1a-mdn-mozit-cloud" {
+  subnet_id      = "${aws_subnet.eu-central-1b-k8s-eu-central-1a-mdn-mozit-cloud.id}"
+  route_table_id = "${data.aws_route_table.selected.id}"
+}
+
 resource aws_subnet "eu-central-1c-k8s-eu-central-1a-mdn-mozit-cloud" {
   vpc_id            = "${module.kubernetes.vpc_id}"
   cidr_block        = "172.20.96.0/19"
@@ -41,4 +55,9 @@ resource aws_subnet "eu-central-1c-k8s-eu-central-1a-mdn-mozit-cloud" {
     "kubernetes.io/cluster/k8s.eu-central-1a.mdn.mozit.cloud" = "owned"
     "kubernetes.io/role/elb"                                  = "1"
   }
+}
+
+resource aws_route_table_association "eu-central-1c-k8s-eu-central-1a-mdn-mozit-cloud" {
+  subnet_id      = "${aws_subnet.eu-central-1c-k8s-eu-central-1a-mdn-mozit-cloud.id}"
+  route_table_id = "${data.aws_route_table.selected.id}"
 }
