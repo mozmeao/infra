@@ -1,9 +1,8 @@
-
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_policy" "datadog_integration_policy" {
-  name = "DatadogAWSIntegrationPolicy"
-  path  = "/"
+  name        = "DatadogAWSIntegrationPolicy"
+  path        = "/"
   description = "DatadogAWSIntegrationPolicy"
 
   policy = <<EOF
@@ -84,9 +83,9 @@ EOF
 }
 
 resource "aws_iam_role" "datadog_role" {
-	name = "DatadogAWSIntegrationRole"
+  name = "DatadogAWSIntegrationRole"
 
-	assume_role_policy = <<EOF
+  assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
   "Statement": {
