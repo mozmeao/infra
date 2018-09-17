@@ -11,13 +11,13 @@ terraform {
 }
 
 module "mdn_shared" {
-  source  = "./shared"
+  source  = "./modules/shared"
   enabled = "${lookup(var.features, "shared-infra")}"
   region  = "${var.region}"
 }
 
 module "mdn_cdn" {
-  source      = "./mdn-cdn"
+  source      = "./modules/mdn-cdn"
   enabled     = "${lookup(var.features, "cdn")}"
   region      = "${var.region}"
   environment = "stage"
@@ -38,7 +38,7 @@ module "mdn_cdn" {
 }
 
 module "mdn_cdn_prod" {
-  source      = "./mdn-cdn"
+  source      = "./modules/mdn-cdn"
   enabled     = "${lookup(var.features, "cdn")}"
   region      = "${var.region}"
   environment = "prod"
@@ -62,7 +62,7 @@ module "mdn_cdn_prod" {
 # Multi region resources
 
 module "efs-us-west-2" {
-  source               = "./multi_region/efs"
+  source               = "./modules/multi_region/efs"
   enabled              = "${lookup(var.features, "efs")}"
   environment          = "${var.environment}"
   region               = "us-west-2"
@@ -72,7 +72,7 @@ module "efs-us-west-2" {
 }
 
 module "efs-us-west-2-prod" {
-  source               = "./multi_region/efs"
+  source               = "./modules/multi_region/efs"
   enabled              = "${lookup(var.features, "efs")}"
   environment          = "prod"
   region               = "us-west-2"
@@ -82,7 +82,7 @@ module "efs-us-west-2-prod" {
 }
 
 module "redis-us-west-2" {
-  source               = "./multi_region/redis"
+  source               = "./modules/multi_region/redis"
   enabled              = "${lookup(var.features, "redis")}"
   environment          = "stage"
   region               = "us-west-2"
@@ -94,7 +94,7 @@ module "redis-us-west-2" {
 }
 
 module "redis-us-west-2-prod" {
-  source               = "./multi_region/redis"
+  source               = "./modules/multi_region/redis"
   enabled              = "${lookup(var.features, "redis")}"
   environment          = "prod"
   region               = "us-west-2"
@@ -106,7 +106,7 @@ module "redis-us-west-2-prod" {
 }
 
 module "memcached-us-west-2" {
-  source               = "./multi_region/memcached"
+  source               = "./modules/multi_region/memcached"
   enabled              = "${lookup(var.features, "memcached")}"
   environment          = "stage"
   region               = "us-west-2"
@@ -118,7 +118,7 @@ module "memcached-us-west-2" {
 }
 
 module "memcached-us-west-2-prod" {
-  source               = "./multi_region/memcached"
+  source               = "./modules/multi_region/memcached"
   enabled              = "${lookup(var.features, "memcached")}"
   environment          = "prod"
   region               = "us-west-2"
@@ -130,7 +130,7 @@ module "memcached-us-west-2-prod" {
 }
 
 module "mysql-us-west-2" {
-  source                      = "./multi_region/rds"
+  source                      = "./modules/multi_region/rds"
   enabled                     = "${lookup(var.features, "rds")}"
   environment                 = "stage"
   region                      = "us-west-2"
@@ -150,7 +150,7 @@ module "mysql-us-west-2" {
 }
 
 module "mysql-us-west-2-prod" {
-  source                      = "./multi_region/rds"
+  source                      = "./modules/multi_region/rds"
   enabled                     = "${lookup(var.features, "rds")}"
   environment                 = "prod"
   region                      = "us-west-2"
@@ -171,7 +171,7 @@ module "mysql-us-west-2-prod" {
 
 # Replica set
 module "mysql-eu-central-1-replica-prod" {
-  source            = "./multi_region/rds-replica"
+  source            = "./modules/multi_region/rds-replica"
   environment       = "prod"
   region            = "eu-central-1"
   subnets           = "${join(",", data.aws_subnet_ids.eu-central-subnet_ids.ids)}"
