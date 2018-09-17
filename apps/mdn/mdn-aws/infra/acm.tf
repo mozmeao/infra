@@ -8,7 +8,7 @@ provider "aws" {
 }
 
 module "acm_star_mdn" {
-  source = "./acm"
+  source = "./modules/acm"
 
   providers = {
     aws = "aws.acm"
@@ -19,7 +19,7 @@ module "acm_star_mdn" {
 }
 
 module "interactive-example-acm" {
-  source = "./acm"
+  source = "./modules/acm"
 
   providers = {
     aws = "aws.acm"
@@ -30,7 +30,7 @@ module "interactive-example-acm" {
 }
 
 module "acm_ci" {
-  source = "./acm"
+  source = "./modules/acm"
 
   domain_name = "ci.us-west-2.mdn.mozit.cloud"
   zone_id     = "${data.terraform_remote_state.dns.us-west-2-zone-id}"
