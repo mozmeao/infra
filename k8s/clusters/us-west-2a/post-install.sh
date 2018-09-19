@@ -103,6 +103,14 @@ install_calico_rbac() {
 }
 
 install_fluentd() {
+
+    PAPERTRAIL_CONFIG="${SECRETS_PATH}/k8s/secrets/portland/papertrail.sh"
+    if [ ! -f "${PAPERTRAIL_CONFIG}" ]; then
+        echo "Can't find papertrail.sh"
+        exit 1
+    fi
+
+    source "${PAPERTRAIL_CONFIG}"
     echo "Installing fluentd"
     (cd ${KOPS_INSTALLER}/services/fluentd && make FLUENTD_SYSLOG_HOST=${SYSLOG_HOST} FLUENTD_SYSLOG_PORT=${SYSLOG_PORT})
 }

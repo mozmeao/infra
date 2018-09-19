@@ -15,10 +15,5 @@ export KOPS_NODE_COUNT="10"
 # This is the path of of your services manifests
 export KOPS_INSTALLER="../../install"
 
-#populate these if installing FluentD->PaperTrail DaemonSet
-# These values are private
-export SYSLOG_HOST=""
-export SYSLOG_PORT=""
-
 # secrets path
 export SECRETS_PATH="${HOME}/scm/mdn-k8s-private"

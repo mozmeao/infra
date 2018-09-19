@@ -103,6 +103,14 @@ install_calico_rbac() {
 }
 
 install_fluentd() {
+
+    PAPERTRAIL_CONFIG="${SECRETS_PATH}/k8s/secrets/frankfurt/papertrail.sh"
+    if [ ! -f "${PAPERTRAIL_CONFIG}" ]; then
+        echo "Can't find papertrail.sh"
+        exit 1
+    fi
+
+    source "${PAPERTRAIL_CONFIG}"
     echo "Installing fluentd"
     (cd ${KOPS_INSTALLER}/services/fluentd && make FLUENTD_SYSLOG_HOST=${SYSLOG_HOST} FLUENTD_SYSLOG_PORT=${SYSLOG_PORT})
 }
@@ -122,8 +130,11 @@ install_cluster_autoscaler() {
     (cd ${KOPS_INSTALLER}/services/cluster-autoscaler && make MAX_NODES=${MAX_NODES} KOPS_CLUSTER_NAME=${KOPS_CLUSTER_NAME} AWS_REGION=${KOPS_REGION})
 }
 
-install_cluster_autoscaler
-install_calico_rbac
-install_fluentd
-install_mig
-install_redirector_service
+install_services() {
+    install_cluster_autoscaler
+    install_calico_rbac
+    install_fluentd
+    install_mig
+    install_datadog
+    install_redirector_service
+}
