@@ -35,7 +35,7 @@ module "mdn_cdn" {
   cloudfront_primary_domain_name       = "${lookup(var.cloudfront_primary, "domain.stage")}"
 
   # attachment CDN
-  cloudfront_attachments_enabled           = "${(lookup(var.cloudfront_attachments, "enabled")) * (var.environment == "stage" ? 0 : 1)}"
+  cloudfront_attachments_enabled           = "0" # Disable for stage
   acm_attachments_cert_arn                 = "${module.acm_star_mdn.certificate_arn}"
   cloudfront_attachments_distribution_name = "${lookup(var.cloudfront_attachments, "distribution_name")}"
   cloudfront_attachments_aliases           = "${split(",", lookup(var.cloudfront_attachments, "aliases.stage"))}"
@@ -69,9 +69,9 @@ module "mdn_cdn_prod" {
 module "efs-us-west-2" {
   source               = "./modules/multi_region/efs"
   enabled              = "${lookup(var.features, "efs")}"
-  environment          = "${var.environment}"
+  environment          = "stage"
   region               = "us-west-2"
-  efs_name             = "${var.environment}"
+  efs_name             = "stage"
   subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
   nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
 }
@@ -84,6 +84,16 @@ module "efs-us-west-2-prod" {
   efs_name             = "prod"
   subnets              = "${join(",", data.terraform_remote_state.kubernetes-us-west-2.node_subnet_ids)}"
   nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
+}
+
+module "efs-eu-central-1-prod" {
+  source               = "./modules/multi_region/efs"
+  enabled              = "${lookup(var.features, "efs")}"
+  environment          = "prod"
+  region               = "eu-central-1"
+  efs_name             = "prod"
+  subnets              = "${join(",", data.terraform_remote_state.kubernetes-eu-central-1.node_subnet_ids)}"
+  nodes_security_group = "${data.terraform_remote_state.kubernetes-eu-central-1.node_security_group_ids}"
 }
 
 module "redis-us-west-2" {
@@ -110,6 +120,18 @@ module "redis-us-west-2-prod" {
   nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
 }
 
+module "redis-eu-central-1-prod" {
+  source               = "./modules/multi_region/redis"
+  enabled              = "${lookup(var.features, "redis")}"
+  environment          = "prod"
+  region               = "eu-central-1"
+  redis_name           = "prod"
+  redis_node_size      = "${lookup(var.redis, "node_size.prod")}"
+  redis_num_nodes      = "${lookup(var.redis, "num_nodes.prod")}"
+  subnets              = "${join(",", data.terraform_remote_state.kubernetes-eu-central-1.node_subnet_ids)}"
+  nodes_security_group = "${data.terraform_remote_state.kubernetes-eu-central-1.node_security_group_ids}"
+}
+
 module "memcached-us-west-2" {
   source               = "./modules/multi_region/memcached"
   enabled              = "${lookup(var.features, "memcached")}"
@@ -134,12 +156,24 @@ module "memcached-us-west-2-prod" {
   nodes_security_group = "${data.terraform_remote_state.kubernetes-us-west-2.node_security_group_ids}"
 }
 
+module "memcached-eu-central-1-prod" {
+  source               = "./modules/multi_region/memcached"
+  enabled              = "${lookup(var.features, "memcached")}"
+  environment          = "prod"
+  region               = "eu-central-1"
+  memcached_name       = "prod"
+  memcached_node_size  = "${lookup(var.memcached, "node_size.prod")}"
+  memcached_num_nodes  = "${lookup(var.memcached, "num_nodes.prod")}"
+  subnets              = "${join(",", data.terraform_remote_state.kubernetes-eu-central-1.node_subnet_ids)}"
+  nodes_security_group = "${data.terraform_remote_state.kubernetes-eu-central-1.node_security_group_ids}"
+}
+
 module "mysql-us-west-2" {
   source                      = "./modules/multi_region/rds"
   enabled                     = "${lookup(var.features, "rds")}"
   environment                 = "stage"
   region                      = "us-west-2"
-  mysql_env                   = "${var.environment}"
+  mysql_env                   = "stage"
   mysql_db_name               = "${lookup(var.rds, "db_name.stage")}"
   mysql_username              = "${lookup(var.rds, "username.stage")}"
   mysql_password              = "${lookup(var.rds, "password.stage")}"
@@ -159,7 +193,7 @@ module "mysql-us-west-2-prod" {
   enabled                     = "${lookup(var.features, "rds")}"
   environment                 = "prod"
   region                      = "us-west-2"
-  mysql_env                   = "${var.environment}"
+  mysql_env                   = "prod"
   mysql_db_name               = "${lookup(var.rds, "db_name.prod")}"
   mysql_username              = "${lookup(var.rds, "username.prod")}"
   mysql_password              = "${lookup(var.rds, "password.prod")}"

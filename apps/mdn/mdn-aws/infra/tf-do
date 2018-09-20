@@ -25,12 +25,12 @@ show_help() {
 }
 
 terraform_do() {
-	declare -a _ACTION; _ACTION=( "${@}" )
+    declare -a _ACTION; _ACTION=( "${@}" )
 
-	if ! terraform "${_ACTION[@]}" ; then
-		echo -e "\033[1;31mERROR: Failed running 'terraform ${_ACTION[*]}'\033[0m"
-		exit 1
-	fi
+    if ! terraform "${_ACTION[@]}" ; then
+        echo -e "\033[1;31mERROR: Failed running 'terraform ${_ACTION[*]}'\033[0m"
+        exit 1
+    fi
 }
 
 init() {
@@ -39,41 +39,41 @@ init() {
 
 plan() {
     local environment=$1
-    terraform plan -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars -var "environment=${environment}"
+    terraform plan -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars
 }
 
 apply() {
     local environment=$1
-    terraform apply -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars -var "environment=${environment}"
+    terraform apply -input=false -var-file=${TF_SECRETS_PATH}/terraform.tfvars
 }
 
 while [ "$1" != "" ]; do
-	case "$1" in
-		-x | --debug | --setx )
-			set -x
-		;;
-		-h | --help | help )
-			show_help
-			exit 0
-		;;
+    case "$1" in
+        -x | --debug | --setx )
+            set -x
+        ;;
+        -h | --help | help )
+            show_help
+            exit 0
+        ;;
         -e | --environment )
             export MY_ENVIRONMENT=${2:-stage}
             shift
         ;;
-		init )
-			init
-			GOT_COMMAND=1
+        init )
+            init
+            GOT_COMMAND=1
 		;;
-		plan )
-			plan "${MY_ENVIRONMENT:-stage}"
-			GOT_COMMAND=1
-		;;
-		apply )
-            apply "${MY_ENVIRONMENT:-stage}"
-			GOT_COMMAND=1
-		;;
-	esac
-	shift
+        plan )
+            plan
+            GOT_COMMAND=1
+        ;;
+        apply )
+            apply
+            GOT_COMMAND=1
+        ;;
+    esac
+    shift
 done
 
 # If we did not get a valid command print the help message
