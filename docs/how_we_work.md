@@ -1,3 +1,8 @@
+[DEPRECATED]
+
+Please see https://github.com/mozmeao/agile-task-force/blob/master/how-we-work/mozmeao.md
+
+
 # SRE Project Management
 
 Our team manages it's work via a simple [Github project](https://github.com/mozmeao/infra/projects/2). All data in the project is "standalone": we try to keep all links and references as public as possible, but there are obviously tasks that include sensitive data. These sensitive tasks are managed internally, and also tracked in private Bugzilla issues.
