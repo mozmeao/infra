@@ -656,6 +656,47 @@ resource "aws_elb" "sumo-prod" {
   }
 }
 
+
+# "high level" SUMO ELB cipher suites
+# w/ Windows XP support
+module "sumo-stage-a-policy" {
+    source = "./sumo-policy"
+    name = "sumo-stage-a-policy"
+    load_balancer="${aws_elb.sumo-stage-a.id}"
+    lb_port = 443
+}
+
+module "sumo-stage-b-policy" {
+    source = "./sumo-policy"
+    name = "sumo-stage-b-policy"
+    load_balancer="${aws_elb.sumo-stage-b.id}"
+    lb_port = 443
+}
+
+
+module "sumo-prod-policy" {
+    source = "./sumo-policy"
+    name = "sumo-prod-policy"
+    load_balancer="${aws_elb.sumo-prod.id}"
+    lb_port = 443
+}
+
+
+module "sumo-prod-a-policy" {
+    source = "./sumo-policy"
+    name = "sumo-prod-a-policy"
+    load_balancer="${aws_elb.sumo-prod-a.id}"
+    lb_port = 443
+}
+
+
+module "sumo-prod-b-policy" {
+    source = "./sumo-policy"
+    name = "sumo-prod-b-policy"
+    load_balancer="${aws_elb.sumo-prod-b.id}"
+    lb_port = 443
+}
+
 resource "aws_elb" "bedrock-prod" {
   name                        = "bedrock-prod"
   subnets                     = ["subnet-e290afaa"]
