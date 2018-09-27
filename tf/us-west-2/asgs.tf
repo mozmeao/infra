@@ -137,7 +137,7 @@ resource "aws_autoscaling_group" "nodes-oregon-a-moz-works" {
   health_check_type         = "EC2"
   launch_configuration      = "nodes.oregon-a.moz.works-00ee8d519143a65e3c27f5a21b"
   max_size                  = 20
-  min_size                  = 2
+  min_size                  = 1
   metrics_granularity       = "1Minute"
   name                      = "nodes.oregon-a.moz.works"
   vpc_zone_identifier       = ["subnet-0d89cd37ecec22dd2"]
@@ -189,7 +189,7 @@ resource "aws_autoscaling_group" "nodes-oregon-b-moz-works" {
   health_check_type         = "EC2"
   launch_configuration      = "nodes.oregon-b.moz.works-0070023b5c9242310476f7d37a"
   max_size                  = 20
-  min_size                  = 2
+  min_size                  = 10
   metrics_granularity       = "1Minute"
   name                      = "nodes.oregon-b.moz.works"
   vpc_zone_identifier       = ["subnet-e290afaa"]
