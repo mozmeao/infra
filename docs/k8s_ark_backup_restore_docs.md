@@ -63,7 +63,11 @@ Install Ark using [these](https://heptio.github.io/ark/v0.9.0/aws-config) docs f
 - Setup an S3 bucket and IAM user:
 
 ```bash
-export ARK_BUCKET=my-bucket-ark-frankfurt
+cd <somedir>
+git clone https://github.com/heptio/ark.git
+cd ark && git checkout v0.9.0 && cd ..
+
+export ARK_BUCKET=mozmeao-ark-frankfurt
 export ARK_REGION=eu-central-1
 export ARK_USER=ark-frankfurt
 export ARK_NAMESPACE=heptio-ark
@@ -133,10 +137,12 @@ aws iam create-access-key --user-name ${ARK_USER}
  aws_secret_access_key=<AWS_SECRET_ACCESS_KEY>
 ```
 
+> Be sure to update `infra_private/credentials.yml` with the credentials created above.
+
 - Setup Ark prereqs
 
 ```bash
-kubectl apply -f 00-prereqs.yaml
+kubectl apply -f ./ark/examples/common/00-prereqs.yaml
 ```
 
 > No customizations are needed in this file.
@@ -152,13 +158,15 @@ kubectl create secret generic cloud-credentials \
 
 - Modify Ark config
 
-Modify the `ark-config.yaml` file and change the `region` and `bucket` values. 
+***Modify the `00-ark-config.yaml` file and change the `region` and `bucket` values. ***
 
 - Install Ark
 
 ```bash
-kubectl apply -f 00-ark-config.yaml
-kubectl apply -f 10-deployment.yaml
+cp ./ark/examples/aws/00-ark-config.yaml ./${ARK_BUCKET}.yaml
+# UPDATE ./${ARK_BUCKET}.yaml
+kubectl apply -f ./${ARK-BUCKET}.yaml
+kubectl apply -f ./ark/examples/aws/10-deployment.yaml
 ```
 
 - Test
