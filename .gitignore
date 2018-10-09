@@ -8,6 +8,7 @@ apps/**/Procfile
 # .tfstate files
 *.tfstate
 *.tfstate.*
+infra/k8s/install/services/fluentd/fluentd.yaml.out
 
 # Crash log files
 crash.log
