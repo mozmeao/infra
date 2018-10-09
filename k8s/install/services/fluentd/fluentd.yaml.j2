@@ -29,25 +29,26 @@ spec:
       hostNetwork: true
       containers:
       - name: mozfluentd
-        image: {{ FLUENTD_IMAGE }}
+        image: {{ env["FLUENTD_IMAGE"] }}
         resources:
           limits:
-            cpu: {{ FLUENTD_CPU_LIMIT }}
-            memory: {{ FLUENTD_MEMORY_LIMIT }}
+            cpu: {{ env["FLUENTD_CPU_LIMIT"] }}
+            memory: {{ env["FLUENTD_MEMORY_LIMIT"] }}
         env:
           - name: "SYSLOG_HOST"
-            value: "{{ FLUENTD_SYSLOG_HOST }}"
+            value: "{{ env["FLUENTD_SYSLOG_HOST"] }}"
           - name: "SYSLOG_PORT"
-            value: "{{ FLUENTD_SYSLOG_PORT }}"
+            value: "{{ env["FLUENTD_SYSLOG_PORT"] }}"
         volumeMounts:
         - name: varlog
           mountPath: /var/log
         - name: varlibdockercontainers
           mountPath: /var/lib/docker/containers
+      {% if env["FLUENTD_ON_MASTER"] == 'true' -%}
       tolerations:
         - effect: NoSchedule
           key: node-role.kubernetes.io/master
-          operator: Exists
+          operator: Exists {% endif -%}
       volumes:
       - name: varlog
         hostPath:
