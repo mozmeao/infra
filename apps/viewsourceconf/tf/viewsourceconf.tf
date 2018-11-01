@@ -181,7 +181,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/92927e4f-8b1a-4d52-9f92-3912151e5dea"
+    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/d629f5d3-b43f-423a-81f3-b821bc7cabea"
     ssl_support_method  = "sni-only"
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
@@ -241,7 +241,7 @@ resource "aws_cloudfront_distribution" "stage_s3_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/57b9d32d-03ec-4e77-9a7a-6fcb6980becc"
+    acm_certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/8a0de85f-f6ea-40a9-ad35-b27a9d870438"
     ssl_support_method  = "sni-only"
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
