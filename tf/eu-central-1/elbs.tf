@@ -78,7 +78,7 @@ resource "aws_elb" "basket-prod" {
     instance_protocol  = "tcp"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/eac03015-d53b-42f2-84e9-2b58a0231e8b"
+    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/d6d41a56-17fd-4588-bd32-cdd1c4174ec8"
   }
 
   health_check {
@@ -115,7 +115,7 @@ resource "aws_elb" "basket-stage" {
     instance_protocol  = "tcp"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/fa2169bd-cd78-4024-adf2-659424de6b45"
+    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/0c02d92c-c9cd-4e51-b397-ed49bb851a66"
   }
 
   health_check {
@@ -292,7 +292,7 @@ resource "aws_elb" "snippets-stats" {
     instance_protocol  = "tcp"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/290a91d7-4f69-4791-b670-534b671bd6b8"
+    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/b50dfd4d-de4b-4c55-a30d-c18c70554f6c"
   }
 
   listener {
@@ -329,7 +329,7 @@ resource "aws_elb" "nucleus-prod" {
     instance_protocol  = "tcp"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/9a38de62-3461-43a4-9027-4ec5d165e0d6"
+    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/73da790d-5c41-47c5-b032-fd65674804ee"
   }
 
   listener {
@@ -480,7 +480,7 @@ resource "aws_elb" "sumo-stage" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/b74e73f7-6fd7-4fea-99fa-c67e34556077"
+    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/ff1da657-0f1c-4ce8-9041-2c8a9afafef5"
   }
 
   health_check {
@@ -512,7 +512,7 @@ resource "aws_elb" "sumo-prod" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/88ff1ddb-7a2f-4a78-85b3-cdcc0ea97124"
+    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/65f7baa1-5748-4b3f-ada0-b82bb797912e"
   }
 
   listener {
