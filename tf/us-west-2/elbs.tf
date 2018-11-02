@@ -262,7 +262,7 @@ resource "aws_elb" "abb45ebd7fbb211e788530656fabf84c" {
     instance_protocol  = "tcp"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/54c7055e-dedd-4fac-889a-0a0f1c3e9968"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/a6377c2d-97e8-4d7b-bc43-0d6f41beb034"
   }
 
   health_check {
@@ -295,7 +295,7 @@ resource "aws_elb" "snippets-stage" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/375fd27c-bf20-409d-a48b-4ff0b0fe3658"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/6c8ca0be-8082-4587-9f19-42db2603d593"
   }
 
   listener {
@@ -383,7 +383,7 @@ resource "aws_elb" "careers-stage" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/4952e9c1-dda2-450b-b156-908a42869f4f"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/e3d6aa9a-0a9b-4fed-b2fa-d05ae0156677"
   }
 
   health_check {
@@ -480,7 +480,7 @@ resource "aws_elb" "sumo-stage-a" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/192b6409-996e-46ac-a3d9-c78a69670dae"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/eac90dfa-6796-40be-9eb5-eb522bd828ef"
   }
 
   health_check {
@@ -512,7 +512,7 @@ resource "aws_elb" "sumo-prod-a" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/b427fcf8-4321-41ca-8fe0-57a90da17d52"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/976bd332-1fca-4ccb-bd99-9ce820c45d4f"
   }
 
   listener {
@@ -552,7 +552,7 @@ resource "aws_elb" "sumo-stage-b" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/192b6409-996e-46ac-a3d9-c78a69670dae"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/eac90dfa-6796-40be-9eb5-eb522bd828ef"
   }
 
   listener {
@@ -600,7 +600,7 @@ resource "aws_elb" "sumo-prod-b" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/b427fcf8-4321-41ca-8fe0-57a90da17d52"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/976bd332-1fca-4ccb-bd99-9ce820c45d4f"
   }
 
   health_check {
@@ -752,7 +752,7 @@ resource "aws_elb" "basket-prod-b" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/385ce81c-80de-4ec9-865f-3b9a119139ed"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/ce86f1b1-7020-432f-9f79-b05c1e301d8e"
   }
 
   listener {
@@ -800,7 +800,7 @@ resource "aws_elb" "snippets-prod" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/fbe34166-ae87-43f8-b9cc-7bc9a45d904c"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/6b9ebb9d-144a-474d-812f-56acc5101c56"
   }
 
   health_check {
@@ -840,7 +840,7 @@ resource "aws_elb" "snippets-stats-b" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/9c1fa86d-d2da-4d54-b07d-33c200c3a967"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/8dce3494-a641-4301-b707-5920c9aabf49"
   }
 
   health_check {
@@ -920,7 +920,7 @@ resource "aws_elb" "careers-prod" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/1bf60ff2-141f-4f9c-a3b0-e3391cdf6994"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/ae2d2e64-b345-4bc1-a49a-5860c73a0809"
   }
 
   health_check {
@@ -960,7 +960,7 @@ resource "aws_elb" "basket-dev" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/9bc81da3-4d50-420f-bad1-b33ff9545c98"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/5b7b7e99-dd57-4bce-92ea-c1a2534340bb"
   }
 
   health_check {
@@ -1000,7 +1000,7 @@ resource "aws_elb" "basket-stage" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/3a319919-5568-4c06-a351-4cd27baeb29f"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/8470c4e1-2acd-4e6e-b5e8-9e9560caa2c0"
   }
 
   health_check {
@@ -1040,7 +1040,7 @@ resource "aws_elb" "basket-admin-stage" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/3a319919-5568-4c06-a351-4cd27baeb29f"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/8470c4e1-2acd-4e6e-b5e8-9e9560caa2c0"
   }
 
   health_check {
@@ -1080,7 +1080,7 @@ resource "aws_elb" "basket-prod" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/385ce81c-80de-4ec9-865f-3b9a119139ed"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/ce86f1b1-7020-432f-9f79-b05c1e301d8e"
   }
 
   health_check {
@@ -1152,7 +1152,7 @@ resource "aws_elb" "a26612beb807111e88eeb0656fabf84c" {
     instance_protocol  = "tcp"
     lb_port            = 80
     lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/54c7055e-dedd-4fac-889a-0a0f1c3e9968"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/a6377c2d-97e8-4d7b-bc43-0d6f41beb034"
   }
 
   health_check {
