@@ -9,6 +9,7 @@ import csv
 FIELDS = [
     'region',
     'domain_name',
+    'sans',
     'arn',
     'validation_method',
     'used_by',
@@ -23,10 +24,10 @@ def check_region(region_name):
         cert_def = Munch.fromDict(
             acm_client.describe_certificate(
                 CertificateArn=c.CertificateArn))
-
         region_cert = {
             'region': region_name,
             'domain_name': c.DomainName,
+            'sans': cert_def.Certificate.SubjectAlternativeNames,
             'arn': c.CertificateArn,
             'validation_method': cert_def.Certificate.DomainValidationOptions[0].ValidationMethod,
             'used_by': cert_def.Certificate.InUseBy,
