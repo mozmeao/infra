@@ -10,59 +10,6 @@ terraform {
   }
 }
 
-resource "aws_iam_user" "careers" {
-  name = "careers-upload"
-}
-
-resource "aws_iam_user_policy" "careers-upload" {
-  name = "careers-upload"
-  user = "${aws_iam_user.careers.name}"
-
-  policy = <<EOF
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket"
-            ],
-            "Resource": [
-                "arn:aws:s3:::mozilla-careers"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:*"
-            ],
-            "Resource": [
-                "arn:aws:s3:::mozilla-careers/*"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:ListBucket"
-            ],
-            "Resource": [
-                "arn:aws:s3:::mozilla-careers-stage"
-            ]
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                "s3:*"
-            ],
-            "Resource": [
-                "arn:aws:s3:::mozilla-careers-stage/*"
-            ]
-        }
-    ]
-}
-EOF
-}
-
 resource "aws_s3_bucket" "logs" {
   bucket = "mozilla-careers-logs"
   acl    = "log-delivery-write"
