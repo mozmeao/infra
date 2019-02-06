@@ -5,7 +5,7 @@ Follow these instructions to setup your Github project to use this for your Cont
 
 ## Create a GitLab Project
 
-* Login to GitLab and navigate to our [GitLab Group][].
+* Login to GitLab as our [MozMEAOBot](https://gitlab.com/mozmeaobot) account. Credentials are in the infra-private repo.
 * Click the "New Project" button.
 * Select the "CI/CD for external repo" tab at the top.
 * Select "Repo by URL" so that we can manually connect everything and avoid extra permissions.
@@ -13,7 +13,7 @@ Follow these instructions to setup your Github project to use this for your Cont
 * Give it a name and set it to "public".
 * Click "Create project"
 
-Once the mirroring is done you should see your new project. You can now give it a logo or set various setting if you'd like.
+Once the mirroring is done you should see your new project. You can now give it a logo or set various setting if you'd like. You should go to the CI/CD settings for the project, expand the "Runners" section and disable the shared runners. We use a runner enabled for the entire "mozmeao" group that we maintain in our AWS infra.
 
 ## Github Integration in GitLab
 
@@ -50,6 +50,17 @@ Sending notifications to a slack channel is optional but recommended. To do this
 ## Pipeline
 
 Now that you've got all of the wiring done, you can add a `.gitlab-ci.yml` file to your repo and get started. You can see examples in Kitsune and Bedrock. Our runner has many of the same authenticated resources available as our Jenkins box did. Contact a MEAO SRE for details if you don't see an example of what you need in an existing project.
+
+Some useful docs for setting up your pipeline:
+
+* [Intro to pipelines and jobs](https://docs.gitlab.com/ee/ci/pipelines.html)
+* [GitLab environment variables](https://docs.gitlab.com/ee/ci/variables/README.html)
+* [.gitlab-ci.yml reference](https://docs.gitlab.com/ee/ci/yaml/README.html)
+
+And some hints for your jobs:
+
+* The docker daemon is already logged into docker hub in our runner. Pull and push at will.
+* Add the `meao` tag to your jobs so that they'll run on our runner.
 
 ## Troubleshooting
 
