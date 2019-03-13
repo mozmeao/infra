@@ -136,6 +136,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "mozilla-careers"
 
+    lambda_function_association {
+      event_type = "viewer-response"
+      lambda_arn = "${aws_lambda_function.prod-lambda-headers.qualified_arn}"
+    }
+
+
     forwarded_values {
       query_string = false
 
@@ -255,7 +261,7 @@ resource "aws_iam_role" "lambda-edge-role" {
 EOF
 }
 
-data "archive_file" "lambda-zip" {
+data "archive_file" "prod-lambda-zip" {
   type        = "zip"
   source_file = "${path.module}/lambda-headers.js"
   output_path = "${path.module}/lambda-headers.zip"
@@ -288,6 +294,25 @@ resource "aws_lambda_function" "stage-lambda-headers" {
   tags {
     Name        = "careers-stage-headers"
     ServiceName = "careers stage"
+    Terraform   = "true"
+  }
+}
+
+
+resource "aws_lambda_function" "prod-lambda-headers" {
+  provider         = "aws.aws-lambda-east"
+  function_name    = "careers-prod-resp-headers"
+  description      = "Provides Correct Response Headers for careers prod"
+  publish          = "true"
+  filename         = "${path.module}/prod-lambda-headers.zip"
+  source_code_hash = "${data.archive_file.prod-lambda-zip.output_base64sha256}"
+  role             = "${aws_iam_role.lambda-edge-role.arn}"
+  handler          = "lambda-headers.handler"
+  runtime          = "nodejs8.10"
+
+  tags {
+    Name        = "careers-prod-headers"
+    ServiceName = "careers prod"
     Terraform   = "true"
   }
 }
