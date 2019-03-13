@@ -261,6 +261,9 @@ resource "aws_iam_role" "lambda-edge-role" {
 EOF
 }
 
+// Stage and prod are pointing at the same javascript file.
+// Change this if we want to deploy stage separately for 
+// development.
 data "archive_file" "prod-lambda-zip" {
   type        = "zip"
   source_file = "${path.module}/lambda-headers.js"
