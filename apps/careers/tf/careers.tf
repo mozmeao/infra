@@ -136,6 +136,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "mozilla-careers"
 
+    lambda_function_association {
+      event_type = "viewer-response"
+      lambda_arn = "${aws_lambda_function.prod-lambda-headers.qualified_arn}"
+    }
+
+
     forwarded_values {
       query_string = false
 
@@ -196,6 +202,11 @@ resource "aws_cloudfront_distribution" "stage_s3_distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "mozilla-careersstage"
 
+    lambda_function_association {
+      event_type = "viewer-response"
+      lambda_arn = "${aws_lambda_function.stage-lambda-headers.qualified_arn}"
+    }
+
     forwarded_values {
       query_string = false
 
@@ -222,5 +233,89 @@ resource "aws_cloudfront_distribution" "stage_s3_distribution" {
 
     # https://www.terraform.io/docs/providers/aws/r/cloudfront_distribution.html#minimum_protocol_version
     minimum_protocol_version = "TLSv1"
+  }
+}
+
+
+# Lambda@edge to set origin response headers
+resource "aws_iam_role" "lambda-edge-role" {
+  name = "careers-lambda-exec-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": [
+          "lambda.amazonaws.com",
+          "edgelambda.amazonaws.com"
+       ]
+     },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
+// Stage and prod are pointing at the same javascript file.
+// Change this if we want to deploy stage separately for 
+// development.
+data "archive_file" "prod-lambda-zip" {
+  type        = "zip"
+  source_file = "${path.module}/lambda-headers.js"
+  output_path = "${path.module}/lambda-headers.zip"
+}
+
+
+data "archive_file" "stage-lambda-zip" {
+  type        = "zip"
+  source_file = "${path.module}/lambda-headers.js"
+  output_path = "${path.module}/stage-lambda-headers.zip"
+}
+
+
+provider "aws" {
+  alias  = "aws-lambda-east"
+  region = "us-east-1"
+}
+
+resource "aws_lambda_function" "stage-lambda-headers" {
+  provider         = "aws.aws-lambda-east"
+  function_name    = "careers-stage-resp-headers"
+  description      = "Provides Correct Response Headers for careers stage"
+  publish          = "true"
+  filename         = "${path.module}/stage-lambda-headers.zip"
+  source_code_hash = "${data.archive_file.stage-lambda-zip.output_base64sha256}"
+  role             = "${aws_iam_role.lambda-edge-role.arn}"
+  handler          = "lambda-headers.handler"
+  runtime          = "nodejs8.10"
+
+  tags {
+    Name        = "careers-stage-headers"
+    ServiceName = "careers stage"
+    Terraform   = "true"
+  }
+}
+
+
+resource "aws_lambda_function" "prod-lambda-headers" {
+  provider         = "aws.aws-lambda-east"
+  function_name    = "careers-prod-resp-headers"
+  description      = "Provides Correct Response Headers for careers prod"
+  publish          = "true"
+  filename         = "${path.module}/prod-lambda-headers.zip"
+  source_code_hash = "${data.archive_file.prod-lambda-zip.output_base64sha256}"
+  role             = "${aws_iam_role.lambda-edge-role.arn}"
+  handler          = "lambda-headers.handler"
+  runtime          = "nodejs8.10"
+
+  tags {
+    Name        = "careers-prod-headers"
+    ServiceName = "careers prod"
+    Terraform   = "true"
   }
 }
