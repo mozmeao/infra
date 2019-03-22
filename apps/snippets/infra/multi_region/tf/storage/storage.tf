@@ -44,6 +44,16 @@ EOF
     }
   }
 
+  lifecycle_rule {
+    id      = "metadata"
+    prefix  = "metadata/"
+    enabled = true
+
+    expiration {
+      days = 7
+    }
+  }
+
   versioning {
     enabled = true
   }
