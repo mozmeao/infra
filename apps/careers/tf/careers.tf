@@ -23,7 +23,6 @@ resource "aws_s3_bucket" "mozilla-careers" {
   force_destroy = ""
 
   hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
-
   logging {
     target_bucket = "${aws_s3_bucket.logs.bucket}"
     target_prefix = "logs/"
@@ -68,7 +67,6 @@ resource "aws_s3_bucket" "mozilla-careers-stage" {
   force_destroy = ""
 
   hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
-
   logging {
     target_bucket = "${aws_s3_bucket.logs.bucket}"
     target_prefix = "stage-logs/"
@@ -130,6 +128,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   aliases = ["careers.mozilla.org"]
+
+  custom_error_response {
+    error_code = 404
+    response_code = 404
+    response_page_path="/404.html"
+  }
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
@@ -196,6 +200,12 @@ resource "aws_cloudfront_distribution" "stage_s3_distribution" {
   }
 
   aliases = ["careers.allizom.org"]
+
+  custom_error_response {
+    error_code = 404
+    response_code = 404
+    response_page_path="/404.html"
+  }
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]

@@ -10,7 +10,7 @@ exports.handler = (event, context, callback) => {
    response.headers['content-security-policy'] = [{"key":"Content-Security-Policy","value":"font-src 'self' http://*.mozilla.net https://*.mozilla.net http://*.mozilla.org https://*.mozilla.org; img-src 'self' data: http://*.mozilla.net https://*.mozilla.net http://*.mozilla.org https://*.mozilla.org http://www.google-analytics.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline' http://*.mozilla.org https://*.mozilla.org http://*.mozilla.net https://*.mozilla.net; script-src 'self' data: http://*.mozilla.org https://*.mozilla.org http://*.mozilla.net https://*.mozilla.net http://www.google-analytics.com https://www.google-analytics.com http://www.googletagmanager.com https://www.googletagmanager.com; default-src 'self' *.cdn.mozilla.net assets.mozilla.net"}]; 
    response.headers['strict-transport-security'] = [{"key":"strict-transport-security","value":"max-age=31536000"}]; 
     
-   if(request.uri === '/feed/index.html') {
+   if(request.uri.startsWith('/feed/')) {
         response.headers['content-type'] = [{"key":"Content-Type","value":"application/rss+xml"}]; 
     }
     callback(null, response);
