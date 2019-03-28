@@ -139,7 +139,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "mozilla-careers"
-
+    compress = true
     lambda_function_association {
       event_type = "viewer-response"
       lambda_arn = "${aws_lambda_function.prod-lambda-headers.qualified_arn}"
@@ -211,7 +211,7 @@ resource "aws_cloudfront_distribution" "stage_s3_distribution" {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "mozilla-careersstage"
-
+    compress = true
     lambda_function_association {
       event_type = "viewer-response"
       lambda_arn = "${aws_lambda_function.stage-lambda-headers.qualified_arn}"
