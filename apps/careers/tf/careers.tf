@@ -23,7 +23,7 @@ resource "aws_s3_bucket" "mozilla-careers" {
   force_destroy = ""
 
   hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
-
+  response_page_path="/404.html"
   logging {
     target_bucket = "${aws_s3_bucket.logs.bucket}"
     target_prefix = "logs/"
@@ -68,7 +68,7 @@ resource "aws_s3_bucket" "mozilla-careers-stage" {
   force_destroy = ""
 
   hosted_zone_id = "${lookup(var.hosted-zone-id-defs, var.region)}"
-
+  response_page_path="/404.html"
   logging {
     target_bucket = "${aws_s3_bucket.logs.bucket}"
     target_prefix = "stage-logs/"
