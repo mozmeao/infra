@@ -156,7 +156,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
-    default_ttl            = 60
+    default_ttl            = 900
     max_ttl                = 86400
   }
 
@@ -227,7 +227,7 @@ resource "aws_cloudfront_distribution" "stage_s3_distribution" {
 
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
-    default_ttl            = 60
+    default_ttl            = 900
     max_ttl                = 86400
   }
 
@@ -277,7 +277,7 @@ EOF
 data "archive_file" "prod-lambda-zip" {
   type        = "zip"
   source_file = "${path.module}/lambda-headers.js"
-  output_path = "${path.module}/lambda-headers.zip"
+  output_path = "${path.module}/prod-lambda-headers.zip"
 }
 
 
