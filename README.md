@@ -48,6 +48,10 @@ This repo is maintained by the [Mozilla Marketing Engineering and Operations](ht
 	- collecting logs from Kubernetes pods
 
 
+## How we do CI/CD
+
+See the [MozMEAO CI/CD Architecture doc](https://docs.google.com/document/d/1do_jZPA50rLraLzNXuAgRObj0kxc5H36xWk0KIzE1fg/edit?usp=sharing) (limited to Mozillians).
+
 ## How we manage our work
 
 See [how we work](docs/how_we_work.md) doc.
