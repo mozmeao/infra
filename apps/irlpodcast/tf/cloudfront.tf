@@ -37,6 +37,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       }
     }
 
+    lambda_function_association {
+          event_type = "viewer-response"
+          lambda_arn = "${aws_lambda_function.prod-lambda-headers.qualified_arn}"
+    }
+
+
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 60
@@ -96,6 +102,11 @@ resource "aws_cloudfront_distribution" "www_s3_distribution" {
       }
     }
 
+    lambda_function_association {
+            event_type = "viewer-request"
+            lambda_arn = "${aws_lambda_function.www-prod-lambda.qualified_arn}"
+    }
+    
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 60
