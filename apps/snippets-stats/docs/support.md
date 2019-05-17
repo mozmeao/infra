@@ -1,1 +1,0 @@
-# snippets-stats support documentation
