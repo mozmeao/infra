@@ -40,6 +40,18 @@ Integrating GitLab in Github will trigger GitLab's mirroring whenever changes ar
 * Follow the instructions in [Gitlab's docs][gitlab-manual] to create this webhook url based on the token you generated and the project name.
   * It should look like: `https://gitlab.com/api/v4/projects/mozmeao%2F<PROJECT>/mirror/pull?private_token=<PERSONAL_ACCESS_TOKEN>`
 
+## Private Pipeline Configuration
+
+To ensure we don't accidentally expose any sensitive information, we need to make sure the build pipelines are not public.
+
+* In GitLab, navigate to the new project's "Settings" in the left hand menu
+* Choose "CI/CD"
+* Click "Expand" next to "General pipelines"
+* Uncheck the "Public pipelines" box
+* Click "Save changes"
+
+Security achieved.
+
 ## Slack Notifications
 
 Sending notifications to a slack channel is optional but recommended. To do this you'll need the URL for our Slack GitLab webhook integration which you can find in the infra private repo.
