@@ -10,6 +10,7 @@ Follow these instructions to setup your Github project to use this for your Cont
 * Select the "CI/CD for external repo" tab at the top.
 * Select "Repo by URL" so that we can manually connect everything and avoid extra permissions.
 * Enter the URL for your repo (e.g. https://github.com/mozilla/bedrock.git) (no auth is required if the repo is public).
+* Under the **Project URL** heading, make sure `mozmeao` is selected from the drop down (the default is likely `mozmeaobot`)
 * Give it a name and set it to "public".
 * Click "Create project"
 
