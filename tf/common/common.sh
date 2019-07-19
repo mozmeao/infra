@@ -1,8 +1,9 @@
 #!/bin/bash -e
 
-TF_VERSION=0.11.8
+TF_VERSION=0.11.14
 
-tfenv use $TF_VERSION
+asdf install terraform ${TF_VERSION}
+asdf local terraform ${TF_VERSION}
 
 terraform init
 PLAN=$(mktemp)
