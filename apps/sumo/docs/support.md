@@ -1,1 +1,0 @@
-# SUMO support documentation
