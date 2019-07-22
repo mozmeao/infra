@@ -1,59 +1,3 @@
-resource "aws_elb" "ac984662673b111e7b1e70287e8e34e8" {
-  name                        = "ac984662673b111e7b1e70287e8e34e8"
-  subnets                     = ["subnet-1349a175", "subnet-3c8c8e75"]
-  security_groups             = ["sg-e8d05992"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 1200
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 31600
-    instance_protocol  = "tcp"
-    lb_port            = 80
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 30030
-    instance_protocol  = "tcp"
-    lb_port            = 9090
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 30001
-    instance_protocol  = "tcp"
-    lb_port            = 2222
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 32105
-    instance_protocol  = "tcp"
-    lb_port            = 443
-    lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/9e22fa5e-3e54-4441-adf0-beb6fccaf0a4"
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "TCP:31600"
-    timeout             = 5
-  }
-
-  tags {
-    "kubernetes.io/service-name"               = "deis/deis-router"
-    "KubernetesCluster"                        = "portland.moz.works"
-    "kubernetes.io/cluster/portland.moz.works" = "owned"
-  }
-}
 
 resource "aws_elb" "ci-us-west-moz-works" {
   name                        = "ci-us-west-moz-works"
@@ -98,131 +42,6 @@ resource "aws_elb" "ci-us-west-moz-works" {
   tags {}
 }
 
-resource "aws_elb" "ad9c984f598bc11e7b1e70287e8e34e8" {
-  name                        = "ad9c984f598bc11e7b1e70287e8e34e8"
-  subnets                     = ["subnet-1349a175", "subnet-3c8c8e75"]
-  security_groups             = ["sg-b426c1c9"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 60
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 31761
-    instance_protocol  = "http"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/ddf39755-b0e2-4bfa-92e5-7f2d6025db14"
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "TCP:31761"
-    timeout             = 5
-  }
-
-  tags {
-    "kubernetes.io/service-name"               = "mdn-stage/web"
-    "kubernetes.io/cluster/portland.moz.works" = "owned"
-    "KubernetesCluster"                        = "portland.moz.works"
-    "Stack"                                    = "MDN-stage"
-  }
-}
-
-resource "aws_elb" "a8583e1be9a3711e7b1e70287e8e34e8" {
-  name                        = "a8583e1be9a3711e7b1e70287e8e34e8"
-  subnets                     = ["subnet-1349a175", "subnet-3c8c8e75"]
-  security_groups             = ["sg-a9e00cd4"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 60
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 31383
-    instance_protocol  = "http"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/8b99db59-3310-402b-9266-2398e5733055"
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "TCP:31383"
-    timeout             = 5
-  }
-
-  tags {
-    "kubernetes.io/service-name"               = "mdn-prod/web"
-    "kubernetes.io/cluster/portland.moz.works" = "owned"
-    "KubernetesCluster"                        = "portland.moz.works"
-    "Stack"                                    = "MDN-prod"
-  }
-}
-
-resource "aws_elb" "a59873061c36e11e7b1e70287e8e34e8" {
-  name                        = "a59873061c36e11e7b1e70287e8e34e8"
-  subnets                     = ["subnet-1349a175", "subnet-3c8c8e75"]
-  security_groups             = ["sg-7b062806"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 60
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 30987
-    instance_protocol  = "tcp"
-    lb_port            = 6503
-    lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/921dce45-4537-4c2c-b4e4-0cc475e592ed"
-  }
-
-  listener {
-    instance_port      = 32376
-    instance_protocol  = "tcp"
-    lb_port            = 6502
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 30966
-    instance_protocol  = "tcp"
-    lb_port            = 443
-    lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/921dce45-4537-4c2c-b4e4-0cc475e592ed"
-  }
-
-  listener {
-    instance_port      = 32202
-    instance_protocol  = "tcp"
-    lb_port            = 80
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "TCP:32202"
-    timeout             = 5
-  }
-
-  tags {
-    "kubernetes.io/service-name"               = "mdn-samples/mdn-samples-service"
-    "KubernetesCluster"                        = "portland.moz.works"
-    "kubernetes.io/cluster/portland.moz.works" = "owned"
-  }
-}
-
 resource "aws_elb" "abb45ebd7fbb211e788530656fabf84c" {
   name                        = "abb45ebd7fbb211e788530656fabf84c"
   subnets                     = ["subnet-e290afaa"]
@@ -232,14 +51,6 @@ resource "aws_elb" "abb45ebd7fbb211e788530656fabf84c" {
   connection_draining         = false
   connection_draining_timeout = 300
   internal                    = false
-
-  listener {
-    instance_port      = 32418
-    instance_protocol  = "tcp"
-    lb_port            = 2222
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
 
   listener {
     instance_port      = 32413
@@ -262,7 +73,7 @@ resource "aws_elb" "abb45ebd7fbb211e788530656fabf84c" {
     instance_protocol  = "tcp"
     lb_port            = 443
     lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/a6377c2d-97e8-4d7b-bc43-0d6f41beb034"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/3865bd6b-c6e2-4c8b-b68d-45cf7ef0b455"
   }
 
   health_check {
@@ -357,46 +168,6 @@ resource "aws_elb" "bedrock-stage" {
   tags {
     "KubernetesCluster" = "oregon-b.moz.works"
     "Stack"             = "bedrock-stage"
-  }
-}
-
-resource "aws_elb" "careers-stage" {
-  name                        = "careers-stage"
-  subnets                     = ["subnet-e290afaa"]
-  security_groups             = ["sg-44858b38"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 60
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 31166
-    instance_protocol  = "http"
-    lb_port            = 80
-    lb_protocol        = "http"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 31166
-    instance_protocol  = "http"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/e3d6aa9a-0a9b-4fed-b2fa-d05ae0156677"
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "HTTP:31166/healthz/"
-    timeout             = 5
-  }
-
-  tags {
-    "KubernetesCluster" = "oregon-b.moz.works"
-    "Stack"             = "careers-stage"
   }
 }
 
@@ -560,7 +331,7 @@ resource "aws_elb" "snippets-prod" {
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/6b9ebb9d-144a-474d-812f-56acc5101c56"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/5514f163-47e2-4a2c-afe1-4af5d3bdb7f9"
   }
 
   health_check {
@@ -574,46 +345,6 @@ resource "aws_elb" "snippets-prod" {
   tags {
     "KubernetesCluster" = "oregon-b.moz.works"
     "Stack"             = "snippets-prod"
-  }
-}
-
-resource "aws_elb" "snippets-stats-b" {
-  name                        = "snippets-stats-b"
-  subnets                     = ["subnet-e290afaa"]
-  security_groups             = ["sg-44858b38"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 60
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 31451
-    instance_protocol  = "http"
-    lb_port            = 80
-    lb_protocol        = "http"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 31451
-    instance_protocol  = "http"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/8dce3494-a641-4301-b707-5920c9aabf49"
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "HTTP:31451/"
-    timeout             = 5
-  }
-
-  tags {
-    "KubernetesCluster" = "oregon-b.moz.works"
-    "Stack"             = "snippets-stats"
   }
 }
 
@@ -657,49 +388,10 @@ resource "aws_elb" "snippets-admin" {
   }
 }
 
-resource "aws_elb" "careers-prod" {
-  name                        = "careers-prod"
-  subnets                     = ["subnet-e290afaa"]
-  security_groups             = ["sg-44858b38"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 60
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 31898
-    instance_protocol  = "http"
-    lb_port            = 80
-    lb_protocol        = "http"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 31898
-    instance_protocol  = "http"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/ae2d2e64-b345-4bc1-a49a-5860c73a0809"
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "HTTP:31898/healthz/"
-    timeout             = 5
-  }
-
-  tags {
-    "KubernetesCluster" = "oregon-b.moz.works"
-    "Stack"             = "careers-prod"
-  }
-}
 
 resource "aws_elb" "basket-dev" {
   name                        = "basket-dev"
-  subnets                     = ["subnet-e290afaa"]
+  subnets                     = ["subnet-e290afaa","subnet-0d89cd37ecec22dd2"]
   security_groups             = ["sg-44858b38"]
   cross_zone_load_balancing   = false
   idle_timeout                = 60
@@ -894,39 +586,6 @@ resource "aws_elb" "basket-admin" {
   tags {
     "KubernetesCluster" = "oregon-b.moz.works"
     "Stack"             = "basket-admin"
-  }
-}
-
-resource "aws_elb" "a26612beb807111e88eeb0656fabf84c" {
-  name                        = "a26612beb807111e88eeb0656fabf84c"
-  subnets                     = ["subnet-e290afaa"]
-  security_groups             = ["sg-0c63c5b576e33efa9"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 60
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 32493
-    instance_protocol  = "tcp"
-    lb_port            = 80
-    lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/a6377c2d-97e8-4d7b-bc43-0d6f41beb034"
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "TCP:32493"
-    timeout             = 5
-  }
-
-  tags {
-    "kubernetes.io/service-name"               = "bedrock-demo/voyager-bedrock-demo-ingress"
-    "kubernetes.io/cluster/oregon-b.moz.works" = "owned"
-    "KubernetesCluster"                        = "oregon-b.moz.works"
   }
 }
 

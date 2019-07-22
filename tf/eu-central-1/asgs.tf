@@ -3,7 +3,7 @@ resource "aws_autoscaling_group" "master-eu-central-1a-masters-frankfurt-moz-wor
   force_delete              = false
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  launch_configuration      = "master-eu-central-1a.masters.frankfurt.moz.works-007817dc318ddd128f8542f3ec"
+  launch_configuration      = "master-eu-central-1a.masters.frankfurt.moz.works-20190418182947676900000002"
   max_size                  = 1
   min_size                  = 1
   name                      = "master-eu-central-1a.masters.frankfurt.moz.works"
@@ -44,12 +44,12 @@ resource "aws_autoscaling_group" "master-eu-central-1a-masters-frankfurt-moz-wor
 }
 
 resource "aws_autoscaling_group" "nodes-frankfurt-moz-works" {
-  desired_capacity          = 12
+  desired_capacity          = 10
   force_delete              = false
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  launch_configuration      = "nodes.frankfurt.moz.works-007817dc318ddd128f8542f3eb"
-  max_size                  = 20
+  launch_configuration      = "nodes.frankfurt.moz.works-20190418182947675400000001"
+  max_size                  = 22
   min_size                  = 12
   name                      = "nodes.frankfurt.moz.works"
   wait_for_capacity_timeout = "10m"
@@ -65,18 +65,13 @@ resource "aws_autoscaling_group" "nodes-frankfurt-moz-works" {
     "GroupMaxSize",
   ]
 
-  load_balancers = ["sumo-prod",
+  load_balancers = [
     "basket-stage",
     "bedrock-prod",
     "bedrock-dev",
     "basket-prod",
-    "snippets-stats",
     "nucleus-prod",
-    "bedrock-stage",
-    "careers",
-    "snippets",
-    "sumo-stage",
-    "sumo-dev",
+    "snippets"
   ]
 
   lifecycle {
