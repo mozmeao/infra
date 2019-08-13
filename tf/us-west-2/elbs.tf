@@ -1,46 +1,4 @@
 
-resource "aws_elb" "ci-us-west-moz-works" {
-  name                        = "ci-us-west-moz-works"
-  subnets                     = ["subnet-505f3827", "subnet-536f2e36", "subnet-8f8931d6"]
-  security_groups             = ["sg-bece53da"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 60
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  access_logs {
-    bucket        = "ci-us-west-access-logs"
-    bucket_prefix = "elb-logs"
-    interval      = 5
-  }
-
-  listener {
-    instance_port      = 4443
-    instance_protocol  = "tcp"
-    lb_port            = 443
-    lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/061c9881-4f2e-4022-a24d-fc05a15081f4"
-  }
-
-  listener {
-    instance_port      = 80
-    instance_protocol  = "tcp"
-    lb_port            = 80
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 10
-    interval            = 30
-    target              = "TCP:80"
-    timeout             = 5
-  }
-
-  tags {}
-}
 
 resource "aws_elb" "abb45ebd7fbb211e788530656fabf84c" {
   name                        = "abb45ebd7fbb211e788530656fabf84c"
