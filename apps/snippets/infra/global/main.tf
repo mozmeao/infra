@@ -28,17 +28,6 @@ resource "aws_s3_bucket" "snippets-logging" {
   }
 }
 
-module "snippets-cdn-stage" {
-  source      = "./cdn"
-  environment = "stage"
-  aliases     = ["snippets-stage-cdn.moz.works"]
-  comment     = "Used by Firefox (stage)"
-  log_bucket  = "${aws_s3_bucket.snippets-logging.bucket_domain_name}"
-  log_prefix  = "snippets-stage/"
-
-  #certificate_arn = ""
-}
-
 module "snippets-cdn-prod" {
   source      = "./cdn"
   environment = "prod"
@@ -52,5 +41,5 @@ module "snippets-cdn-prod" {
   log_bucket = "${aws_s3_bucket.snippets-logging.bucket_domain_name}"
   log_prefix = "snippets-prod/"
 
-  #certificate_arn = ""
+  certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/8f1a65e7-2d0f-40e7-a74a-8d5056fd2462"
 }
