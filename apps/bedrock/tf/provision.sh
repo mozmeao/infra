@@ -1,7 +1,4 @@
-#!/bin/bash
-
-set -e
-set -u
+#!/bin/bash -exu
 
 BEDROCK_PROVISIONING_REGION="us-west-2"
 TERRAFORM_ENV="bedrock-media"
