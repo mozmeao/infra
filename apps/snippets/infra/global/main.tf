@@ -28,8 +28,30 @@ resource "aws_s3_bucket" "snippets-logging" {
   }
 }
 
+
+module "snippets-cdn-stage" {
+  source      = "./stage_cdn"
+  environment = "stage"
+
+  # Commented out because snippets.cdn.mozilla.net is used, uncomment
+  # once everything is fully tested
+  #aliases = [ "snippets-prod-cdn.moz.works", "snippets.cdn.mozilla.net"]
+  aliases = ["snippets-stage-cdn.moz.works"]
+
+  comment    = "Used by Firefox (stage)"
+  log_bucket = "${aws_s3_bucket.snippets-logging.bucket_domain_name}"
+  log_prefix = "snippets-stage/"
+
+  certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/3a7ae4ad-3b7b-449a-a5ea-0238295dc6fd"
+  origin_domain_name = "snippets-stage-us-west.s3.amazonaws.com"
+  default_cache_target_origin_id = "snippets.allizom.org"
+  ordered_cache_target_origin_id = "S3-snippets-stage-us-west"
+  lambda_arn = "${aws_lambda_function.stage-lambda.arn}"
+}
+
+
 module "snippets-cdn-prod" {
-  source      = "./cdn"
+  source      = "./prod_cdn"
   environment = "prod"
 
   # Commented out because snippets.cdn.mozilla.net is used, uncomment
@@ -47,21 +69,3 @@ module "snippets-cdn-prod" {
   ordered_cache_target_origin_id = "S3-snippets-prod-us-west"
 }
 
-module "snippets-cdn-stage" {
-  source      = "./cdn"
-  environment = "stage"
-
-  # Commented out because snippets.cdn.mozilla.net is used, uncomment
-  # once everything is fully tested
-  #aliases = [ "snippets-prod-cdn.moz.works", "snippets.cdn.mozilla.net"]
-  aliases = ["snippets-stage-cdn.moz.works"]
-
-  comment    = "Used by Firefox (stage)"
-  log_bucket = "${aws_s3_bucket.snippets-logging.bucket_domain_name}"
-  log_prefix = "snippets-stage/"
-
-  certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/3a7ae4ad-3b7b-449a-a5ea-0238295dc6fd"
-  origin_domain_name = "snippets-stage-us-west.s3.amazonaws.com"
-  default_cache_target_origin_id = "snippets.allizom.org"
-  ordered_cache_target_origin_id = "S3-snippets-stage-us-west"
-}
