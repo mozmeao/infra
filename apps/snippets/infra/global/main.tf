@@ -37,9 +37,31 @@ module "snippets-cdn-prod" {
   #aliases = [ "snippets-prod-cdn.moz.works", "snippets.cdn.mozilla.net"]
   aliases = ["snippets-prod-cdn.moz.works"]
 
-  comment    = "User by Firefox (prod)"
+  comment    = "Used by Firefox (prod)"
   log_bucket = "${aws_s3_bucket.snippets-logging.bucket_domain_name}"
   log_prefix = "snippets-prod/"
 
   certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/8f1a65e7-2d0f-40e7-a74a-8d5056fd2462"
+  origin_domain_name = "snippets-prod-us-west.s3.amazonaws.com"
+  default_cache_target_origin_id = "snippets.mozilla.com"
+  ordered_cache_target_origin_id = "S3-snippets-prod-us-west"
+}
+
+module "snippets-cdn-stage" {
+  source      = "./cdn"
+  environment = "stage"
+
+  # Commented out because snippets.cdn.mozilla.net is used, uncomment
+  # once everything is fully tested
+  #aliases = [ "snippets-prod-cdn.moz.works", "snippets.cdn.mozilla.net"]
+  aliases = ["snippets-stage-cdn.moz.works"]
+
+  comment    = "Used by Firefox (stage)"
+  log_bucket = "${aws_s3_bucket.snippets-logging.bucket_domain_name}"
+  log_prefix = "snippets-stage/"
+
+  certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/3a7ae4ad-3b7b-449a-a5ea-0238295dc6fd"
+  origin_domain_name = "snippets-stage-us-west.s3.amazonaws.com"
+  default_cache_target_origin_id = "snippets.allizom.org"
+  ordered_cache_target_origin_id = "S3-snippets-stage-us-west"
 }
