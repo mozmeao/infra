@@ -46,7 +46,7 @@ module "snippets-cdn-stage" {
   origin_domain_name = "snippets-stage-us-west.s3.amazonaws.com"
   default_cache_target_origin_id = "snippets.allizom.org"
   ordered_cache_target_origin_id = "S3-snippets-stage-us-west"
-  lambda_arn = "${aws_lambda_function.stage-lambda.arn}"
+  lambda_arn = "${aws_lambda_function.stage-lambda.qualified_arn}"
 }
 
 
