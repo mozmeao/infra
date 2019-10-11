@@ -109,6 +109,6 @@ resource "aws_cloudfront_distribution" "snippets" {
     acm_certificate_arn            = "${var.certificate_arn}"
     cloudfront_default_certificate = false
     minimum_protocol_version       = "TLSv1"
-    ssl_support_method             = "vip"
+    ssl_support_method             = "sni-only"
   }
 }
