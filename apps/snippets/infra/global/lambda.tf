@@ -23,10 +23,16 @@ resource "aws_iam_role" "lambda-edge-role" {
 EOF
 }
 
-data "archive_file" "stage-lambda-zip" {
+data "archive_file" "stage-lambda-origin-request-zip" {
   type        = "zip"
-  source_file = "${path.module}/lambda.py"
-  output_path = "${path.module}/stage-lambda.zip"
+  source_file = "./lambda/stage/origin_request/lambda.py"
+  output_path = "./lambda/stage/origin_request/lambda.zip"
+}
+
+data "archive_file" "stage-lambda-origin-response-zip" {
+  type        = "zip"
+  source_file = "./lambda/stage/origin_response/lambda.py"
+  output_path = "./lambda/stage/origin_response/lambda.zip"
 }
 
 provider "aws" {
@@ -34,13 +40,31 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_lambda_function" "stage-lambda" {
+resource "aws_lambda_function" "stage-lambda-origin-request" {
   provider         = "aws.aws-lambda-east"
-  function_name    = "snippets-stage-resp"
+  function_name    = "snippets-stage-origin-request"
   description      = ""
   publish          = "true"
-  filename         = "${path.module}/stage-lambda.zip"
-  source_code_hash = "${data.archive_file.stage-lambda-zip.output_base64sha256}"
+  filename         = "./lambda/stage/origin_request/lambda.zip"
+  source_code_hash = "${data.archive_file.stage-lambda-origin-request-zip.output_base64sha256}"
+  role             = "${aws_iam_role.lambda-edge-role.arn}"
+  handler          = "lambda.lambda_handler"
+  runtime          = "python3.7"
+
+  tags {
+    Name        = "snippets-stage-headers"
+    ServiceName = "snippets stage"
+    Terraform   = "true"
+  }
+}
+
+resource "aws_lambda_function" "stage-lambda-origin-response" {
+  provider         = "aws.aws-lambda-east"
+  function_name    = "snippets-stage-origin-response"
+  description      = ""
+  publish          = "true"
+  filename         = "./lambda/stage/origin_response/lambda.zip"
+  source_code_hash = "${data.archive_file.stage-lambda-origin-response-zip.output_base64sha256}"
   role             = "${aws_iam_role.lambda-edge-role.arn}"
   handler          = "lambda.lambda_handler"
   runtime          = "python3.7"

@@ -18,11 +18,6 @@ resource "aws_cloudfront_distribution" "snippets" {
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
     target_origin_id = "${var.default_cache_target_origin_id}"
 
-    lambda_function_association {
-          event_type = "origin-request"
-          lambda_arn = "${var.lambda_arn}"
-    }
-
     forwarded_values {
       query_string = true
       headers      = ["Origin"]
@@ -30,6 +25,11 @@ resource "aws_cloudfront_distribution" "snippets" {
       cookies {
         forward = "none"
       }
+    }
+
+    lambda_function_association {
+      event_type = "origin-request"
+      lambda_arn = "${var.origin_request_lambda_arn}"
     }
 
     viewer_protocol_policy = "https-only"
@@ -46,11 +46,6 @@ resource "aws_cloudfront_distribution" "snippets" {
 
     allowed_methods = ["GET", "HEAD", "OPTIONS"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
-
-    lambda_function_association {
-          event_type = "origin-request"
-          lambda_arn = "${var.lambda_arn}"
-    }
 
     forwarded_values {
       query_string = false
@@ -75,17 +70,17 @@ resource "aws_cloudfront_distribution" "snippets" {
     allowed_methods = ["GET", "HEAD", "OPTIONS"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
 
-    lambda_function_association {
-          event_type = "origin-request"
-          lambda_arn = "${var.lambda_arn}"
-    }
-
     forwarded_values {
       query_string = false
 
       cookies {
         forward = "none"
       }
+    }
+
+    lambda_function_association {
+      event_type = "origin-response"
+      lambda_arn = "${var.origin_response_lambda_arn}"
     }
 
     viewer_protocol_policy = "https-only"
