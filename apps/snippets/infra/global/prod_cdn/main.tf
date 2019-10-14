@@ -16,7 +16,7 @@ resource "aws_cloudfront_distribution" "snippets" {
   default_cache_behavior = {
     allowed_methods  = ["GET", "HEAD", "OPTIONS"]
     cached_methods   = ["GET", "HEAD", "OPTIONS"]
-    target_origin_id = "snippets.mozilla.com"
+    target_origin_id = "${var.default_cache_target_origin_id}"
 
     forwarded_values {
       query_string = true
@@ -37,7 +37,7 @@ resource "aws_cloudfront_distribution" "snippets" {
   # Cache behavior with precedence 0
   ordered_cache_behavior {
     path_pattern     = "media/*"
-    target_origin_id = "S3-snippets-prod-us-west"
+    target_origin_id = "${var.ordered_cache_target_origin_id}"
 
     allowed_methods = ["GET", "HEAD", "OPTIONS"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
@@ -60,7 +60,7 @@ resource "aws_cloudfront_distribution" "snippets" {
   # Cache behavior with precedence 1
   ordered_cache_behavior {
     path_pattern     = "us-west/*"
-    target_origin_id = "S3-snippets-prod-us-west"
+    target_origin_id = "${var.ordered_cache_target_origin_id}"
 
     allowed_methods = ["GET", "HEAD", "OPTIONS"]
     cached_methods  = ["GET", "HEAD", "OPTIONS"]
@@ -81,8 +81,8 @@ resource "aws_cloudfront_distribution" "snippets" {
   }
 
   origin {
-    domain_name = "snippets.mozilla.com"
-    origin_id   = "snippets.mozilla.com"
+    domain_name = "${var.default_cache_target_origin_id}"
+    origin_id   = "${var.default_cache_target_origin_id}"
 
     custom_origin_config {
       http_port                = "80"
@@ -95,8 +95,8 @@ resource "aws_cloudfront_distribution" "snippets" {
   }
 
   origin {
-    domain_name = "snippets-prod-us-west.s3.amazonaws.com"
-    origin_id   = "S3-snippets-prod-us-west"
+    domain_name = "${var.origin_domain_name}"
+    origin_id   = "${var.ordered_cache_target_origin_id}"
   }
 
   restrictions {
@@ -106,10 +106,9 @@ resource "aws_cloudfront_distribution" "snippets" {
   }
 
   viewer_certificate {
-    #acm_certificate_arn            = "arn:aws:acm:us-east-1:369987351092:certificate/5f5d4ff6-3a5a-416f-9990-e8201558eab8"
     acm_certificate_arn            = "${var.certificate_arn}"
     cloudfront_default_certificate = false
     minimum_protocol_version       = "TLSv1"
-    ssl_support_method             = "vip"
+    ssl_support_method             = "sni-only"
   }
 }
