@@ -10,8 +10,8 @@ This repo is maintained by the [Mozilla Marketing Engineering and Operations](ht
 	- software containerization
 - [Amazon Web Services](https://aws.amazon.com/)
 	- our primary cloud services platform
-- [Jenkins](https://jenkins.io/)
-	- including [Groovy](http://www.groovy-lang.org/) scripting
+- [Google Cloud Platform](https://cloud.google.com/)
+- [Gitlab CI/CD](https://gitlab.com) and [Jenkins](https://jenkins.io/)
 - [Terraform](https://www.terraform.io/)
 	- declarative infrastructure provisioning
 - [Ansible](https://www.ansible.com/)
@@ -28,16 +28,9 @@ This repo is maintained by the [Mozilla Marketing Engineering and Operations](ht
 	- See [this](https://github.com/mozmeao/infra/tree/master/k8s) page for more info.
 - [Kops](https://github.com/kubernetes/kops)
 	- Kubernetes installation in AWS
-- [Deis 1 and Deis Workflow](https://deis.com/)
-	- Deis helps developers and operators build, deploy, manage, and scale their applications on top of Kubernetes.
-- [Quay.io](https://quay.io/repository/)
-	- builds, analyzes, and distributed container images
-	- [just how do you pronounce quay anyways?](https://www.youtube.com/watch?v=6LRYrGJg-PM)
 
 ### Monitoring tools:
 
-- [Mig](http://mig.mozilla.org/)
-	- Mozilla's real-time digital forensics and investigation platform.
 - [Datadog](https://www.datadoghq.com/)
 	- performance monitoring
 - [New Relic](https://newrelic.com/)
@@ -59,7 +52,3 @@ See [how we work](docs/how_we_work.md) doc.
 ## Contributing
 
 If you'd like to make a contribution, or you've found an issue with our work, please submit an issue and/or pull request. We're happy to take a look, however, a timeframe for review cannot be guaranteed.
-
-## Contacting us
-
-We're in the `#meao-infra` channel on IRC. More info [here](https://wiki.mozilla.org/IRC).
