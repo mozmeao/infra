@@ -27,11 +27,6 @@ resource "aws_cloudfront_distribution" "snippets" {
       }
     }
 
-    lambda_function_association {
-      event_type = "origin-request"
-      lambda_arn = "${var.origin_request_lambda_arn}"
-    }
-
     viewer_protocol_policy = "https-only"
     compress               = true
     min_ttl                = "0"
@@ -76,11 +71,6 @@ resource "aws_cloudfront_distribution" "snippets" {
       cookies {
         forward = "none"
       }
-    }
-
-    lambda_function_association {
-      event_type = "origin-response"
-      lambda_arn = "${var.origin_response_lambda_arn}"
     }
 
     viewer_protocol_policy = "https-only"

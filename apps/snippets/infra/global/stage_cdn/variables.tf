@@ -25,7 +25,3 @@ variable "default_cache_target_origin_id" {}
 variable "ordered_cache_target_origin_id" {}
 
 variable "origin_domain_name" {}
-
-variable "origin_request_lambda_arn" {}
-
-variable "origin_response_lambda_arn" {}
