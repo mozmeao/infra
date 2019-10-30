@@ -34,6 +34,13 @@ resource "aws_cloudfront_distribution" "snippets" {
     default_ttl            = "86400"
   }
 
+  custom_error_response {
+    error_code    = 403
+    response_code = 200
+    error_caching_min_ttl = 60
+    response_page_path = "/us-west/empty.json"
+  }
+
   # Cache behavior with precedence 0
   ordered_cache_behavior {
     path_pattern     = "media/*"

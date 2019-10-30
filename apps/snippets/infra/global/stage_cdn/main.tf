@@ -27,16 +27,18 @@ resource "aws_cloudfront_distribution" "snippets" {
       }
     }
 
-    lambda_function_association {
-      event_type = "origin-request"
-      lambda_arn = "${var.origin_request_lambda_arn}"
-    }
-
     viewer_protocol_policy = "https-only"
     compress               = true
     min_ttl                = "0"
     max_ttl                = "31536000"
     default_ttl            = "86400"
+  }
+
+  custom_error_response {
+    error_code    = 403
+    response_code = 200
+    error_caching_min_ttl = 60
+    response_page_path = "/us-west/empty.json"
   }
 
   # Cache behavior with precedence 0
@@ -76,11 +78,6 @@ resource "aws_cloudfront_distribution" "snippets" {
       cookies {
         forward = "none"
       }
-    }
-
-    lambda_function_association {
-      event_type = "origin-response"
-      lambda_arn = "${var.origin_response_lambda_arn}"
     }
 
     viewer_protocol_policy = "https-only"
