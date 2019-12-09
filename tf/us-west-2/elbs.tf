@@ -497,7 +497,7 @@ resource "aws_elb" "bedrock-test" {
     healthy_threshold   = 2
     unhealthy_threshold = 6
     interval            = 10
-    target              = "HTTP:31467/healthz/"
+    target              = "HTTP:31888/healthz/"
     timeout             = 5
   }
 
