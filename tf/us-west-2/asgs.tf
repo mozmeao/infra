@@ -3,7 +3,7 @@ resource "aws_autoscaling_group" "master-us-west-2a-masters-oregon-a-moz-works" 
   force_delete              = false
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  launch_configuration      = "master-us-west-2a.masters.oregon-a.moz.works-20190212214909977400000002"
+  launch_configuration      = "master-us-west-2a.masters.oregon-a.moz.works-20190920165600157100000001"
   max_size                  = 1
   min_size                  = 1
   metrics_granularity       = "1Minute"
@@ -60,7 +60,7 @@ resource "aws_autoscaling_group" "master-us-west-2b-masters-oregon-b-moz-works" 
   force_delete              = false
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  launch_configuration      = "master-us-west-2b.masters.oregon-b.moz.works-20190408183450493300000002"
+  launch_configuration      = "master-us-west-2b.masters.oregon-b.moz.works-20191001193310824000000001"
   max_size                  = 1
   min_size                  = 1
   metrics_granularity       = "1Minute"
@@ -117,17 +117,13 @@ resource "aws_autoscaling_group" "nodes-oregon-a-moz-works" {
   force_delete              = false
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  launch_configuration      = "nodes.oregon-a.moz.works-20190212214909968000000001"
+  launch_configuration      = "nodes.oregon-a.moz.works-20190920165600173700000002"
   max_size                  = 20
-  min_size                  = 5
+  min_size                  = 3
   metrics_granularity       = "1Minute"
   name                      = "nodes.oregon-a.moz.works"
   vpc_zone_identifier       = ["subnet-0d89cd37ecec22dd2"]
   wait_for_capacity_timeout = "10m"
-
-  load_balancers = [
-    "basket-dev"
-  ]
 
   enabled_metrics = [
       "GroupStandbyInstances",
@@ -178,7 +174,7 @@ resource "aws_autoscaling_group" "nodes-oregon-b-moz-works" {
   force_delete              = false
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  launch_configuration      = "nodes.oregon-b.moz.works-20190408183450481200000001"
+  launch_configuration      = "nodes.oregon-b.moz.works-20191001193310830700000002"
   max_size                  = 22
   min_size                  = 12
   metrics_granularity       = "1Minute"
