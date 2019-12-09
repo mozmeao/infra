@@ -89,46 +89,6 @@ resource "aws_elb" "snippets-stage" {
   }
 }
 
-resource "aws_elb" "bedrock-stage" {
-  name                        = "bedrock-stage"
-  subnets                     = ["subnet-e290afaa"]
-  security_groups             = ["sg-44858b38"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 120
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 32743
-    instance_protocol  = "http"
-    lb_port            = 80
-    lb_protocol        = "http"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 32318
-    instance_protocol  = "http"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/657b1ca0-8c09-4add-90a2-1243470a6b45"
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "HTTP:32318/healthz/"
-    timeout             = 5
-  }
-
-  tags {
-    "KubernetesCluster" = "oregon-b.moz.works"
-    "Stack"             = "bedrock-stage"
-  }
-}
-
 resource "aws_elb" "a51544a9b133411e89b8402e6188a289" {
   name                        = "a51544a9b133411e89b8402e6188a289"
   subnets                     = ["subnet-0d89cd37ecec22dd2"]
@@ -183,46 +143,6 @@ resource "aws_elb" "a51544a9b133411e89b8402e6188a289" {
     "kubernetes.io/service-name"               = "deis/deis-router"
     "KubernetesCluster"                        = "oregon-a.moz.works"
     "kubernetes.io/cluster/oregon-a.moz.works" = "owned"
-  }
-}
-
-resource "aws_elb" "bedrock-prod" {
-  name                        = "bedrock-prod"
-  subnets                     = ["subnet-e290afaa"]
-  security_groups             = ["sg-44858b38"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 120
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 30024
-    instance_protocol  = "http"
-    lb_port            = 443
-    lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:iam::236517346949:server-certificate/www.mozilla.org"
-  }
-
-  listener {
-    instance_port      = 32743
-    instance_protocol  = "http"
-    lb_port            = 80
-    lb_protocol        = "http"
-    ssl_certificate_id = ""
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "HTTP:30024/healthz/"
-    timeout             = 5
-  }
-
-  tags {
-    "KubernetesCluster" = "oregon-b.moz.works"
-    "Stack"             = "bedrock-prod"
   }
 }
 
@@ -547,8 +467,8 @@ resource "aws_elb" "basket-admin" {
   }
 }
 
-resource "aws_elb" "bedrock-dev" {
-  name                        = "bedrock-dev"
+resource "aws_elb" "bedrock-test" {
+  name                        = "bedrock-test"
   subnets                     = ["subnet-e290afaa"]
   security_groups             = ["sg-44858b38"]
   cross_zone_load_balancing   = false
@@ -558,11 +478,11 @@ resource "aws_elb" "bedrock-dev" {
   internal                    = false
 
   listener {
-    instance_port      = 31467
+    instance_port      = 31888
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/21a09f64-2eb3-438c-b6d2-080b07df93d4"
+    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/1f05b4cd-09ff-423b-8443-2567eab6c7e4"
   }
 
   listener {
@@ -583,7 +503,7 @@ resource "aws_elb" "bedrock-dev" {
 
   tags {
     "KubernetesCluster" = "oregon-b.moz.works"
-    "Stack"             = "bedrock-dev"
+    "Stack"             = "bedrock-test"
   }
 }
 
