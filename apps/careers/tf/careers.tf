@@ -302,7 +302,7 @@ resource "aws_lambda_function" "stage-lambda-headers" {
   source_code_hash = "${data.archive_file.stage-lambda-zip.output_base64sha256}"
   role             = "${aws_iam_role.lambda-edge-role.arn}"
   handler          = "lambda-headers.handler"
-  runtime          = "nodejs8.10"
+  runtime          = "nodejs12.x"
 
   tags {
     Name        = "careers-stage-headers"
@@ -321,7 +321,7 @@ resource "aws_lambda_function" "prod-lambda-headers" {
   source_code_hash = "${data.archive_file.prod-lambda-zip.output_base64sha256}"
   role             = "${aws_iam_role.lambda-edge-role.arn}"
   handler          = "lambda-headers.handler"
-  runtime          = "nodejs8.10"
+  runtime          = "nodejs12.x"
 
   tags {
     Name        = "careers-prod-headers"
