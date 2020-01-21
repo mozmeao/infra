@@ -59,7 +59,7 @@ module "snippets-cdn-prod" {
   log_bucket = "${aws_s3_bucket.snippets-logging.bucket_domain_name}"
   log_prefix = "snippets-prod/"
 
-  certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/5f2b4283-3fbc-4edc-bed7-9018c065d918"
+  certificate_arn = "arn:aws:acm:us-east-1:236517346949:certificate/615f7c6a-b0a8-466e-886c-8d0064f07c6d"
   origin_domain_name = "snippets-prod-us-west.s3.amazonaws.com"
   default_cache_target_origin_id = "snippets.mozilla.com"
   ordered_cache_target_origin_id = "S3-snippets-prod-us-west"
