@@ -89,62 +89,62 @@ resource "aws_elb" "snippets-stage" {
   }
 }
 
-resource "aws_elb" "a51544a9b133411e89b8402e6188a289" {
-  name                        = "a51544a9b133411e89b8402e6188a289"
-  subnets                     = ["subnet-0d89cd37ecec22dd2"]
-  security_groups             = ["sg-072cb472eec3cfcf0"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 1200
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
+# resource "aws_elb" "a51544a9b133411e89b8402e6188a289" {
+#   name                        = "a51544a9b133411e89b8402e6188a289"
+#   subnets                     = ["subnet-0d89cd37ecec22dd2"]
+#   security_groups             = ["sg-072cb472eec3cfcf0"]
+#   cross_zone_load_balancing   = false
+#   idle_timeout                = 1200
+#   connection_draining         = false
+#   connection_draining_timeout = 300
+#   internal                    = false
 
-  listener {
-    instance_port      = 31901
-    instance_protocol  = "tcp"
-    lb_port            = 2222
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
+#   listener {
+#     instance_port      = 31901
+#     instance_protocol  = "tcp"
+#     lb_port            = 2222
+#     lb_protocol        = "tcp"
+#     ssl_certificate_id = ""
+#   }
 
-  listener {
-    instance_port      = 32473
-    instance_protocol  = "tcp"
-    lb_port            = 9090
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
+#   listener {
+#     instance_port      = 32473
+#     instance_protocol  = "tcp"
+#     lb_port            = 9090
+#     lb_protocol        = "tcp"
+#     ssl_certificate_id = ""
+#   }
 
-  listener {
-    instance_port      = 31938
-    instance_protocol  = "tcp"
-    lb_port            = 80
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
+#   listener {
+#     instance_port      = 31938
+#     instance_protocol  = "tcp"
+#     lb_port            = 80
+#     lb_protocol        = "tcp"
+#     ssl_certificate_id = ""
+#   }
 
-  listener {
-    instance_port      = 31125
-    instance_protocol  = "tcp"
-    lb_port            = 443
-    lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/0a683933-3b11-4651-bf48-4fd8097d6b64"
-  }
+#   listener {
+#     instance_port      = 31125
+#     instance_protocol  = "tcp"
+#     lb_port            = 443
+#     lb_protocol        = "ssl"
+#     ssl_certificate_id = "arn:aws:acm:us-west-2:236517346949:certificate/0a683933-3b11-4651-bf48-4fd8097d6b64"
+#   }
 
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "TCP:31938"
-    timeout             = 5
-  }
+#   health_check {
+#     healthy_threshold   = 2
+#     unhealthy_threshold = 6
+#     interval            = 10
+#     target              = "TCP:31938"
+#     timeout             = 5
+#   }
 
-  tags {
-    "kubernetes.io/service-name"               = "deis/deis-router"
-    "KubernetesCluster"                        = "oregon-a.moz.works"
-    "kubernetes.io/cluster/oregon-a.moz.works" = "owned"
-  }
-}
+#   tags {
+#     "kubernetes.io/service-name"               = "deis/deis-router"
+#     "KubernetesCluster"                        = "oregon-a.moz.works"
+#     "kubernetes.io/cluster/oregon-a.moz.works" = "owned"
+#   }
+# }
 
 resource "aws_elb" "basket-prod-b" {
   name                        = "basket-prod-b"
@@ -264,6 +264,12 @@ resource "aws_elb" "snippets-admin" {
     "KubernetesCluster" = "oregon-b.moz.works"
     "Stack"             = "snippets-admin"
   }
+
+  access_logs {
+    bucket        = "mozmeao-elb-access-logs-us-west-2"
+    interval      = 60
+  }
+
 }
 
 
