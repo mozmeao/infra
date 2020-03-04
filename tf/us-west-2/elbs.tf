@@ -267,7 +267,7 @@ resource "aws_elb" "snippets-admin" {
 
   access_logs {
     bucket        = "mozmeao-elb-access-logs-us-west-2"
-    interval      = 60
+    interval      = 15
   }
 
 }
