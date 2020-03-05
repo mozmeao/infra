@@ -4,7 +4,7 @@ Date: 2020-02-19
 
 ## Status
 
-Draft
+Accepted
 
 ## Context
 
@@ -26,6 +26,6 @@ The other primary advantage is reducing the class of errors where some new featu
 
 The primary cost is to backend developers/SREs who must develop these charts. That time investment has a uncertain payoff, where the benefit is fewer configuration errors (which may not be very common today).
 If we aren't careful with promoting helm charts sensibly in the service pipelines, we could accidentally grab a new version of a helm chart out of order.  Mitigation: Version helm charts.  At the point of publish assign a new value to each change. And, in the service pipeline record/promote which version of the helm chart was deployed. (This could use a 'lock' pattern, that software apps often use.)
-The helm repo has to be available to deploy our services.  Mitigation: Github pages is pretty reliable, and we could also setup a 'local' repo from any up to date git repo to do emergency deploys.
+The helm repo has to be available to deploy our services.  Mitigation: Github pages is pretty reliable, and we could also setup a 'local' repo from any up to date git repo to do emergency deploys. s3 as backup or primary chart source is also possible.
 Writing the helm charts will be difficult because you need to take into account the current deltas between the existing k8s deployments.  Minimizing these deltas is one of the goals of this work. But during the transition we could deploy the services with good zero downtime patterns, where we make it easy to rollback a bad deployment.  And make sure we deploy to dev/stg/prod in order. 
 
