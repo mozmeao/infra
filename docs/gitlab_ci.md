@@ -5,7 +5,7 @@ Follow these instructions to setup your Github project to use this for your Cont
 
 ## Create a GitLab Project
 
-* Login to GitLab as our [MozMEAOBot](https://gitlab.com/mozmeaobot) account. Credentials are in the infra-private repo.
+* Login to GitLab as our [MozMEAOBot](https://gitlab.com/mozmeaobot) account. Credentials are in 1password.
 * Click the "New Project" button.
 * Select the "CI/CD for external repo" tab at the top.
 * Select "Repo by URL" so that we can manually connect everything and avoid extra permissions.
