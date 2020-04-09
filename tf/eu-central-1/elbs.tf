@@ -1,60 +1,3 @@
-resource "aws_elb" "a82511f724fb611e78dc902859405480" {
-  name                        = "a82511f724fb611e78dc902859405480"
-  subnets                     = ["subnet-10685f78","subnet-57ef9f2d"]
-  security_groups             = ["sg-8d1064e6"]
-  cross_zone_load_balancing   = false
-  idle_timeout                = 1200
-  connection_draining         = false
-  connection_draining_timeout = 300
-  internal                    = false
-
-  listener {
-    instance_port      = 31670
-    instance_protocol  = "tcp"
-    lb_port            = 443
-    lb_protocol        = "ssl"
-    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/79885752-992b-48a4-8170-22475cac599e"
-  }
-
-  listener {
-    instance_port      = 32208
-    instance_protocol  = "tcp"
-    lb_port            = 80
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 32033
-    instance_protocol  = "tcp"
-    lb_port            = 9090
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
-
-  listener {
-    instance_port      = 32480
-    instance_protocol  = "tcp"
-    lb_port            = 2222
-    lb_protocol        = "tcp"
-    ssl_certificate_id = ""
-  }
-
-  health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 6
-    interval            = 10
-    target              = "TCP:32208"
-    timeout             = 5
-  }
-
-  tags {
-    "kubernetes.io/service-name"                = "deis/deis-router"
-    "KubernetesCluster"                         = "frankfurt.moz.works"
-    "kubernetes.io/cluster/frankfurt.moz.works" = "owned"
-  }
-}
-
 resource "aws_elb" "basket-prod" {
   name                        = "basket-prod"
   subnets                     = ["subnet-10685f78"]
@@ -197,6 +140,35 @@ resource "aws_elb" "bedrock-prod" {
     unhealthy_threshold = 6
     interval            = 10
     target              = "HTTP:32249/healthz/"
+    timeout             = 5
+  }
+
+  tags {}
+}
+
+resource "aws_elb" "nucleus-dev" {
+  name                        = "nucleus-dev"
+  subnets                     = ["subnet-10685f78"]
+  security_groups             = ["sg-02552a69"]
+  cross_zone_load_balancing   = true
+  idle_timeout                = 60
+  connection_draining         = true
+  connection_draining_timeout = 300
+  internal                    = false
+
+  listener {
+    instance_port      = 31759
+    instance_protocol  = "tcp"
+    lb_port            = 443
+    lb_protocol        = "ssl"
+    ssl_certificate_id = "arn:aws:acm:eu-central-1:236517346949:certificate/0d25a16b-134f-413a-b097-24b5a67ceb94"
+  }
+
+  health_check {
+    healthy_threshold   = 2
+    unhealthy_threshold = 6
+    interval            = 10
+    target              = "HTTP:31759/"
     timeout             = 5
   }
 
