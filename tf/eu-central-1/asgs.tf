@@ -72,7 +72,7 @@ resource "aws_autoscaling_group" "nodes-frankfurt-moz-works" {
     "basket-prod",
     "nucleus-dev",
     "nucleus-prod",
-    "snippets"
+    "snippets",
   ]
 
   lifecycle {
