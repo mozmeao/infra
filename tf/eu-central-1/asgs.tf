@@ -3,7 +3,7 @@ resource "aws_autoscaling_group" "master-eu-central-1a-masters-frankfurt-moz-wor
   force_delete              = false
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  launch_configuration      = "master-eu-central-1a.masters.frankfurt.moz.works-20190418182947676900000002"
+  launch_configuration      = "master-eu-central-1a.masters.frankfurt.moz.works-20191105085519517200000001"
   max_size                  = 1
   min_size                  = 1
   name                      = "master-eu-central-1a.masters.frankfurt.moz.works"
@@ -48,7 +48,7 @@ resource "aws_autoscaling_group" "nodes-frankfurt-moz-works" {
   force_delete              = false
   health_check_grace_period = 300
   health_check_type         = "EC2"
-  launch_configuration      = "nodes.frankfurt.moz.works-20190418182947675400000001"
+  launch_configuration      = "nodes.frankfurt.moz.works-20191105085519517300000002"
   max_size                  = 22
   min_size                  = 12
   name                      = "nodes.frankfurt.moz.works"
@@ -70,8 +70,9 @@ resource "aws_autoscaling_group" "nodes-frankfurt-moz-works" {
     "bedrock-prod",
     "bedrock-dev",
     "basket-prod",
+    "nucleus-dev",
     "nucleus-prod",
-    "snippets"
+    "snippets",
   ]
 
   lifecycle {
