@@ -47,3 +47,10 @@ We will have to redeploy all of our infrastructure to use the new networking spa
 If we want another /16 address, we should request it from netops.  But, we fully own this /16, and no-one at at mozilla should deploy into that space.
 
 Using /20 means we have 16 chunks for unique VPCs.  Then from /20 to /24 we have another 16 chunks inside of that. If we create more vpcs or more subnets than that, we'll have quite a few issues getting everything working.  It seems unlikely we'll need more than 16 vpcs or more than 16 subnets inside that vpc, which is how we decided on these numbers.
+
+## Active Documentation
+
+Active network definitions will be stored in these two documents:
+
+https://github.com/mozmeao/infra-services/blob/master/aws/README.md
+https://github.com/mozmeao/infra-services/blob/master/gcp/README.md
