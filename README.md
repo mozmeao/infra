@@ -31,8 +31,6 @@ This repo is maintained by the [Mozilla Marketing Engineering and Operations](ht
 
 ### Monitoring tools:
 
-- [Datadog](https://www.datadoghq.com/)
-	- performance monitoring
 - [New Relic](https://newrelic.com/)
 	- performance monitoring
 - [Papertrail](https://papertrailapp.com/)
