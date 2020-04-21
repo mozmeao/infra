@@ -6,6 +6,8 @@ Date: 2020-04-07
 
 Accepted
 
+Amended by [6. AWS VPC Public and Private subnets](0006-aws-vpc-public-and-private-subnets.md)
+
 ## Context
 
 Changing networking can be hard.  It usually requires a full redeploy of all services and all infrastructure to make it 'real'.  Our current network has overlaps, which makes it more difficult to setup vpns, usually requring syncing of live IP addresses to their desired state.
