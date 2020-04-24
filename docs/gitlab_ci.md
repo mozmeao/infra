@@ -25,6 +25,8 @@ Setting up Github integration means that GitLab will be able to report back to G
 
 You'll now need to generate a "Personal access token". This should be done as our Github bot account: [MozmarRobot](https://github.com/MozmarRobot). The credentials for this bot account can be found in 1password. Once logged in as this user go to the [personal access token page](https://github.com/settings/tokens) and create a token named for your new project with the `repo` scope enabled.
 
+The MozmarRobot account will also need write access to the GitHub repo. Invite the user as a user with admin permissions on the repo, then copy the invitation URL which is available right after you invite them, and then accept the invitation while logged in as MozmarRobot. Firefox container tabs are a great way to accomplish all of this without having to switch browsers or use a private browsing window.
+
 * Copy the token and paste it into the field on the Github integration page on GitLab from above.
 * Select "active" and enter the Github address for your project.
 
