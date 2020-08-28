@@ -1,6 +1,6 @@
 # How we work in 2018
 
-#### tl;dr
+#### tl;dr 
 
 Our team manages it's work via two Github projects separated into [milestones](https://github.com/orgs/mozmeao/projects/3) and [tasks](https://github.com/orgs/mozmeao/projects/2). 
 
