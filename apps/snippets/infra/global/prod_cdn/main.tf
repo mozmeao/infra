@@ -27,7 +27,7 @@ resource "aws_cloudfront_distribution" "snippets" {
       }
     }
 
-    viewer_protocol_policy = "https-only"
+    viewer_protocol_policy = "redirect-to-https"
     compress               = true
     min_ttl                = "0"
     max_ttl                = "31536000"
@@ -35,10 +35,10 @@ resource "aws_cloudfront_distribution" "snippets" {
   }
 
   custom_error_response {
-    error_code    = 403
-    response_code = 200
+    error_code            = 403
+    response_code         = 200
     error_caching_min_ttl = 60
-    response_page_path = "/us-west/empty.json"
+    response_page_path    = "/us-west/empty.json"
   }
 
   # Cache behavior with precedence 0
@@ -57,7 +57,7 @@ resource "aws_cloudfront_distribution" "snippets" {
       }
     }
 
-    viewer_protocol_policy = "https-only"
+    viewer_protocol_policy = "redirect-to-https"
     compress               = true
     min_ttl                = "0"
     max_ttl                = "31536000"
@@ -80,7 +80,7 @@ resource "aws_cloudfront_distribution" "snippets" {
       }
     }
 
-    viewer_protocol_policy = "https-only"
+    viewer_protocol_policy = "redirect-to-https"
     compress               = true
     min_ttl                = "0"
     max_ttl                = "31536000"
