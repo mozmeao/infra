@@ -26,6 +26,20 @@ resource "aws_s3_bucket" "snippets-logging" {
     Region    = "${var.region}"
     Terraform = "true"
   }
+
+  lifecycle_rule {
+    enabled = true
+
+    expiration {
+      days = 90
+    }
+
+    noncurrent_version_expiration {
+      days = 1
+    }
+  }
+
+
 }
 
 

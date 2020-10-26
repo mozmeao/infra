@@ -1,7 +1,7 @@
 resource "aws_cloudfront_distribution" "snippets" {
   enabled             = "${var.enabled}"
   aliases             = "${var.aliases}"
-  price_class         = "PriceClass_All"
+  price_class         = "PriceClass_100"
   comment             = "${var.comment}"
   http_version        = "http1.1"
   is_ipv6_enabled     = false
