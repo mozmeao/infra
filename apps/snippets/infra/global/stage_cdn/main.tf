@@ -1,7 +1,7 @@
 resource "aws_cloudfront_distribution" "snippets" {
   enabled             = "${var.enabled}"
   aliases             = "${var.aliases}"
-  price_class         = "PriceClass_All"
+  price_class         = "PriceClass_100"
   comment             = "${var.comment}"
   http_version        = "http1.1"
   is_ipv6_enabled     = false
@@ -27,7 +27,7 @@ resource "aws_cloudfront_distribution" "snippets" {
       }
     }
 
-    viewer_protocol_policy = "https-only"
+    viewer_protocol_policy = "redirect-to-https"
     compress               = true
     min_ttl                = "0"
     max_ttl                = "31536000"
@@ -35,10 +35,10 @@ resource "aws_cloudfront_distribution" "snippets" {
   }
 
   custom_error_response {
-    error_code    = 403
-    response_code = 200
+    error_code            = 403
+    response_code         = 200
     error_caching_min_ttl = 60
-    response_page_path = "/us-west/empty.json"
+    response_page_path    = "/us-west/empty.json"
   }
 
   # Cache behavior with precedence 0
@@ -57,7 +57,7 @@ resource "aws_cloudfront_distribution" "snippets" {
       }
     }
 
-    viewer_protocol_policy = "https-only"
+    viewer_protocol_policy = "redirect-to-https"
     compress               = true
     min_ttl                = "0"
     max_ttl                = "31536000"
@@ -80,7 +80,7 @@ resource "aws_cloudfront_distribution" "snippets" {
       }
     }
 
-    viewer_protocol_policy = "https-only"
+    viewer_protocol_policy = "redirect-to-https"
     compress               = true
     min_ttl                = "0"
     max_ttl                = "31536000"
@@ -118,4 +118,19 @@ resource "aws_cloudfront_distribution" "snippets" {
     minimum_protocol_version       = "TLSv1"
     ssl_support_method             = "sni-only"
   }
+}
+
+data "aws_route53_zone" "zone" {
+  name = "moz.works"
+}
+
+resource "aws_route53_record" "snippet_stage_cnames" {
+  count = "${length(var.aliases)}"
+
+  zone_id = "${data.aws_route53_zone.zone.zone_id}"
+  name    = "${var.aliases[count.index]}"
+  type    = "CNAME"
+  ttl     = 300
+
+  records = ["${aws_cloudfront_distribution.snippets.domain_name}"]
 }
