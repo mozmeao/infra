@@ -49,9 +49,9 @@ resource "aws_autoscaling_group" "nodes-frankfurt-moz-works" {
   health_check_grace_period = 300
   health_check_type         = "EC2"
   launch_configuration      = "nodes2.frankfurt.moz.works-20200826210841"
-  max_size                  = 22
-  min_size                  = 12
-  name                      = "nodes2.frankfurt.moz.works"
+  max_size                  = 20
+  min_size                  = 8
+  name                      = ""
   wait_for_capacity_timeout = "10m"
   vpc_zone_identifier       = ["subnet-10685f78"]
 
