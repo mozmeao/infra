@@ -1,4 +1,0 @@
-kubernetes
-munch
-requests
-sh

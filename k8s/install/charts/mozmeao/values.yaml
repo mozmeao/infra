@@ -1,6 +1,0 @@
-fluentd:
-  syslog_host:
-  syslog_port:
-  limits:
-    cpu: 100m
-    memory: 768Mi
