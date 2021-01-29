@@ -1,4 +1,0 @@
-apiVersion: v1
-description: Helm charts for MozMEAO services
-name: mozmeao
-version: 0.1.0

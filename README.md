@@ -21,14 +21,6 @@ This repo is maintained by the [Mozilla Marketing Engineering and Operations](ht
 - [jq](https://stedolan.github.io/jq/)
 	- json transformations and queries
 
-### Container technologies:
-
-- [Kubernetes](https://kubernetes.io/)
-	- container orchestration in the cloud
-	- See [this](https://github.com/mozmeao/infra/tree/master/k8s) page for more info.
-- [Kops](https://github.com/kubernetes/kops)
-	- Kubernetes installation in AWS
-
 ### Monitoring tools:
 
 - [New Relic](https://newrelic.com/)
