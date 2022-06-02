@@ -26,9 +26,11 @@ Repeat the above for www-demo2 through www-demo5.
 Say someone asks you to deploy the `make-everything-awesomer` branch to demo4. This is the procedure.
 
 ```bash
-$ git pull origin # if your mozilla remote is "origin"
+$ git pull origin
+$ # if your mozilla remote is "origin"
 $ git checkout make-everything-awesomer
 $ git push --force heroku-demo4 make-everything-awesomer:main
+$ # need --force to overwrite the previously deployed branch
 ```
 
 You have to push the `main` branch in order for Heroku to deploy your branch code.
